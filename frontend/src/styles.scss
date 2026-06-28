@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    Inter,
+    Roboto,
+    Arial,
+    sans-serif;
+
+  background: #f4f7f9;
+  color: #17202a;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
