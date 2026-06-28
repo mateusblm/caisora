@@ -9,6 +9,8 @@ public interface UsuarioRepository {
 
     Usuario save(Usuario usuario);
 
+    Optional<Usuario> findByOrganizacaoIdAndEmail(UUID organizacaoId, String email);
+
     Optional<Usuario> findByIdAndOrganizacaoId(UUID id, UUID organizacaoId);
 
     Page<Usuario> findAllByOrganizacaoId(UUID organizacaoId, Pageable paginacao);

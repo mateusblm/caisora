@@ -6,6 +6,12 @@ spring:
   jpa:
     show-sql: true
 
+caisora:
+  seguranca:
+    jwt:
+      segredo: segredo-local-caisora-com-tamanho-suficiente-para-hmac-256
+      expiracao-segundos: 3600
+
 logging:
   level:
     br.com.caisora: DEBUG

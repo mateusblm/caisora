@@ -3,9 +3,11 @@ package br.com.caisora.compartilhado.excecao;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.List;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -29,6 +31,75 @@ public class TratadorGlobalException {
                 "Dados invalidos",
                 request.getRequestURI(),
                 errosCampos));
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErroResponse> tratarHeaderObrigatorioAusente(
+            MissingRequestHeaderException exception,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.badRequest().body(criarErro(
+                HttpStatus.BAD_REQUEST,
+                "HEADER_OBRIGATORIO_AUSENTE",
+                "Header obrigatorio ausente: " + exception.getHeaderName(),
+                request.getRequestURI(),
+                List.of(new ErroCampoResponse(exception.getHeaderName(), "Header obrigatorio"))));
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<ErroResponse> tratarTipoInvalido(
+            TypeMismatchException exception,
+            HttpServletRequest request
+    ) {
+        String campo = exception.getPropertyName() == null ? "parametro" : exception.getPropertyName();
+        return ResponseEntity.badRequest().body(criarErro(
+                HttpStatus.BAD_REQUEST,
+                "TIPO_INVALIDO",
+                "Parametro com formato invalido",
+                request.getRequestURI(),
+                List.of(new ErroCampoResponse(campo, "Formato invalido"))));
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<ErroResponse> tratarCredenciaisInvalidas(
+            CredenciaisInvalidasException exception,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                "CREDENCIAIS_INVALIDAS",
+                exception.getMessage(),
+                request.getRequestURI(),
+                List.of()));
+    }
+
+    @ExceptionHandler(UsuarioInativoException.class)
+    public ResponseEntity<ErroResponse> tratarUsuarioInativo(
+            UsuarioInativoException exception,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                "USUARIO_INATIVO",
+                exception.getMessage(),
+                request.getRequestURI(),
+                List.of()));
+    }
+
+    @ExceptionHandler(OrganizacaoInativaException.class)
+    public ResponseEntity<ErroResponse> tratarOrganizacaoInativa(
+            OrganizacaoInativaException exception,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                "ORGANIZACAO_INATIVA",
+                exception.getMessage(),
+                request.getRequestURI(),
+                List.of()));
     }
 
     @ExceptionHandler(ConflitoDadosException.class)

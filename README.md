@@ -85,6 +85,52 @@ Com a aplicacao em execucao:
 GET /actuator/health
 ```
 
+## Autenticacao JWT
+
+O Caisora usa JWT para autenticar chamadas da API. No login, o backend valida a senha com BCrypt, verifica se o usuario esta ativo, verifica se a organizacao esta ativa e entao gera um token assinado.
+
+Login no MVP:
+
+```http
+POST /api/v1/autenticacao/login
+X-Organizacao-Id: <uuid-da-organizacao>
+```
+
+```json
+{
+  "email": "maria@marina.com",
+  "senha": "SenhaForte123"
+}
+```
+
+O header `X-Organizacao-Id` e temporario. Ele existe porque o e-mail e unico por organizacao, nao globalmente. Na evolucao do produto, a organizacao deve ser resolvida pelo subdominio da marina, por exemplo `marina-exemplo.caisora.com`, mantendo o formulario de login apenas com e-mail e senha.
+
+Claims geradas no token:
+
+- `sub`: id do usuario
+- `nome`: nome do usuario
+- `email`: e-mail normalizado
+- `perfil`: perfil de autorizacao
+- `organizacaoId`: organizacao do usuario
+- `organizacaoNome`: nome da organizacao
+- `iat`: data de emissao
+- `exp`: data de expiracao
+
+Uso do token:
+
+```http
+Authorization: Bearer <token>
+```
+
+Usuario atual:
+
+```http
+GET /api/v1/autenticacao/me
+Authorization: Bearer <token>
+```
+
+A chave JWT deve vir da variavel `JWT_SECRET`. No profile `local`, ha um segredo local apenas para desenvolvimento.
+
 ## Multi-tenant
 
 O modelo planejado usa banco unico, schema unico e isolamento por coluna `organizacao_id`. Nesta entrega foi criado o `ContextoOrganizacao`, que sera populado a partir do usuario autenticado quando a autenticacao JWT for implementada.
