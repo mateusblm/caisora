@@ -21,6 +21,7 @@ public class ConfiguracaoSeguranca {
                 .authorizeHttpRequests(autorizacao -> autorizacao
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/v1/organizacoes/**").permitAll()
+                        .requestMatchers("/api/v1/usuarios/**").permitAll()
                         .anyRequest().authenticated())
                 .build();
     }

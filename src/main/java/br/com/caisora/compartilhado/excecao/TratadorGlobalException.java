@@ -31,6 +31,20 @@ public class TratadorGlobalException {
                 errosCampos));
     }
 
+    @ExceptionHandler(ConflitoDadosException.class)
+    public ResponseEntity<ErroResponse> tratarConflitoDados(
+            ConflitoDadosException exception,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                "CONFLITO_DADOS",
+                exception.getMessage(),
+                request.getRequestURI(),
+                List.of()));
+    }
+
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<ErroResponse> tratarRecursoNaoEncontrado(
             RecursoNaoEncontradoException exception,
