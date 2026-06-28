@@ -11,8 +11,8 @@
 	<groupId>br.com.caisora</groupId>
 	<artifactId>caisora-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>Caisora</name>
+	<description>Backend do ERP web SaaS Caisora para gestao de marinas</description>
 	<url/>
 	<licenses>
 		<license/>

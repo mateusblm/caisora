@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CaisoraApiApplication {
+public class CaisoraApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CaisoraApiApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(CaisoraApplication.class, args);
+    }
 }

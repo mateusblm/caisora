@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    show-sql: false
+
+caisora:
+  seguranca:
+    jwt:
+      segredo: segredo-de-teste-com-tamanho-suficiente-para-hmac
+      expiracao-segundos: 3600
