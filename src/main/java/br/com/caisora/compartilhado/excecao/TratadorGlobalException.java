@@ -24,7 +24,10 @@ public class TratadorGlobalException {
         List<ErroCampoResponse> errosCampos = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(erro -> new ErroCampoResponse(erro.getField(), erro.getDefaultMessage()))
+                .map(erro -> new ErroCampoResponse(
+                        erro.getField(),
+                        erro.getDefaultMessage()
+                ))
                 .toList();
 
         return ResponseEntity.badRequest().body(criarErro(
@@ -32,7 +35,8 @@ public class TratadorGlobalException {
                 "ERRO_VALIDACAO",
                 "Dados invalidos",
                 request.getRequestURI(),
-                errosCampos));
+                errosCampos
+        ));
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
@@ -45,7 +49,11 @@ public class TratadorGlobalException {
                 "HEADER_OBRIGATORIO_AUSENTE",
                 "Header obrigatorio ausente: " + exception.getHeaderName(),
                 request.getRequestURI(),
-                List.of(new ErroCampoResponse(exception.getHeaderName(), "Header obrigatorio"))));
+                List.of(new ErroCampoResponse(
+                        exception.getHeaderName(),
+                        "Header obrigatorio"
+                ))
+        ));
     }
 
     @ExceptionHandler(TypeMismatchException.class)
@@ -53,27 +61,39 @@ public class TratadorGlobalException {
             TypeMismatchException exception,
             HttpServletRequest request
     ) {
-        String campo = exception.getPropertyName() == null ? "parametro" : exception.getPropertyName();
+        String campo = exception.getPropertyName() == null
+                ? "parametro"
+                : exception.getPropertyName();
+
         return ResponseEntity.badRequest().body(criarErro(
                 HttpStatus.BAD_REQUEST,
                 "TIPO_INVALIDO",
                 "Parametro com formato invalido",
                 request.getRequestURI(),
-                List.of(new ErroCampoResponse(campo, "Formato invalido"))));
+                List.of(new ErroCampoResponse(
+                        campo,
+                        "Formato invalido"
+                ))
+        ));
     }
 
     @ExceptionHandler({
             AuthorizationDeniedException.class,
             AccessDeniedException.class
     })
-    public ResponseEntity<ErroResponse> tratarAcessoNegado(Exception exception, HttpServletRequest request) {
+    public ResponseEntity<ErroResponse> tratarAcessoNegado(
+            Exception exception,
+            HttpServletRequest request
+    ) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "ACESSO_NEGADO",
                 "Acesso negado",
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     @ExceptionHandler(CredenciaisInvalidasException.class)
@@ -82,12 +102,14 @@ public class TratadorGlobalException {
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "CREDENCIAIS_INVALIDAS",
                 exception.getMessage(),
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     @ExceptionHandler(UsuarioInativoException.class)
@@ -96,12 +118,14 @@ public class TratadorGlobalException {
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "USUARIO_INATIVO",
                 exception.getMessage(),
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     @ExceptionHandler(OrganizacaoInativaException.class)
@@ -110,12 +134,14 @@ public class TratadorGlobalException {
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "ORGANIZACAO_INATIVA",
                 exception.getMessage(),
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     @ExceptionHandler(ConflitoDadosException.class)
@@ -124,12 +150,14 @@ public class TratadorGlobalException {
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.CONFLICT;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "CONFLITO_DADOS",
                 exception.getMessage(),
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
@@ -138,23 +166,46 @@ public class TratadorGlobalException {
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "RECURSO_NAO_ENCONTRADO",
                 exception.getMessage(),
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
+    }
+
+    @ExceptionHandler(DadosInvalidosException.class)
+    public ResponseEntity<ErroResponse> tratarDadosInvalidos(
+            DadosInvalidosException exception,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                exception.getCodigo(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        ));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroResponse> tratarInesperado(Exception exception, HttpServletRequest request) {
+    public ResponseEntity<ErroResponse> tratarInesperado(
+            Exception exception,
+            HttpServletRequest request
+    ) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
         return ResponseEntity.status(status).body(criarErro(
                 status,
                 "ERRO_INTERNO",
                 "Erro inesperado",
                 request.getRequestURI(),
-                List.of()));
+                List.of()
+        ));
     }
 
     private ErroResponse criarErro(
@@ -171,6 +222,7 @@ public class TratadorGlobalException {
                 codigo,
                 mensagem,
                 caminho,
-                errosCampos);
+                errosCampos
+        );
     }
 }
