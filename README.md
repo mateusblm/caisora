@@ -122,6 +122,8 @@ Uso do token:
 Authorization: Bearer <token>
 ```
 
+Endpoints autenticados, como `/api/v1/usuarios`, usam a organizacao presente no JWT. O frontend nao deve enviar `X-Organizacao-Id` nesses endpoints.
+
 Usuario atual:
 
 ```http
@@ -133,11 +135,11 @@ A chave JWT deve vir da variavel `JWT_SECRET`. No profile `local`, ha um segredo
 
 ## Multi-tenant
 
-O modelo planejado usa banco unico, schema unico e isolamento por coluna `organizacao_id`. Nesta entrega foi criado o `ContextoOrganizacao`, que sera populado a partir do usuario autenticado quando a autenticacao JWT for implementada.
+O modelo planejado usa banco unico, schema unico e isolamento por coluna `organizacao_id`. Os endpoints de usuario ja usam a organizacao presente no JWT para evitar acesso cruzado entre tenants.
 
 ## Limitacoes atuais
 
-- Modulos de negocio ainda nao possuem endpoints.
-- Autenticacao JWT ainda nao foi implementada.
+- Modulos de cliente, embarcacao, vagas, ocupacao, contrato e financeiro ainda nao possuem endpoints.
+- Login ainda usa `X-Organizacao-Id` temporariamente ate a resolucao da organizacao por subdominio.
 - OpenAPI sera configurado junto com os primeiros controllers.
-- O usuario inicial local sera criado em uma entrega futura, depois das entidades `Organizacao` e `Usuario`.
+- O usuario inicial local sera criado em uma entrega futura.

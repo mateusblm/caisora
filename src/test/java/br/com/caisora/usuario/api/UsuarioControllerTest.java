@@ -55,10 +55,9 @@ class UsuarioControllerTest {
     void deveCriarUsuario() throws Exception {
         UUID organizacaoId = UUID.randomUUID();
         UsuarioResponse response = criarResponse(UUID.randomUUID(), organizacaoId);
-        when(usuarioService.criar(eq(organizacaoId), any(CriarUsuarioRequest.class))).thenReturn(response);
+        when(usuarioService.criar(any(CriarUsuarioRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/usuarios")
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -77,10 +76,7 @@ class UsuarioControllerTest {
 
     @Test
     void deveRetornarBadRequestAoCriarUsuarioInvalido() throws Exception {
-        UUID organizacaoId = UUID.randomUUID();
-
         mockMvc.perform(post("/api/v1/usuarios")
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -98,11 +94,10 @@ class UsuarioControllerTest {
     void deveListarUsuarios() throws Exception {
         UUID organizacaoId = UUID.randomUUID();
         UsuarioResponse response = criarResponse(UUID.randomUUID(), organizacaoId);
-        when(usuarioService.listar(eq(organizacaoId), any(Pageable.class)))
+        when(usuarioService.listar(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(response), PageRequest.of(0, 10), 1));
 
-        mockMvc.perform(get("/api/v1/usuarios?page=0&size=10")
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId))
+        mockMvc.perform(get("/api/v1/usuarios?page=0&size=10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].id").value(response.id().toString()))
                 .andExpect(jsonPath("$.content[0].organizacaoId").value(organizacaoId.toString()));
@@ -112,10 +107,9 @@ class UsuarioControllerTest {
     void deveBuscarUsuarioPorId() throws Exception {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
-        when(usuarioService.buscarPorId(organizacaoId, usuarioId)).thenReturn(criarResponse(usuarioId, organizacaoId));
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(criarResponse(usuarioId, organizacaoId));
 
-        mockMvc.perform(get("/api/v1/usuarios/{id}", usuarioId)
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId))
+        mockMvc.perform(get("/api/v1/usuarios/{id}", usuarioId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(usuarioId.toString()))
                 .andExpect(jsonPath("$.organizacaoId").value(organizacaoId.toString()));
@@ -135,11 +129,10 @@ class UsuarioControllerTest {
                 "Marina Teste",
                 Instant.parse("2026-06-28T20:00:00Z"),
                 Instant.parse("2026-06-28T20:00:00Z"));
-        when(usuarioService.atualizar(eq(organizacaoId), eq(usuarioId), any(AtualizarUsuarioRequest.class)))
+        when(usuarioService.atualizar(eq(usuarioId), any(AtualizarUsuarioRequest.class)))
                 .thenReturn(response);
 
         mockMvc.perform(put("/api/v1/usuarios/{id}", usuarioId)
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -166,11 +159,10 @@ class UsuarioControllerTest {
                 "Marina Teste",
                 Instant.parse("2026-06-28T20:00:00Z"),
                 Instant.parse("2026-06-28T20:00:00Z"));
-        when(usuarioService.alterarStatus(eq(organizacaoId), eq(usuarioId), any(AlterarStatusUsuarioRequest.class)))
+        when(usuarioService.alterarStatus(eq(usuarioId), any(AlterarStatusUsuarioRequest.class)))
                 .thenReturn(response);
 
         mockMvc.perform(patch("/api/v1/usuarios/{id}/status", usuarioId)
-                        .header(UsuarioController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.caisora.autenticacao.aplicacao.LeitorTokenJwt;
+import br.com.caisora.autenticacao.aplicacao.UsuarioAutenticado;
 import br.com.caisora.compartilhado.excecao.ConflitoDadosException;
 import br.com.caisora.compartilhado.excecao.RecursoNaoEncontradoException;
 import br.com.caisora.organizacao.dominio.Organizacao;
@@ -43,6 +45,9 @@ class UsuarioServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private LeitorTokenJwt leitorTokenJwt;
+
     private UsuarioService usuarioService;
 
     @BeforeEach
@@ -51,7 +56,8 @@ class UsuarioServiceTest {
                 usuarioRepository,
                 organizacaoRepository,
                 passwordEncoder,
-                new UsuarioMapper());
+                new UsuarioMapper(),
+                leitorTokenJwt);
     }
 
     @Test
@@ -64,6 +70,7 @@ class UsuarioServiceTest {
                 "SenhaForte123",
                 PerfilUsuario.ATENDENTE);
 
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(organizacaoRepository.findById(organizacaoId)).thenReturn(Optional.of(organizacao));
         when(usuarioRepository.existsByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com")).thenReturn(false);
         when(passwordEncoder.encode("SenhaForte123")).thenReturn("hash-bcrypt");
@@ -73,7 +80,7 @@ class UsuarioServiceTest {
             return usuario;
         });
 
-        UsuarioResponse response = usuarioService.criar(organizacaoId, request);
+        UsuarioResponse response = usuarioService.criar(request);
 
         ArgumentCaptor<Usuario> captor = ArgumentCaptor.forClass(Usuario.class);
         verify(usuarioRepository).save(captor.capture());
@@ -94,10 +101,11 @@ class UsuarioServiceTest {
                 "SenhaForte123",
                 PerfilUsuario.ATENDENTE);
 
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(organizacaoRepository.findById(organizacaoId)).thenReturn(Optional.of(criarOrganizacaoPersistida(organizacaoId)));
         when(usuarioRepository.existsByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com")).thenReturn(true);
 
-        assertThatThrownBy(() -> usuarioService.criar(organizacaoId, request))
+        assertThatThrownBy(() -> usuarioService.criar(request))
                 .isInstanceOf(ConflitoDadosException.class)
                 .hasMessage("Ja existe usuario com este e-mail na organizacao");
     }
@@ -112,6 +120,7 @@ class UsuarioServiceTest {
                 "SenhaForte123",
                 PerfilUsuario.ATENDENTE);
 
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(organizacaoRepository.findById(organizacaoId)).thenReturn(Optional.of(organizacao));
         when(usuarioRepository.existsByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com")).thenReturn(false);
         when(passwordEncoder.encode("SenhaForte123")).thenReturn("hash-bcrypt");
@@ -121,7 +130,7 @@ class UsuarioServiceTest {
             return usuario;
         });
 
-        UsuarioResponse response = usuarioService.criar(organizacaoId, request);
+        UsuarioResponse response = usuarioService.criar(request);
 
         assertThat(response.email()).isEqualTo("maria@marina.com");
         verify(usuarioRepository).existsByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com");
@@ -132,10 +141,11 @@ class UsuarioServiceTest {
         UUID organizacaoId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(UUID.randomUUID(), criarOrganizacaoPersistida(organizacaoId));
         PageRequest paginacao = PageRequest.of(0, 10);
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(usuarioRepository.findAllByOrganizacaoId(organizacaoId, paginacao))
                 .thenReturn(new PageImpl<>(java.util.List.of(usuario), paginacao, 1));
 
-        var pagina = usuarioService.listar(organizacaoId, paginacao);
+        var pagina = usuarioService.listar(paginacao);
 
         assertThat(pagina.getContent()).hasSize(1);
         assertThat(pagina.getContent().get(0).organizacaoId()).isEqualTo(organizacaoId);
@@ -146,9 +156,10 @@ class UsuarioServiceTest {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(usuarioId, criarOrganizacaoPersistida(organizacaoId));
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(usuarioRepository.findByIdAndOrganizacaoId(usuarioId, organizacaoId)).thenReturn(Optional.of(usuario));
 
-        UsuarioResponse response = usuarioService.buscarPorId(organizacaoId, usuarioId);
+        UsuarioResponse response = usuarioService.buscarPorId(usuarioId);
 
         assertThat(response.id()).isEqualTo(usuarioId);
         assertThat(response.organizacaoId()).isEqualTo(organizacaoId);
@@ -158,9 +169,10 @@ class UsuarioServiceTest {
     void deveFalharAoBuscarUsuarioDeOutraOrganizacao() {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(usuarioRepository.findByIdAndOrganizacaoId(usuarioId, organizacaoId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> usuarioService.buscarPorId(organizacaoId, usuarioId))
+        assertThatThrownBy(() -> usuarioService.buscarPorId(usuarioId))
                 .isInstanceOf(RecursoNaoEncontradoException.class)
                 .hasMessage("Usuario nao encontrado");
     }
@@ -170,10 +182,10 @@ class UsuarioServiceTest {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(usuarioId, criarOrganizacaoPersistida(organizacaoId));
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(usuarioRepository.findByIdAndOrganizacaoId(usuarioId, organizacaoId)).thenReturn(Optional.of(usuario));
 
         UsuarioResponse response = usuarioService.atualizar(
-                organizacaoId,
                 usuarioId,
                 new AtualizarUsuarioRequest("Maria Atualizada", PerfilUsuario.GERENTE));
 
@@ -188,10 +200,10 @@ class UsuarioServiceTest {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(usuarioId, criarOrganizacaoPersistida(organizacaoId));
+        when(leitorTokenJwt.obterUsuarioAutenticado()).thenReturn(criarUsuarioAutenticado(organizacaoId));
         when(usuarioRepository.findByIdAndOrganizacaoId(usuarioId, organizacaoId)).thenReturn(Optional.of(usuario));
 
         UsuarioResponse response = usuarioService.alterarStatus(
-                organizacaoId,
                 usuarioId,
                 new AlterarStatusUsuarioRequest(false));
 
@@ -227,5 +239,15 @@ class UsuarioServiceTest {
         ReflectionTestUtils.setField(usuario, "id", id);
         ReflectionTestUtils.setField(usuario, "criadoEm", Instant.parse("2026-06-28T20:00:00Z"));
         ReflectionTestUtils.setField(usuario, "atualizadoEm", Instant.parse("2026-06-28T20:00:00Z"));
+    }
+
+    private UsuarioAutenticado criarUsuarioAutenticado(UUID organizacaoId) {
+        return new UsuarioAutenticado(
+                UUID.randomUUID(),
+                "Administrador",
+                "admin@marina.com",
+                PerfilUsuario.ADMINISTRADOR_MARINA,
+                organizacaoId,
+                "Marina Teste");
     }
 }
