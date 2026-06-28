@@ -1,0 +1,99 @@
+<mat-sidenav-container class="layout">
+  <mat-sidenav
+    #menu
+    class="menu-lateral"
+    [mode]="telaPequena() ? 'over' : 'side'"
+    [opened]="!telaPequena()"
+  >
+    <div class="marca">
+      <div class="marca__icone">
+        <mat-icon>water</mat-icon>
+      </div>
+
+      <div>
+        <strong>Caisora</strong>
+        <span>Gestão para marinas</span>
+      </div>
+    </div>
+
+    <div class="marina">
+      <span class="marina__legenda">
+        Marina atual
+      </span>
+
+      <strong>Marina Teste</strong>
+    </div>
+
+    <mat-nav-list class="navegacao">
+      @for (item of itensMenu; track item.rota) {
+        <a
+          mat-list-item
+          class="item-menu"
+          [routerLink]="item.rota"
+          routerLinkActive="ativo"
+          [routerLinkActiveOptions]="{
+            exact: item.rota === '/dashboard'
+          }"
+          (click)="telaPequena() && menu.close()"
+        >
+          <mat-icon matListItemIcon>
+            {{ item.icone }}
+          </mat-icon>
+
+          <span matListItemTitle>
+            {{ item.rotulo }}
+          </span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <div class="menu-rodape">
+      <span>Caisora</span>
+      <small>Versão 0.1.0</small>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="area-principal">
+    <mat-toolbar class="barra-superior">
+      @if (telaPequena()) {
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="Abrir menu"
+          (click)="menu.toggle()"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <div class="titulo-topo">
+        <span>Painel de gestão</span>
+      </div>
+
+      <span class="espacador"></span>
+
+      <div class="usuario">
+        <div class="usuario__avatar">
+          A
+        </div>
+
+        <div class="usuario__dados">
+          <strong>Administrador</strong>
+          <span>Administrador da marina</span>
+        </div>
+      </div>
+
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Sair"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="conteudo">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

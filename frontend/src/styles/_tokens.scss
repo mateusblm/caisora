@@ -1,0 +1,43 @@
+:root {
+  // Identidade náutica
+  --caisora-marinho-950: #041f2b;
+  --caisora-marinho-900: #07354a;
+  --caisora-marinho-800: #0a475e;
+
+  --caisora-oceano-700: #075d78;
+  --caisora-oceano-600: #0b6e8e;
+  --caisora-oceano-500: #1285a5;
+
+  --caisora-turquesa-600: #118b88;
+  --caisora-turquesa-500: #16a6a1;
+  --caisora-turquesa-100: #d8f1ef;
+
+  // Superfícies
+  --caisora-fundo: #f3f8fa;
+  --caisora-superficie: #ffffff;
+  --caisora-superficie-secundaria: #e8f1f3;
+  --caisora-borda: #d7e3e6;
+
+  // Texto
+  --caisora-texto: #17313d;
+  --caisora-texto-secundario: #607780;
+  --caisora-texto-invertido: #ffffff;
+
+  // Estados
+  --caisora-sucesso: #2e8b72;
+  --caisora-alerta: #d98b32;
+  --caisora-erro: #d65353;
+
+  // Layout
+  --caisora-menu-largura: 264px;
+  --caisora-topo-altura: 64px;
+  --caisora-raio: 14px;
+  --caisora-raio-pequeno: 9px;
+
+  // Sombras
+  --caisora-sombra-card:
+    0 4px 18px rgb(7 53 74 / 8%);
+
+  --caisora-sombra-topo:
+    0 1px 6px rgb(7 53 74 / 8%);
+}

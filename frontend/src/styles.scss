@@ -4,7 +4,7 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-
+@use './styles/tokens';
 html {
   height: 100%;
   @include mat.theme(
@@ -61,4 +61,40 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    Inter,
+    Roboto,
+    Arial,
+    sans-serif;
+
+  background: var(--caisora-fundo);
+  color: var(--caisora-texto);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
