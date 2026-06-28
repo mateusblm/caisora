@@ -41,7 +41,6 @@ public class ConfiguracaoSeguranca {
                 .authorizeHttpRequests(autorizacao -> autorizacao
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/v1/autenticacao/login").permitAll()
-                        .requestMatchers("/api/v1/organizacoes/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))

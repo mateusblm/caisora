@@ -124,6 +124,8 @@ Authorization: Bearer <token>
 
 Endpoints autenticados, como `/api/v1/usuarios`, usam a organizacao presente no JWT. O frontend nao deve enviar `X-Organizacao-Id` nesses endpoints.
 
+Endpoints de `/api/v1/organizacoes` exigem usuario autenticado com perfil `ADMINISTRADOR_PLATAFORMA`.
+
 Usuario atual:
 
 ```http
