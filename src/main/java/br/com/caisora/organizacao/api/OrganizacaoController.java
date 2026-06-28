@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/organizacoes")
-@PreAuthorize("hasRole('ADMINISTRADOR_PLATAFORMA')")
+@PreAuthorize("principal.claims['perfil'] == 'ADMINISTRADOR_PLATAFORMA'")
 public class OrganizacaoController {
 
     private final OrganizacaoService organizacaoService;
