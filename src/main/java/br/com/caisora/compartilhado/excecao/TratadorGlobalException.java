@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,6 +60,20 @@ public class TratadorGlobalException {
                 "Parametro com formato invalido",
                 request.getRequestURI(),
                 List.of(new ErroCampoResponse(campo, "Formato invalido"))));
+    }
+
+    @ExceptionHandler({
+            AuthorizationDeniedException.class,
+            AccessDeniedException.class
+    })
+    public ResponseEntity<ErroResponse> tratarAcessoNegado(Exception exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status).body(criarErro(
+                status,
+                "ACESSO_NEGADO",
+                "Acesso negado",
+                request.getRequestURI(),
+                List.of()));
     }
 
     @ExceptionHandler(CredenciaisInvalidasException.class)
