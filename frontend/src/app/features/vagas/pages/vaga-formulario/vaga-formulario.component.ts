@@ -550,18 +550,32 @@ export class VagaFormularioComponent
 
     const mapaCodigos:
       Record<string, CampoFormulario> = {
-        CODIGO_OBRIGATORIO: 'codigo',
-        TIPO_VAGA_OBRIGATORIO: 'tipo',
-        COMPRIMENTO_INVALIDO:
+        CODIGO_VAGA_OBRIGATORIO:
+          'codigo',
+
+        TIPO_VAGA_OBRIGATORIO:
+          'tipo',
+
+        COMPRIMENTO_MAXIMO_INVALIDO:
           'comprimentoMaximoMetros',
-        BOCA_INVALIDA:
+
+        BOCA_MAXIMA_INVALIDA:
           'bocaMaximaMetros',
-        CALADO_INVALIDO:
+
+        CALADO_MAXIMO_INVALIDO:
           'caladoMaximoMetros',
-        ALTURA_INVALIDA:
+
+        ALTURA_MAXIMA_INVALIDA:
           'alturaMaximaMetros',
-        PESO_INVALIDO:
-          'pesoMaximoKg'
+
+        PESO_MAXIMO_INVALIDO:
+          'pesoMaximoKg',
+
+        POSSUI_AGUA_OBRIGATORIO:
+          'possuiAgua',
+
+        POSSUI_ENERGIA_OBRIGATORIO:
+          'possuiEnergia'
       };
 
     const campo =
