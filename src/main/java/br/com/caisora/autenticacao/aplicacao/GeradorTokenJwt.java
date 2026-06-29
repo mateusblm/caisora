@@ -26,8 +26,8 @@ public class GeradorTokenJwt {
 
     /**
      * Gera um JWT assinado pelo backend. O token contem identidade do usuario,
-     * perfil e organizacao para que as proximas requisicoes nao dependam do header
-     * temporario `X-Organizacao-Id`.
+     * perfil e UUID da organizacao para que as proximas requisicoes mantenham o
+     * isolamento multi-tenant sem depender do codigo amigavel usado no login.
      */
     public String gerarToken(Usuario usuario) {
         Instant agora = Instant.now();

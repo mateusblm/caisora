@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record SolicitacaoLogin(
+        @NotBlank(message = "Codigo da marina e obrigatorio")
+        String codigoOrganizacao,
+
         @NotBlank(message = "E-mail e obrigatorio")
         @Email(message = "E-mail invalido")
         String email,

@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.caisora.compartilhado.excecao.RecursoNaoEncontradoException;
+import br.com.caisora.compartilhado.excecao.ConflitoDadosException;
+import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import br.com.caisora.organizacao.api.AtualizarOrganizacaoRequest;
 import br.com.caisora.organizacao.api.CriarOrganizacaoRequest;
 import br.com.caisora.organizacao.api.OrganizacaoResponse;
@@ -42,6 +44,7 @@ class OrganizacaoServiceTest {
     void deveCriarOrganizacaoAtivaComEmailNormalizado() {
         CriarOrganizacaoRequest request = new CriarOrganizacaoRequest(
                 "Marina Teste",
+                "marina-teste",
                 "Marina Teste LTDA",
                 "12345678000199",
                 "CONTATO@MARINATESTE.COM",
@@ -56,9 +59,44 @@ class OrganizacaoServiceTest {
         verify(organizacaoRepository).save(captor.capture());
 
         assertThat(captor.getValue().getEmail()).isEqualTo("contato@marinateste.com");
+        assertThat(captor.getValue().getSlug()).isEqualTo("marina-teste");
         assertThat(captor.getValue().isAtiva()).isTrue();
+        assertThat(response.slug()).isEqualTo("marina-teste");
         assertThat(response.email()).isEqualTo("contato@marinateste.com");
         assertThat(response.ativa()).isTrue();
+    }
+
+    @Test
+    void deveFalharAoCriarOrganizacaoComSlugDuplicado() {
+        CriarOrganizacaoRequest request = new CriarOrganizacaoRequest(
+                "Marina Teste",
+                " MARINA-TESTE ",
+                "Marina Teste LTDA",
+                "12345678000199",
+                "contato@marinateste.com",
+                "11999999999");
+
+        when(organizacaoRepository.existsBySlugIgnoreCase("marina-teste"))
+                .thenReturn(true);
+
+        assertThatThrownBy(() -> organizacaoService.criar(request))
+                .isInstanceOf(ConflitoDadosException.class)
+                .hasMessage("Codigo da marina ja esta em uso");
+    }
+
+    @Test
+    void deveFalharAoCriarOrganizacaoComSlugInvalido() {
+        CriarOrganizacaoRequest request = new CriarOrganizacaoRequest(
+                "Marina Teste",
+                "marina__teste",
+                "Marina Teste LTDA",
+                "12345678000199",
+                "contato@marinateste.com",
+                "11999999999");
+
+        assertThatThrownBy(() -> organizacaoService.criar(request))
+                .isInstanceOf(DadosInvalidosException.class)
+                .hasMessage("Codigo da marina deve conter letras, numeros e hifens simples");
     }
 
     @Test
@@ -118,6 +156,7 @@ class OrganizacaoServiceTest {
     private Organizacao criarOrganizacaoPersistida(UUID id) {
         Organizacao organizacao = Organizacao.criar(
                 "Marina Teste",
+                "marina-teste",
                 "Marina Teste LTDA",
                 "12345678000199",
                 "contato@marinateste.com",

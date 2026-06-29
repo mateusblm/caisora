@@ -46,6 +46,7 @@ class ClienteRepositoryJpaTest {
         organizacaoA = organizacaoRepository.save(
                 Organizacao.criar(
                         "Marina A",
+                        "marina-a",
                         "Marina A LTDA",
                         "11111111000111",
                         "contato@marinaa.com",
@@ -56,6 +57,7 @@ class ClienteRepositoryJpaTest {
         organizacaoB = organizacaoRepository.save(
                 Organizacao.criar(
                         "Marina B",
+                        "marina-b",
                         "Marina B LTDA",
                         "22222222000122",
                         "contato@marinab.com",

@@ -9,6 +9,7 @@ import br.com.caisora.compartilhado.excecao.CredenciaisInvalidasException;
 import br.com.caisora.compartilhado.excecao.OrganizacaoInativaException;
 import br.com.caisora.compartilhado.excecao.UsuarioInativoException;
 import br.com.caisora.organizacao.dominio.Organizacao;
+import br.com.caisora.organizacao.dominio.OrganizacaoRepository;
 import br.com.caisora.usuario.dominio.PerfilUsuario;
 import br.com.caisora.usuario.dominio.Usuario;
 import br.com.caisora.usuario.dominio.UsuarioRepository;
@@ -30,6 +31,9 @@ class AutenticacaoServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
+    private OrganizacaoRepository organizacaoRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -44,6 +48,7 @@ class AutenticacaoServiceTest {
     void configurar() {
         autenticacaoService = new AutenticacaoService(
                 usuarioRepository,
+                organizacaoRepository,
                 passwordEncoder,
                 geradorTokenJwt,
                 leitorTokenJwt,
@@ -54,15 +59,17 @@ class AutenticacaoServiceTest {
     void deveAutenticarUsuarioAtivoDeOrganizacaoAtiva() {
         UUID organizacaoId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(organizacaoId, true, true);
-        SolicitacaoLogin solicitacao = new SolicitacaoLogin("MARIA@MARINA.COM", "SenhaForte123");
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-teste", "MARIA@MARINA.COM", "SenhaForte123");
 
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(usuario.getOrganizacao()));
         when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
                 .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("SenhaForte123", "hash-bcrypt")).thenReturn(true);
         when(geradorTokenJwt.gerarToken(usuario)).thenReturn("token.jwt");
         when(geradorTokenJwt.obterExpiracaoSegundos()).thenReturn(3600L);
 
-        var resposta = autenticacaoService.autenticar(organizacaoId, solicitacao);
+        var resposta = autenticacaoService.autenticar(solicitacao);
 
         assertThat(resposta.tokenAcesso()).isEqualTo("token.jwt");
         assertThat(resposta.tipoToken()).isEqualTo("Bearer");
@@ -72,43 +79,81 @@ class AutenticacaoServiceTest {
     }
 
     @Test
+    void deveAutenticarNormalizandoCodigoOrganizacao() {
+        UUID organizacaoId = UUID.randomUUID();
+        Usuario usuario = criarUsuarioPersistido(organizacaoId, true, true);
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin(" MARINA-TESTE ", "MARIA@MARINA.COM", "SenhaForte123");
+
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(usuario.getOrganizacao()));
+        when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
+                .thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("SenhaForte123", "hash-bcrypt")).thenReturn(true);
+        when(geradorTokenJwt.gerarToken(usuario)).thenReturn("token.jwt");
+        when(geradorTokenJwt.obterExpiracaoSegundos()).thenReturn(3600L);
+
+        var resposta = autenticacaoService.autenticar(solicitacao);
+
+        assertThat(resposta.usuario().organizacaoId()).isEqualTo(organizacaoId);
+    }
+
+    @Test
     void deveFalharQuandoUsuarioNaoExisteNaOrganizacao() {
         UUID organizacaoId = UUID.randomUUID();
-        SolicitacaoLogin solicitacao = new SolicitacaoLogin("maria@marina.com", "SenhaForte123");
+        Organizacao organizacao = criarOrganizacaoPersistida(organizacaoId, true);
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-teste", "maria@marina.com", "SenhaForte123");
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(organizacao));
         when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> autenticacaoService.autenticar(organizacaoId, solicitacao))
+        assertThatThrownBy(() -> autenticacaoService.autenticar(solicitacao))
                 .isInstanceOf(CredenciaisInvalidasException.class)
-                .hasMessage("E-mail ou senha invalidos");
+                .hasMessage("Codigo da marina, e-mail ou senha invalidos");
+    }
+
+    @Test
+    void deveFalharQuandoOrganizacaoNaoExistir() {
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-inexistente", "maria@marina.com", "SenhaForte123");
+
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-inexistente"))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> autenticacaoService.autenticar(solicitacao))
+                .isInstanceOf(CredenciaisInvalidasException.class)
+                .hasMessage("Codigo da marina, e-mail ou senha invalidos");
     }
 
     @Test
     void deveFalharQuandoSenhaForInvalida() {
         UUID organizacaoId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(organizacaoId, true, true);
-        SolicitacaoLogin solicitacao = new SolicitacaoLogin("maria@marina.com", "senha-errada");
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-teste", "maria@marina.com", "senha-errada");
 
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(usuario.getOrganizacao()));
         when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
                 .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("senha-errada", "hash-bcrypt")).thenReturn(false);
 
-        assertThatThrownBy(() -> autenticacaoService.autenticar(organizacaoId, solicitacao))
+        assertThatThrownBy(() -> autenticacaoService.autenticar(solicitacao))
                 .isInstanceOf(CredenciaisInvalidasException.class)
-                .hasMessage("E-mail ou senha invalidos");
+                .hasMessage("Codigo da marina, e-mail ou senha invalidos");
     }
 
     @Test
     void deveFalharQuandoUsuarioEstiverInativo() {
         UUID organizacaoId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(organizacaoId, true, false);
-        SolicitacaoLogin solicitacao = new SolicitacaoLogin("maria@marina.com", "SenhaForte123");
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-teste", "maria@marina.com", "SenhaForte123");
 
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(usuario.getOrganizacao()));
         when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
                 .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("SenhaForte123", "hash-bcrypt")).thenReturn(true);
 
-        assertThatThrownBy(() -> autenticacaoService.autenticar(organizacaoId, solicitacao))
+        assertThatThrownBy(() -> autenticacaoService.autenticar(solicitacao))
                 .isInstanceOf(UsuarioInativoException.class)
                 .hasMessage("Usuario inativo");
     }
@@ -117,13 +162,15 @@ class AutenticacaoServiceTest {
     void deveFalharQuandoOrganizacaoEstiverInativa() {
         UUID organizacaoId = UUID.randomUUID();
         Usuario usuario = criarUsuarioPersistido(organizacaoId, false, true);
-        SolicitacaoLogin solicitacao = new SolicitacaoLogin("maria@marina.com", "SenhaForte123");
+        SolicitacaoLogin solicitacao = new SolicitacaoLogin("marina-teste", "maria@marina.com", "SenhaForte123");
 
+        when(organizacaoRepository.findBySlugIgnoreCase("marina-teste"))
+                .thenReturn(Optional.of(usuario.getOrganizacao()));
         when(usuarioRepository.findByOrganizacaoIdAndEmail(organizacaoId, "maria@marina.com"))
                 .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("SenhaForte123", "hash-bcrypt")).thenReturn(true);
 
-        assertThatThrownBy(() -> autenticacaoService.autenticar(organizacaoId, solicitacao))
+        assertThatThrownBy(() -> autenticacaoService.autenticar(solicitacao))
                 .isInstanceOf(OrganizacaoInativaException.class)
                 .hasMessage("Organizacao inativa");
     }
@@ -152,6 +199,7 @@ class AutenticacaoServiceTest {
     private Usuario criarUsuarioPersistido(UUID organizacaoId, boolean organizacaoAtiva, boolean usuarioAtivo) {
         Organizacao organizacao = Organizacao.criar(
                 "Marina Teste",
+                "marina-teste",
                 "Marina Teste LTDA",
                 "12345678000199",
                 "contato@marinateste.com",
@@ -172,5 +220,20 @@ class AutenticacaoServiceTest {
         ReflectionTestUtils.setField(usuario, "criadoEm", Instant.parse("2026-06-28T20:00:00Z"));
         ReflectionTestUtils.setField(usuario, "atualizadoEm", Instant.parse("2026-06-28T20:00:00Z"));
         return usuario;
+    }
+
+    private Organizacao criarOrganizacaoPersistida(UUID organizacaoId, boolean organizacaoAtiva) {
+        Organizacao organizacao = Organizacao.criar(
+                "Marina Teste",
+                "marina-teste",
+                "Marina Teste LTDA",
+                "12345678000199",
+                "contato@marinateste.com",
+                "11999999999");
+        ReflectionTestUtils.setField(organizacao, "id", organizacaoId);
+        ReflectionTestUtils.setField(organizacao, "ativa", organizacaoAtiva);
+        ReflectionTestUtils.setField(organizacao, "criadaEm", Instant.parse("2026-06-28T20:00:00Z"));
+        ReflectionTestUtils.setField(organizacao, "atualizadaEm", Instant.parse("2026-06-28T20:00:00Z"));
+        return organizacao;
     }
 }

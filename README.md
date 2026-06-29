@@ -93,17 +93,17 @@ Login no MVP:
 
 ```http
 POST /api/v1/autenticacao/login
-X-Organizacao-Id: <uuid-da-organizacao>
 ```
 
 ```json
 {
-  "email": "maria@marina.com",
-  "senha": "SenhaForte123"
+  "codigoOrganizacao": "marina-exemplo",
+  "email": "admin@marinaexemplo.com",
+  "senha": "senha"
 }
 ```
 
-O header `X-Organizacao-Id` e temporario. Ele existe porque o e-mail e unico por organizacao, nao globalmente. Na evolucao do produto, a organizacao deve ser resolvida pelo subdominio da marina, por exemplo `marina-exemplo.caisora.com`, mantendo o formulario de login apenas com e-mail e senha.
+O campo `codigoOrganizacao` e o codigo amigavel e estavel da marina. O backend normaliza esse codigo, localiza a organizacao pelo slug e usa o UUID internamente para buscar o usuario, isolar os dados multi-tenant e gerar o JWT.
 
 Claims geradas no token:
 
@@ -122,7 +122,7 @@ Uso do token:
 Authorization: Bearer <token>
 ```
 
-Endpoints autenticados, como `/api/v1/usuarios`, usam a organizacao presente no JWT. O frontend nao deve enviar `X-Organizacao-Id` nesses endpoints.
+Endpoints autenticados, como `/api/v1/usuarios`, usam a organizacao presente no JWT. O frontend nao deve enviar codigo da marina nem UUID de organizacao nesses endpoints.
 
 Endpoints de `/api/v1/organizacoes` exigem usuario autenticado com perfil `ADMINISTRADOR_PLATAFORMA`.
 
@@ -142,6 +142,5 @@ O modelo planejado usa banco unico, schema unico e isolamento por coluna `organi
 ## Limitacoes atuais
 
 - Modulos de cliente, embarcacao, vagas, ocupacao, contrato e financeiro ainda nao possuem endpoints.
-- Login ainda usa `X-Organizacao-Id` temporariamente ate a resolucao da organizacao por subdominio.
 - OpenAPI sera configurado junto com os primeiros controllers.
 - O usuario inicial local sera criado em uma entrega futura.

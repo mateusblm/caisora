@@ -6,6 +6,7 @@ export type PerfilUsuario =
   | 'FINANCEIRO';
 
 export interface SolicitacaoLogin {
+  codigoOrganizacao: string;
   email: string;
   senha: string;
 }

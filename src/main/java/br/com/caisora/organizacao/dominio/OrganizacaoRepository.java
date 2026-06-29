@@ -11,7 +11,11 @@ public interface OrganizacaoRepository {
 
     Optional<Organizacao> findById(UUID id);
 
+    Optional<Organizacao> findBySlugIgnoreCase(String slug);
+
     Page<Organizacao> findAll(Pageable paginacao);
 
     boolean existsById(UUID id);
+
+    boolean existsBySlugIgnoreCase(String slug);
 }

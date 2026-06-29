@@ -6,10 +6,12 @@ import br.com.caisora.autenticacao.api.UsuarioAutenticadoResponse;
 import br.com.caisora.compartilhado.excecao.CredenciaisInvalidasException;
 import br.com.caisora.compartilhado.excecao.OrganizacaoInativaException;
 import br.com.caisora.compartilhado.excecao.UsuarioInativoException;
+import br.com.caisora.organizacao.dominio.Organizacao;
+import br.com.caisora.organizacao.dominio.OrganizacaoRepository;
+import br.com.caisora.organizacao.dominio.SlugOrganizacao;
 import br.com.caisora.usuario.dominio.Usuario;
 import br.com.caisora.usuario.dominio.UsuarioRepository;
 import java.util.Locale;
-import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AutenticacaoService {
 
     private final UsuarioRepository usuarioRepository;
+    private final OrganizacaoRepository organizacaoRepository;
     private final PasswordEncoder passwordEncoder;
     private final GeradorTokenJwt geradorTokenJwt;
     private final LeitorTokenJwt leitorTokenJwt;
@@ -25,12 +28,14 @@ public class AutenticacaoService {
 
     public AutenticacaoService(
             UsuarioRepository usuarioRepository,
+            OrganizacaoRepository organizacaoRepository,
             PasswordEncoder passwordEncoder,
             GeradorTokenJwt geradorTokenJwt,
             LeitorTokenJwt leitorTokenJwt,
             AutenticacaoMapper autenticacaoMapper
     ) {
         this.usuarioRepository = usuarioRepository;
+        this.organizacaoRepository = organizacaoRepository;
         this.passwordEncoder = passwordEncoder;
         this.geradorTokenJwt = geradorTokenJwt;
         this.leitorTokenJwt = leitorTokenJwt;
@@ -38,14 +43,16 @@ public class AutenticacaoService {
     }
 
     /**
-     * Autentica por organizacao, e-mail e senha. A organizacao ainda chega por
-     * header no MVP; futuramente sera resolvida pelo subdominio antes de validar
-     * credenciais. Usuario ou organizacao inativos nao recebem token.
+     * Autentica por codigo da marina, e-mail e senha. O codigo e normalizado e
+     * usado apenas para localizar a organizacao; o UUID segue sendo usado nos
+     * relacionamentos, isolamento multi-tenant e claims do JWT.
      */
     @Transactional(readOnly = true)
-    public RespostaLogin autenticar(UUID organizacaoId, SolicitacaoLogin solicitacao) {
+    public RespostaLogin autenticar(SolicitacaoLogin solicitacao) {
+        Organizacao organizacao = buscarOrganizacaoPorSlug(solicitacao.codigoOrganizacao());
+
         Usuario usuario = usuarioRepository
-                .findByOrganizacaoIdAndEmail(organizacaoId, normalizarEmail(solicitacao.email()))
+                .findByOrganizacaoIdAndEmail(organizacao.getId(), normalizarEmail(solicitacao.email()))
                 .orElseThrow(CredenciaisInvalidasException::new);
 
         if (!passwordEncoder.matches(solicitacao.senha(), usuario.getSenhaHash())) {
@@ -73,5 +80,16 @@ public class AutenticacaoService {
 
     private String normalizarEmail(String email) {
         return email == null ? null : email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private Organizacao buscarOrganizacaoPorSlug(String codigoOrganizacao) {
+        try {
+            String slug = SlugOrganizacao.normalizar(codigoOrganizacao);
+
+            return organizacaoRepository.findBySlugIgnoreCase(slug)
+                    .orElseThrow(CredenciaisInvalidasException::new);
+        } catch (IllegalArgumentException exception) {
+            throw new CredenciaisInvalidasException();
+        }
     }
 }
