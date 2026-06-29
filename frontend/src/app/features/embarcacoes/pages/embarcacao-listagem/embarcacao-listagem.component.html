@@ -266,20 +266,70 @@
                     }}
                   </span>
                 </td>
-
                 <td class="coluna-acoes">
-                    <button
+                  <button
                     mat-icon-button
                     type="button"
-                    aria-label="Editar embarcação"
-                    [routerLink]="[
+                    aria-label="Abrir ações da embarcação"
+                    [matMenuTriggerFor]="menuAcoes"
+                    [disabled]="
+                      alterandoStatusId() === embarcacao.id
+                    "
+                  >
+                    @if (
+                      alterandoStatusId() === embarcacao.id
+                    ) {
+                      <mat-spinner
+                        diameter="20"
+                      ></mat-spinner>
+                    } @else {
+                      <mat-icon>more_vert</mat-icon>
+                    }
+                  </button>
+
+                  <mat-menu
+                    #menuAcoes="matMenu"
+                    xPosition="before"
+                  >
+                    <button
+                      mat-menu-item
+                      type="button"
+                      [routerLink]="[
                         '/embarcacoes',
                         embarcacao.id,
                         'editar'
-                    ]"
+                      ]"
                     >
-                    <mat-icon>edit</mat-icon>
+                      <mat-icon>edit</mat-icon>
+                      <span>Editar</span>
                     </button>
+
+                    <button
+                      mat-menu-item
+                      type="button"
+                      (click)="
+                        solicitarAlteracaoStatus(
+                          embarcacao
+                        )
+                      "
+                    >
+                      <mat-icon>
+                        {{
+                          embarcacao.ativa
+                            ? 'directions_boat_filled'
+                            : 'sailing'
+                        }}
+                      </mat-icon>
+
+                      <span>
+                        {{
+                          embarcacao.ativa
+                            ? 'Inativar'
+                            : 'Ativar'
+                        }}
+                      </span>
+                    </button>
+                  </mat-menu>
                 </td>
               </tr>
             }
@@ -379,20 +429,72 @@
               </div>
             </dl>
 
-            <footer class="embarcacao-card__acoes">
-                <button
-                mat-stroked-button
-                type="button"
-                [routerLink]="[
-                    '/embarcacoes',
-                    embarcacao.id,
-                    'editar'
-                ]"
-                >
-                <mat-icon>edit</mat-icon>
-                Editar
-                </button>
-            </footer>
+        <footer class="embarcacao-card__acoes">
+            <button
+              mat-stroked-button
+              type="button"
+              [routerLink]="[
+                '/embarcacoes',
+                embarcacao.id,
+                'editar'
+              ]"
+              [disabled]="
+                alterandoStatusId() === embarcacao.id
+              "
+            >
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+
+            <button
+              mat-stroked-button
+              type="button"
+              class="botao-status"
+              [class.botao-status--perigo]="
+                embarcacao.ativa
+              "
+              [class.botao-status--sucesso]="
+                !embarcacao.ativa
+              "
+              [disabled]="
+                alterandoStatusId() === embarcacao.id
+              "
+              (click)="
+                solicitarAlteracaoStatus(
+                  embarcacao
+                )
+              "
+            >
+              <span class="conteudo-botao">
+                @if (
+                  alterandoStatusId()
+                    === embarcacao.id
+                ) {
+                  <mat-spinner
+                    diameter="20"
+                  ></mat-spinner>
+
+                  <span>Alterando...</span>
+                } @else {
+                  <mat-icon>
+                    {{
+                      embarcacao.ativa
+                        ? 'directions_boat_filled'
+                        : 'sailing'
+                    }}
+                  </mat-icon>
+
+                  <span>
+                    {{
+                      embarcacao.ativa
+                        ? 'Inativar'
+                        : 'Ativar'
+                    }}
+                  </span>
+                }
+              </span>
+            </button>
+          </footer>
           </article>
         }
       </section>
