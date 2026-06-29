@@ -12,13 +12,12 @@
       </p>
     </div>
 
-    <!-- A rota será habilitada no próximo passo. -->
-    <button
-      mat-flat-button
-      class="botao-novo"
-      type="button"
-      disabled
-    >
+        <button
+        mat-flat-button
+        class="botao-novo"
+        type="button"
+        routerLink="/clientes/novo"
+        >
       <mat-icon>person_add</mat-icon>
       <span>Novo cliente</span>
     </button>
@@ -222,16 +221,69 @@
                   </span>
                 </td>
 
-                <td class="coluna-acoes">
-                  <button
-                    mat-icon-button
-                    type="button"
-                    aria-label="Editar cliente"
-                    disabled
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                </td>
+               <td class="coluna-acoes">
+                    <button
+                        mat-icon-button
+                        type="button"
+                        aria-label="Abrir ações do cliente"
+                        [matMenuTriggerFor]="menuAcoes"
+                        [disabled]="
+                        alterandoStatusId() === cliente.id
+                        "
+                    >
+                        @if (
+                        alterandoStatusId() === cliente.id
+                        ) {
+                        <mat-spinner
+                            diameter="20"
+                        ></mat-spinner>
+                        } @else {
+                        <mat-icon>more_vert</mat-icon>
+                        }
+                    </button>
+
+                    <mat-menu
+                        #menuAcoes="matMenu"
+                        xPosition="before"
+                    >
+                        <button
+                        mat-menu-item
+                        type="button"
+                        [routerLink]="[
+                            '/clientes',
+                            cliente.id,
+                            'editar'
+                        ]"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        <span>Editar</span>
+                        </button>
+
+                        <button
+                        mat-menu-item
+                        type="button"
+                        (click)="
+                            solicitarAlteracaoStatus(cliente)
+                        "
+                        >
+                        <mat-icon>
+                            {{
+                            cliente.ativo
+                                ? 'person_off'
+                                : 'person_add'
+                            }}
+                        </mat-icon>
+
+                        <span>
+                            {{
+                            cliente.ativo
+                                ? 'Inativar'
+                                : 'Ativar'
+                            }}
+                        </span>
+                        </button>
+                    </mat-menu>
+                    </td>
               </tr>
             }
           </tbody>
@@ -309,15 +361,66 @@
               }
             </dl>
 
-            <footer class="cliente-card__acoes">
-              <button
+          <footer class="cliente-card__acoes">
+            <button
                 mat-stroked-button
                 type="button"
-                disabled
-              >
+                [routerLink]="[
+                '/clientes',
+                cliente.id,
+                'editar'
+                ]"
+                [disabled]="
+                alterandoStatusId() === cliente.id
+                "
+            >
                 <mat-icon>edit</mat-icon>
-                Editar
-              </button>
+                <span>Editar</span>
+            </button>
+
+            <button
+                mat-stroked-button
+                type="button"
+                class="botao-status"
+                [class.botao-status--perigo]="
+                cliente.ativo
+                "
+                [class.botao-status--sucesso]="
+                !cliente.ativo
+                "
+                [disabled]="
+                alterandoStatusId() === cliente.id
+                "
+                (click)="
+                solicitarAlteracaoStatus(cliente)
+                "
+            >
+                @if (
+                alterandoStatusId() === cliente.id
+                ) {
+                <mat-spinner
+                    diameter="20"
+                ></mat-spinner>
+
+                <span>Alterando...</span>
+                } @else {
+                <mat-icon>
+                    {{
+                    cliente.ativo
+                        ? 'person_off'
+                        : 'person_add'
+                    }}
+                </mat-icon>
+
+                <span>
+                    {{
+                    cliente.ativo
+                        ? 'Inativar'
+                        : 'Ativar'
+                    }}
+                </span>
+                }
+            </button>
             </footer>
           </article>
         }

@@ -1,0 +1,66 @@
+<section
+  class="dialogo"
+  [class.dialogo--perigo]="
+    dados.tom === 'perigo'
+  "
+  [class.dialogo--sucesso]="
+    dados.tom === 'sucesso'
+  "
+>
+  <header class="dialogo__cabecalho">
+    <div class="dialogo__icone">
+      <mat-icon>
+        {{ dados.icone }}
+      </mat-icon>
+    </div>
+
+    <div>
+      <h2 mat-dialog-title>
+        {{ dados.titulo }}
+      </h2>
+    </div>
+  </header>
+
+  <div
+    mat-dialog-content
+    class="dialogo__conteudo"
+  >
+    <p>
+      {{ dados.mensagem }}
+    </p>
+
+    @if (dados.detalhe) {
+      <span class="dialogo__detalhe">
+        {{ dados.detalhe }}
+      </span>
+    }
+  </div>
+
+  <div
+    mat-dialog-actions
+    class="dialogo__acoes"
+  >
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="cancelar()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="botao-confirmar"
+      [class.botao-confirmar--perigo]="
+        dados.tom === 'perigo'
+      "
+      [class.botao-confirmar--sucesso]="
+        dados.tom === 'sucesso'
+      "
+      (click)="confirmar()"
+    >
+      {{ dados.textoConfirmacao }}
+    </button>
+  </div>
+</section>

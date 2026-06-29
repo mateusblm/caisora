@@ -1,9 +1,14 @@
 import {
   Component,
+  DestroyRef,
   inject,
   OnInit,
   signal
 } from '@angular/core';
+
+import {
+  HttpErrorResponse
+} from '@angular/common/http';
 
 import {
   FormControl,
@@ -23,9 +28,38 @@ import {
 } from '@angular/router';
 
 import {
+  MatDialog,
+  MatDialogModule
+} from '@angular/material/dialog';
+
+import {
+  MatMenuModule
+} from '@angular/material/menu';
+
+import {
+  MatSnackBar,
+  MatSnackBarModule
+} from '@angular/material/snack-bar';
+
+import {
+  DadosDialogoConfirmacao,
+  DialogoConfirmacaoComponent
+} from '../../../../shared/componentes/dialogo-confirmacao/dialogo-confirmacao.component';
+
+import {
+  ErroApi
+} from '../../../../shared/modelos/erro-api.model';
+
+import {
+  filter,
   finalize,
-  map
+  map,
+  switchMap
 } from 'rxjs';
+
+import {
+  takeUntilDestroyed
+} from '@angular/core/rxjs-interop';
 
 import {
   MatButtonModule
@@ -70,7 +104,10 @@ import {
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule,
+    MatMenuModule,
+    MatSnackBarModule
   ],
   templateUrl: './cliente-listagem.component.html',
   styleUrl: './cliente-listagem.component.scss'
@@ -80,6 +117,15 @@ export class ClienteListagemComponent
 
   private readonly clienteService =
     inject(ClienteService);
+
+  private readonly dialog =
+    inject(MatDialog);
+
+  private readonly snackBar =
+    inject(MatSnackBar);
+
+  private readonly destroyRef =
+    inject(DestroyRef);
 
   private readonly breakpointObserver =
     inject(BreakpointObserver);
@@ -128,6 +174,9 @@ export class ClienteListagemComponent
 
   protected readonly totalElementos =
     signal(0);
+
+  protected readonly alterandoStatusId =
+    signal<string | null>(null);
 
   protected readonly tamanhoPagina = 10;
 
@@ -191,6 +240,128 @@ export class ClienteListagemComponent
     }
   }
 
+  protected solicitarAlteracaoStatus(
+      cliente: Cliente
+    ): void {
+      if (this.alterandoStatusId()) {
+        return;
+      }
+
+      const novoStatus = !cliente.ativo;
+
+      const dadosDialogo:
+        DadosDialogoConfirmacao =
+          novoStatus
+            ? {
+                titulo: 'Ativar cliente?',
+                mensagem:
+                  `O cliente ${cliente.nome} voltará a ficar disponível para as operações da marina.`,
+                detalhe:
+                  'O cadastro permanecerá com os mesmos dados e histórico.',
+                textoConfirmacao: 'Ativar',
+                icone: 'person_add',
+                tom: 'sucesso'
+              }
+            : {
+                titulo: 'Inativar cliente?',
+                mensagem:
+                  `O cliente ${cliente.nome} deixará de aparecer como ativo nas operações da marina.`,
+                detalhe:
+                  'O cadastro não será excluído e poderá ser reativado posteriormente.',
+                textoConfirmacao: 'Inativar',
+                icone: 'person_off',
+                tom: 'perigo'
+              };
+
+      const referenciaDialogo =
+        this.dialog.open<
+          DialogoConfirmacaoComponent,
+          DadosDialogoConfirmacao,
+          boolean
+        >(
+          DialogoConfirmacaoComponent,
+          {
+            data: dadosDialogo,
+            width: 'calc(100vw - 32px)',
+            maxWidth: '440px',
+            autoFocus: false,
+            restoreFocus: true,
+            ariaLabel:
+              novoStatus
+                ? 'Confirmar ativação do cliente'
+                : 'Confirmar inativação do cliente'
+          }
+        );
+
+      referenciaDialogo
+        .afterClosed()
+        .pipe(
+          filter(
+            (confirmado):
+              confirmado is true =>
+                confirmado === true
+          ),
+
+          switchMap(() => {
+            this.alterandoStatusId.set(
+              cliente.id
+            );
+
+            return this.clienteService
+              .alterarStatus(
+                cliente.id,
+                novoStatus
+              )
+              .pipe(
+                finalize(() =>
+                  this.alterandoStatusId.set(
+                    null
+                  )
+                )
+              );
+          }),
+
+          takeUntilDestroyed(
+            this.destroyRef
+          )
+        )
+        .subscribe({
+          next: () => {
+            this.snackBar.open(
+              novoStatus
+                ? 'Cliente ativado com sucesso.'
+                : 'Cliente inativado com sucesso.',
+              'Fechar',
+              {
+                duration: 3500,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              }
+            );
+
+            this.carregarClientes(
+              this.paginaAtual()
+            );
+          },
+
+          error: (
+            erro: HttpErrorResponse
+          ) => {
+            this.snackBar.open(
+              this.obterMensagemErroStatus(
+                erro
+              ),
+              'Fechar',
+              {
+                duration: 5000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              }
+            );
+          }
+        });
+    }
+
   protected formatarTipoPessoa(
     cliente: Cliente
   ): string {
@@ -232,6 +403,27 @@ export class ClienteListagemComponent
     );
   }
 
+  private obterMensagemErroStatus(
+    erro: HttpErrorResponse
+  ): string {
+    const resposta =
+      erro.error as ErroApi | null;
+
+    if (resposta?.mensagem) {
+      return resposta.mensagem;
+    }
+
+    if (erro.status === 0) {
+      return 'Não foi possível conectar ao servidor.';
+    }
+
+    if (erro.status === 404) {
+      return 'O cliente não foi encontrado.';
+    }
+
+    return 'Não foi possível alterar o status do cliente.';
+  }
+
   private carregarClientes(
     pagina = 0
   ): void {
@@ -265,6 +457,20 @@ export class ClienteListagemComponent
       )
       .subscribe({
         next: (resposta) => {
+          if (
+            pagina > 0
+            && resposta.content.length === 0
+            && pagina >= resposta.totalPages
+          ) {
+            this.carregarClientes(
+              Math.max(
+                resposta.totalPages - 1,
+                0
+              )
+            );
+
+            return;
+          }
           this.clientes.set(
             resposta.content
           );

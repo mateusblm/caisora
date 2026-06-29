@@ -54,6 +54,39 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'clientes/novo',
+        title: 'Novo cliente | Caisora',
+        loadComponent: () =>
+          import(
+            './features/clientes/pages/cliente-formulario/cliente-formulario.component'
+          ).then(
+            (componente) =>
+              componente.ClienteFormularioComponent
+          )
+      },
+      {
+        path: 'clientes/:id/editar',
+        title: 'Editar cliente | Caisora',
+        loadComponent: () =>
+          import(
+            './features/clientes/pages/cliente-formulario/cliente-formulario.component'
+          ).then(
+            (componente) =>
+              componente.ClienteFormularioComponent
+          )
+      },
+      {
+        path: 'clientes',
+        title: 'Clientes | Caisora',
+        loadComponent: () =>
+          import(
+            './features/clientes/pages/cliente-listagem/cliente-listagem.component'
+          ).then(
+            (componente) =>
+              componente.ClienteListagemComponent
+          )
+      },
+      {
         path: 'clientes',
         title: 'Clientes | Caisora',
         loadComponent: () =>
