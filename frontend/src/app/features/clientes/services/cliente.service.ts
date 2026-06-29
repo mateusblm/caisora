@@ -5,7 +5,12 @@ import {
   HttpParams
 } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import {
+  EMPTY,
+  expand,
+  Observable,
+  reduce
+} from 'rxjs';
 
 import { environment } from
   '../../../../environments/environment';
@@ -106,4 +111,32 @@ export class ClienteService {
       dados
     );
   }
+
+    listarTodosAtivos(): Observable<Cliente[]> {
+    const tamanhoPagina = 100;
+
+    return this.listar({
+        pagina: 0,
+        tamanho: tamanhoPagina,
+        ativo: true
+    }).pipe(
+        expand((pagina) =>
+        pagina.last
+            ? EMPTY
+            : this.listar({
+                pagina: pagina.number + 1,
+                tamanho: tamanhoPagina,
+                ativo: true
+            })
+        ),
+
+        reduce(
+        (clientes, pagina) => [
+            ...clientes,
+            ...pagina.content
+        ],
+        [] as Cliente[]
+        )
+    );
+    }
 }

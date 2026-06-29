@@ -12,7 +12,13 @@ import {
   provideRouter
 } from '@angular/router';
 
-import { routes } from './app.routes';
+import {
+  provideAnimations
+} from '@angular/platform-browser/animations';
+
+import {
+  routes
+} from './app.routes';
 
 import {
   autenticacaoInterceptor
@@ -21,6 +27,8 @@ import {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+
+    provideAnimations(),
 
     provideRouter(routes),
 

@@ -1,0 +1,982 @@
+<section class="pagina-formulario">
+  <header class="cabecalho-pagina">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Voltar para embarcações"
+      (click)="cancelar()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <span class="sobrelinha">
+        Embarcações
+      </span>
+
+      <h1>
+        {{
+          modoEdicao()
+            ? 'Editar embarcação'
+            : 'Nova embarcação'
+        }}
+      </h1>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Atualize os dados técnicos e cadastrais.'
+            : 'Cadastre uma embarcação vinculada a um cliente.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <section class="estado-carregamento">
+      <mat-spinner
+        diameter="42"
+      ></mat-spinner>
+
+      <p>Carregando embarcação...</p>
+    </section>
+  } @else {
+    @if (mensagemErro()) {
+      <div
+        class="alerta-erro"
+        role="alert"
+      >
+        <mat-icon>
+          error_outline
+        </mat-icon>
+
+        <span>
+          {{ mensagemErro() }}
+        </span>
+      </div>
+    }
+
+    <form
+      [formGroup]="formulario"
+      (ngSubmit)="salvar()"
+    >
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>person</mat-icon>
+          </div>
+
+          <div>
+            <h2>Proprietário</h2>
+
+            <p>
+              Cliente responsável pela embarcação.
+            </p>
+          </div>
+        </header>
+
+        <mat-form-field
+          appearance="outline"
+          class="campo-completo"
+        >
+          <mat-label>
+            Pesquise o proprietário
+          </mat-label>
+
+          <input
+            matInput
+            type="text"
+            autocomplete="off"
+            [formControl]="
+              formulario.controls.proprietario
+            "
+            [matAutocomplete]="
+              autocompleteProprietario
+            "
+          />
+
+          <mat-icon matPrefix>
+            manage_search
+          </mat-icon>
+
+          <mat-autocomplete
+            #autocompleteProprietario="matAutocomplete"
+            [displayWith]="exibirProprietario"
+            [autoActiveFirstOption]="true"
+          >
+            @for (
+              proprietario
+                of proprietariosFiltrados();
+              track proprietario.id
+            ) {
+              <mat-option
+                [value]="proprietario"
+              >
+                <div class="opcao-proprietario">
+                  <strong>
+                    {{ proprietario.nome }}
+                  </strong>
+
+                  <span>
+                    {{
+                      formatarDocumentoCliente(
+                        proprietario.cpfCnpj
+                      )
+                    }}
+
+                    @if (!proprietario.ativo) {
+                      · Proprietário atual inativo
+                    }
+                  </span>
+                </div>
+              </mat-option>
+            } @empty {
+              <mat-option disabled>
+                Nenhum proprietário encontrado
+              </mat-option>
+            }
+          </mat-autocomplete>
+
+          @if (carregandoProprietarios()) {
+            <mat-hint>
+              Carregando clientes ativos...
+            </mat-hint>
+          }
+
+          @if (
+            formulario.controls.proprietario
+              .hasError('required')
+          ) {
+            <mat-error>
+              Selecione um proprietário.
+            </mat-error>
+          }
+
+          @if (
+            formulario.controls.proprietario
+              .hasError(
+                'proprietarioInvalido'
+              )
+            && formulario.controls.proprietario
+              .touched
+          ) {
+            <mat-error>
+              Selecione um cliente da lista.
+            </mat-error>
+          }
+
+          @if (erroApi('proprietario')) {
+            <mat-error>
+              {{ erroApi('proprietario') }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>directions_boat</mat-icon>
+          </div>
+
+          <div>
+            <h2>Identificação</h2>
+
+            <p>
+              Nome, tipo, fabricante e modelo.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field
+            appearance="outline"
+            class="campo-completo"
+          >
+            <mat-label>
+              Nome da embarcação
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="nome"
+              maxlength="150"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              sailing
+            </mat-icon>
+
+            <mat-hint>
+              Opcional
+            </mat-hint>
+
+            @if (erroApi('nome')) {
+              <mat-error>
+                {{ erroApi('nome') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo</mat-label>
+
+            <mat-select formControlName="tipo">
+              @for (
+                tipo of tipos;
+                track tipo.valor
+              ) {
+                <mat-option
+                  [value]="tipo.valor"
+                >
+                  {{ tipo.rotulo }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matPrefix>
+              category
+            </mat-icon>
+
+            @if (
+              formulario.controls.tipo
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione o tipo.
+              </mat-error>
+            }
+
+            @if (erroApi('tipo')) {
+              <mat-error>
+                {{ erroApi('tipo') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Ano de fabricação
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="numeric"
+              min="1800"
+              [max]="anoMaximo"
+              step="1"
+              formControlName="anoFabricacao"
+            />
+
+            <mat-icon matPrefix>
+              calendar_month
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .anoFabricacao
+                .hasError('min')
+              || formulario.controls
+                .anoFabricacao
+                .hasError('max')
+            ) {
+              <mat-error>
+                Informe um ano entre 1800 e
+                {{ anoMaximo }}.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls
+                .anoFabricacao
+                .hasError('numeroInteiro')
+            ) {
+              <mat-error>
+                Informe um ano inteiro.
+              </mat-error>
+            }
+
+            @if (erroApi('anoFabricacao')) {
+              <mat-error>
+                {{ erroApi('anoFabricacao') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fabricante</mat-label>
+
+            <input
+              matInput
+              formControlName="fabricante"
+              maxlength="100"
+              autocomplete="organization"
+            />
+
+            <mat-icon matPrefix>
+              factory
+            </mat-icon>
+
+            @if (erroApi('fabricante')) {
+              <mat-error>
+                {{ erroApi('fabricante') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Modelo</mat-label>
+
+            <input
+              matInput
+              formControlName="modelo"
+              maxlength="100"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              label
+            </mat-icon>
+
+            @if (erroApi('modelo')) {
+              <mat-error>
+                {{ erroApi('modelo') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Cor predominante
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="corPredominante"
+              maxlength="50"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              palette
+            </mat-icon>
+
+            @if (
+              erroApi('corPredominante')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'corPredominante'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>badge</mat-icon>
+          </div>
+
+          <div>
+            <h2>Registro</h2>
+
+            <p>
+              Inscrição, casco, porto e bandeira.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Número de inscrição
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="numeroInscricao"
+              maxlength="50"
+              autocomplete="off"
+              (blur)="
+                normalizarIdentificador(
+                  'numeroInscricao'
+                )
+              "
+            />
+
+            <mat-icon matPrefix>
+              confirmation_number
+            </mat-icon>
+
+            @if (
+              erroApi('numeroInscricao')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'numeroInscricao'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Número do casco
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="numeroCasco"
+              maxlength="100"
+              autocomplete="off"
+              (blur)="
+                normalizarIdentificador(
+                  'numeroCasco'
+                )
+              "
+            />
+
+            <mat-icon matPrefix>
+              numbers
+            </mat-icon>
+
+            @if (erroApi('numeroCasco')) {
+              <mat-error>
+                {{ erroApi('numeroCasco') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="outline"
+            class="campo-completo"
+          >
+            <mat-label>
+              Porto de inscrição
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="portoInscricao"
+              maxlength="150"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              anchor
+            </mat-icon>
+
+            @if (
+              erroApi('portoInscricao')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'portoInscricao'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              País da bandeira
+            </mat-label>
+
+            <input
+              matInput
+              formControlName="codigoPaisBandeira"
+              maxlength="2"
+              autocomplete="off"
+              placeholder="BR"
+              (input)="normalizarCodigoPais()"
+            />
+
+            <mat-icon matPrefix>
+              flag
+            </mat-icon>
+
+            <mat-hint>
+              Código de duas letras
+            </mat-hint>
+
+            @if (
+              formulario.controls
+                .codigoPaisBandeira
+                .hasError('required')
+              || formulario.controls
+                .codigoPaisBandeira
+                .hasError('pattern')
+            ) {
+              <mat-error>
+                Informe duas letras, como BR.
+              </mat-error>
+            }
+
+            @if (
+              erroApi(
+                'codigoPaisBandeira'
+              )
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'codigoPaisBandeira'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>straighten</mat-icon>
+          </div>
+
+          <div>
+            <h2>Dimensões</h2>
+
+            <p>
+              Medidas estruturais da embarcação.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-medidas">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Comprimento total
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="
+                comprimentoTotalMetros
+              "
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .comprimentoTotalMetros
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe o comprimento.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls
+                .comprimentoTotalMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi(
+                'comprimentoTotalMetros'
+              )
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'comprimentoTotalMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Boca</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="bocaMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls.bocaMetros
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe a boca.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls.bocaMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (erroApi('bocaMetros')) {
+              <mat-error>
+                {{ erroApi('bocaMetros') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Calado</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="caladoMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls.caladoMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (erroApi('caladoMetros')) {
+              <mat-error>
+                {{ erroApi('caladoMetros') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Pontal</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="pontalMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls.pontalMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (erroApi('pontalMetros')) {
+              <mat-error>
+                {{ erroApi('pontalMetros') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Altura total
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="
+                alturaTotalMetros
+              "
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .alturaTotalMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi(
+                'alturaTotalMetros'
+              )
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'alturaTotalMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Peso</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="pesoKg"
+            />
+
+            <span matTextSuffix>kg</span>
+
+            @if (
+              formulario.controls.pesoKg
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (erroApi('pesoKg')) {
+              <mat-error>
+                {{ erroApi('pesoKg') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>settings</mat-icon>
+          </div>
+
+          <div>
+            <h2>Operação</h2>
+
+            <p>
+              Propulsão e capacidade.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Tipo de propulsão
+            </mat-label>
+
+            <mat-select
+              formControlName="tipoPropulsao"
+            >
+              @for (
+                propulsao of propulsoes;
+                track propulsao.valor
+              ) {
+                <mat-option
+                  [value]="propulsao.valor"
+                >
+                  {{ propulsao.rotulo }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matPrefix>
+              speed
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .tipoPropulsao
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione a propulsão.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('tipoPropulsao')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'tipoPropulsao'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Capacidade de pessoas
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="numeric"
+              min="1"
+              step="1"
+              formControlName="
+                capacidadePessoas
+              "
+            />
+
+            <mat-icon matPrefix>
+              groups
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .capacidadePessoas
+                .hasError('min')
+              || formulario.controls
+                .capacidadePessoas
+                .hasError('numeroInteiro')
+            ) {
+              <mat-error>
+                Informe um número inteiro positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi(
+                'capacidadePessoas'
+              )
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'capacidadePessoas'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>notes</mat-icon>
+          </div>
+
+          <div>
+            <h2>Observações</h2>
+
+            <p>
+              Informações adicionais.
+            </p>
+          </div>
+        </header>
+
+        <mat-form-field
+          appearance="outline"
+          class="campo-completo"
+        >
+          <mat-label>Observações</mat-label>
+
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="5"
+            maxlength="2000"
+          ></textarea>
+
+          <mat-hint align="end">
+            {{
+              formulario.controls
+                .observacoes.value.length
+            }}/2000
+          </mat-hint>
+
+          @if (erroApi('observacoes')) {
+            <mat-error>
+              {{ erroApi('observacoes') }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <footer class="acoes-formulario">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="salvando()"
+          (click)="cancelar()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          mat-flat-button
+          type="submit"
+          class="botao-salvar"
+          [disabled]="
+            salvando()
+            || carregandoProprietarios()
+          "
+        >
+          @if (salvando()) {
+            <mat-spinner
+              diameter="22"
+            ></mat-spinner>
+
+            <span>Salvando...</span>
+          } @else {
+            <mat-icon>save</mat-icon>
+
+            <span>
+              {{
+                modoEdicao()
+                  ? 'Salvar alterações'
+                  : 'Cadastrar embarcação'
+              }}
+            </span>
+          }
+        </button>
+      </footer>
+    </form>
+  }
+</section>

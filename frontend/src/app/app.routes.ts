@@ -87,14 +87,37 @@ export const routes: Routes = [
           )
       },
       {
-        path: 'clientes',
-        title: 'Clientes | Caisora',
+        path: 'embarcacoes',
+        title: 'Embarcações | Caisora',
         loadComponent: () =>
           import(
-            './features/clientes/pages/cliente-listagem/cliente-listagem.component'
+            './features/embarcacoes/pages/embarcacao-listagem/embarcacao-listagem.component'
           ).then(
             (componente) =>
-              componente.ClienteListagemComponent
+              componente.EmbarcacaoListagemComponent
+          )
+      },
+
+      {
+        path: 'embarcacoes/nova',
+        title: 'Nova embarcação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/embarcacoes/pages/embarcacao-formulario/embarcacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.EmbarcacaoFormularioComponent
+          )
+      },
+      {
+        path: 'embarcacoes/:id/editar',
+        title: 'Editar embarcação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/embarcacoes/pages/embarcacao-formulario/embarcacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.EmbarcacaoFormularioComponent
           )
       }
     ]
