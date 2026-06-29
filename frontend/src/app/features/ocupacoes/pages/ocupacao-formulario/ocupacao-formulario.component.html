@@ -1,0 +1,600 @@
+<section class="pagina-formulario">
+  <header class="cabecalho-pagina">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Voltar para ocupações"
+      (click)="cancelar()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <span class="sobrelinha">
+        Ocupações
+      </span>
+
+      <h1>
+        {{
+          modoEdicao()
+            ? 'Editar ocupação'
+            : 'Nova ocupação'
+        }}
+      </h1>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Atualize a previsão de término e as observações.'
+            : 'Vincule uma embarcação disponível a uma vaga compatível.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <section class="estado-carregamento">
+      <mat-spinner diameter="42"></mat-spinner>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Carregando ocupação...'
+            : 'Carregando opções disponíveis...'
+        }}
+      </p>
+    </section>
+  } @else {
+    @if (mensagemErro()) {
+      <div class="alerta-erro">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ mensagemErro() }}</span>
+      </div>
+    }
+
+    @if (
+      semOpcoesDisponiveis()
+    ) {
+      <div class="alerta-informativo">
+        <mat-icon>info</mat-icon>
+
+        <div>
+          <strong>
+            Não há recursos disponíveis
+          </strong>
+
+          <p>
+            É necessário possuir ao menos uma
+            embarcação ativa sem ocupação e uma
+            vaga ativa livre.
+          </p>
+        </div>
+      </div>
+    }
+
+    <form
+      [formGroup]="formulario"
+      (ngSubmit)="salvar()"
+    >
+      <section class="secao-formulario">
+        <header
+          class="secao-formulario__cabecalho"
+        >
+          <div
+            class="secao-formulario__icone"
+          >
+            <mat-icon>link</mat-icon>
+          </div>
+
+          <div>
+            <h2>Vínculo</h2>
+
+            <p>
+              Selecione a embarcação e a vaga
+              que serão vinculadas.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>Embarcação</mat-label>
+
+            <mat-select
+              formControlName="embarcacaoId"
+            >
+              @for (
+                embarcacao
+                  of embarcacoesDisponiveis();
+                track embarcacao.id
+              ) {
+                <mat-option
+                  [value]="embarcacao.id"
+                >
+                  {{
+                    nomeExibicaoEmbarcacao(
+                      embarcacao
+                    )
+                  }}
+                  —
+                  {{
+                    embarcacao.proprietarioNome
+                  }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>
+              directions_boat
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .embarcacaoId
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione uma embarcação.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('embarcacaoId')
+            ) {
+              <mat-error>
+                {{ erroApi('embarcacaoId') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Vaga</mat-label>
+
+            <mat-select
+              formControlName="vagaId"
+            >
+              @for (
+                vaga of vagasDisponiveis();
+                track vaga.id
+              ) {
+                <mat-option [value]="vaga.id">
+                  {{ vaga.codigo }}
+                  —
+                  {{
+                    vaga.setor
+                      || 'Setor não informado'
+                  }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>
+              garage
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .vagaId
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione uma vaga.
+              </mat-error>
+            }
+
+            @if (erroApi('vagaId')) {
+              <mat-error>
+                {{ erroApi('vagaId') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (
+          embarcacaoSelecionada()
+          || vagaSelecionada()
+        ) {
+          <div class="resumo-selecoes">
+            @if (
+              embarcacaoSelecionada();
+              as embarcacao
+            ) {
+              <article class="resumo-card">
+                <header>
+                  <mat-icon>
+                    directions_boat
+                  </mat-icon>
+
+                  <div>
+                    <strong>
+                      {{
+                        nomeExibicaoEmbarcacao(
+                          embarcacao
+                        )
+                      }}
+                    </strong>
+
+                    <span>
+                      {{
+                        descricaoEmbarcacao(
+                          embarcacao
+                        )
+                      }}
+                    </span>
+                  </div>
+                </header>
+
+                <dl>
+                  <div>
+                    <dt>Proprietário</dt>
+                    <dd>
+                      {{
+                        embarcacao
+                          .proprietarioNome
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Comprimento</dt>
+                    <dd>
+                      {{
+                        formatarMetros(
+                          embarcacao
+                            .comprimentoTotalMetros
+                        )
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Boca</dt>
+                    <dd>
+                      {{
+                        formatarMetros(
+                          embarcacao.bocaMetros
+                        )
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Peso</dt>
+                    <dd>
+                      {{
+                        formatarPeso(
+                          embarcacao.pesoKg
+                        )
+                      }}
+                    </dd>
+                  </div>
+                </dl>
+              </article>
+            }
+
+            @if (
+              vagaSelecionada();
+              as vaga
+            ) {
+              <article class="resumo-card">
+                <header>
+                  <mat-icon>garage</mat-icon>
+
+                  <div>
+                    <strong>
+                      Vaga {{ vaga.codigo }}
+                    </strong>
+
+                    <span>
+                      {{ descricaoVaga(vaga) }}
+                    </span>
+                  </div>
+                </header>
+
+                <dl>
+                  <div>
+                    <dt>Comprimento máximo</dt>
+                    <dd>
+                      {{
+                        formatarMetros(
+                          vaga
+                            .comprimentoMaximoMetros
+                        )
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Boca máxima</dt>
+                    <dd>
+                      {{
+                        formatarMetros(
+                          vaga.bocaMaximaMetros
+                        )
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Calado máximo</dt>
+                    <dd>
+                      {{
+                        formatarMetros(
+                          vaga.caladoMaximoMetros
+                        )
+                      }}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt>Peso máximo</dt>
+                    <dd>
+                      {{
+                        formatarPeso(
+                          vaga.pesoMaximoKg
+                        )
+                      }}
+                    </dd>
+                  </div>
+                </dl>
+              </article>
+            }
+          </div>
+        }
+
+        @if (
+          incompatibilidades().length > 0
+        ) {
+          <div class="alerta-compatibilidade">
+            <mat-icon>warning</mat-icon>
+
+            <div>
+              <strong>
+                Embarcação incompatível
+              </strong>
+
+              <ul>
+                @for (
+                  mensagem
+                    of incompatibilidades();
+                  track mensagem
+                ) {
+                  <li>{{ mensagem }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="secao-formulario">
+        <header
+          class="secao-formulario__cabecalho"
+        >
+          <div
+            class="secao-formulario__icone"
+          >
+            <mat-icon>schedule</mat-icon>
+          </div>
+
+          <div>
+            <h2>Período</h2>
+
+            <p>
+              Informe o início e, quando
+              houver, a previsão de término.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Início da ocupação
+            </mat-label>
+
+            <input
+              matInput
+              type="datetime-local"
+              formControlName="inicioEm"
+            />
+
+            <mat-icon matSuffix>
+              login
+            </mat-icon>
+
+            @if (
+              formulario.controls.inicioEm
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe o início.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls.inicioEm
+                .hasError('inicioFuturo')
+            ) {
+              <mat-error>
+                O início não pode estar no
+                futuro.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls.inicioEm
+                .hasError('dataInvalida')
+            ) {
+              <mat-error>
+                Informe uma data válida.
+              </mat-error>
+            }
+
+            @if (erroApi('inicioEm')) {
+              <mat-error>
+                {{ erroApi('inicioEm') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Fim previsto
+            </mat-label>
+
+            <input
+              matInput
+              type="datetime-local"
+              formControlName="fimPrevistoEm"
+            />
+
+            <mat-icon matSuffix>
+              event
+            </mat-icon>
+
+            <mat-hint>
+              Campo opcional
+            </mat-hint>
+
+            @if (
+              formulario.hasError(
+                'fimNaoPosterior'
+              )
+              && formulario.controls
+                .fimPrevistoEm.touched
+            ) {
+              <mat-error>
+                O fim previsto deve ser
+                posterior ao início.
+              </mat-error>
+            }
+
+            @if (
+              formulario.hasError(
+                'periodoInvalido'
+              )
+              && formulario.controls
+                .fimPrevistoEm.touched
+            ) {
+              <mat-error>
+                Informe uma data válida.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('fimPrevistoEm')
+            ) {
+              <mat-error>
+                {{ erroApi('fimPrevistoEm') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header
+          class="secao-formulario__cabecalho"
+        >
+          <div
+            class="secao-formulario__icone"
+          >
+            <mat-icon>notes</mat-icon>
+          </div>
+
+          <div>
+            <h2>Observações</h2>
+
+            <p>
+              Registre informações adicionais
+              sobre esta ocupação.
+            </p>
+          </div>
+        </header>
+
+        <mat-form-field
+          appearance="outline"
+          class="campo-completo"
+        >
+          <mat-label>Observações</mat-label>
+
+          <textarea
+            matInput
+            rows="5"
+            maxlength="2000"
+            formControlName="observacoes"
+          ></textarea>
+
+          <mat-hint align="end">
+            {{
+              formulario.controls
+                .observacoes.value.length
+            }}/2000
+          </mat-hint>
+
+          @if (
+            formulario.controls
+              .observacoes
+              .hasError('maxlength')
+          ) {
+            <mat-error>
+              O limite é de 2000 caracteres.
+            </mat-error>
+          }
+
+          @if (erroApi('observacoes')) {
+            <mat-error>
+              {{ erroApi('observacoes') }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <footer class="acoes-formulario">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="salvando()"
+          (click)="cancelar()"
+        >
+          Cancelar
+        </button>
+
+        @if (!ocupacaoEncerrada()) {
+          <button
+            mat-flat-button
+            type="submit"
+            class="botao-salvar"
+            [disabled]="
+              salvando()
+              || semOpcoesDisponiveis()
+              || incompatibilidades()
+                .length > 0
+            "
+          >
+            <span class="botao-salvar__conteudo">
+              @if (salvando()) {
+                <mat-spinner
+                  diameter="20"
+                ></mat-spinner>
+              } @else {
+                <mat-icon>save</mat-icon>
+              }
+
+              <span>
+                {{
+                  salvando()
+                    ? 'Salvando...'
+                    : modoEdicao()
+                      ? 'Salvar alterações'
+                      : 'Registrar ocupação'
+                }}
+              </span>
+            </span>
+          </button>
+        }
+      </footer>
+    </form>
+  }
+</section>

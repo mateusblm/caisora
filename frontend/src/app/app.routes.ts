@@ -152,6 +152,39 @@ export const routes: Routes = [
             (componente) =>
               componente.VagaFormularioComponent
           )
+      },
+      {
+        path: 'ocupacoes/nova',
+        title: 'Nova ocupação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/ocupacoes/pages/ocupacao-formulario/ocupacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.OcupacaoFormularioComponent
+          )
+      },
+      {
+        path: 'ocupacoes/:id/editar',
+        title: 'Editar ocupação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/ocupacoes/pages/ocupacao-formulario/ocupacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.OcupacaoFormularioComponent
+          )
+      },
+      {
+        path: 'ocupacoes',
+        title: 'Ocupações | Caisora',
+        loadComponent: () =>
+          import(
+            './features/ocupacoes/pages/ocupacao-listagem/ocupacao-listagem.component'
+          ).then(
+            (componente) =>
+              componente.OcupacaoListagemComponent
+          )
       }
     ]
   },

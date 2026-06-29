@@ -1,0 +1,534 @@
+<section class="pagina-ocupacoes">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">
+        Operação
+      </span>
+
+      <h1>Ocupações</h1>
+
+      <p>
+        Acompanhe as embarcações vinculadas
+        às vagas da marina e consulte o
+        histórico de utilização.
+      </p>
+    </div>
+
+    <a
+      mat-flat-button
+      class="botao-novo"
+      routerLink="/ocupacoes/nova"
+    >
+      <mat-icon>add_home_work</mat-icon>
+      <span>Nova ocupação</span>
+    </a>
+  </header>
+
+  <section
+    class="filtros"
+    aria-label="Filtros de ocupações"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Embarcação</mat-label>
+
+      <mat-select
+        [formControl]="filtroEmbarcacao"
+        [disabled]="carregandoFiltros()"
+        (selectionChange)="
+          alterarFiltroEmbarcacao()
+        "
+      >
+        <mat-option value="TODAS">
+          Todas as embarcações
+        </mat-option>
+
+        @for (
+          embarcacao of embarcacoes();
+          track embarcacao.id
+        ) {
+          <mat-option
+            [value]="embarcacao.id"
+          >
+            {{
+              nomeExibicaoEmbarcacao(
+                embarcacao
+              )
+            }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Vaga</mat-label>
+
+      <mat-select
+        [formControl]="filtroVaga"
+        [disabled]="carregandoFiltros()"
+        (selectionChange)="
+          alterarFiltroVaga()
+        "
+      >
+        <mat-option value="TODAS">
+          Todas as vagas
+        </mat-option>
+
+        @for (
+          vaga of vagas();
+          track vaga.id
+        ) {
+          <mat-option [value]="vaga.id">
+            {{ vaga.codigo }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select
+        [formControl]="filtroStatus"
+        (selectionChange)="
+          alterarFiltroStatus()
+        "
+      >
+        <mat-option value="TODAS">
+          Todas
+        </mat-option>
+
+        <mat-option value="ATIVA">
+          Ativas
+        </mat-option>
+
+        <mat-option value="ENCERRADA">
+          Encerradas
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="botao-limpar"
+      (click)="limparFiltros()"
+    >
+      <mat-icon>filter_alt_off</mat-icon>
+      <span>Limpar filtros</span>
+    </button>
+  </section>
+
+  <p class="resumo-listagem">
+    {{ totalElementos() }}
+    {{
+      totalElementos() === 1
+        ? 'ocupação encontrada'
+        : 'ocupações encontradas'
+    }}
+  </p>
+
+  @if (carregando()) {
+    <section class="estado-listagem">
+      <mat-spinner diameter="42"></mat-spinner>
+      <p>Carregando ocupações...</p>
+    </section>
+  } @else if (mensagemErro()) {
+    <section class="estado-listagem">
+      <mat-icon>error_outline</mat-icon>
+
+      <h2>Não foi possível carregar</h2>
+
+      <p>{{ mensagemErro() }}</p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="carregarOcupacoes()"
+      >
+        Tentar novamente
+      </button>
+    </section>
+  } @else if (ocupacoes().length === 0) {
+    <section class="estado-listagem">
+      <mat-icon>garage</mat-icon>
+
+      <h2>Nenhuma ocupação encontrada</h2>
+
+      <p>
+        Altere os filtros ou registre uma
+        nova ocupação.
+      </p>
+    </section>
+  } @else {
+    @if (telaDesktop()) {
+      <section class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Embarcação</th>
+              <th>Proprietário</th>
+              <th>Vaga</th>
+              <th>Período</th>
+              <th>Status</th>
+              <th class="coluna-acoes">
+                Ações
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (
+              ocupacao of ocupacoes();
+              track ocupacao.id
+            ) {
+              <tr>
+                <td class="dado-principal">
+                  <strong>
+                    {{ ocupacao.embarcacaoNome }}
+                  </strong>
+
+                  <span>
+                    {{
+                      ocupacao.embarcacaoModelo
+                        || 'Modelo não informado'
+                    }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ ocupacao.proprietarioNome }}
+                </td>
+
+                <td class="dado-principal">
+                  <strong>
+                    {{ ocupacao.vagaCodigo }}
+                  </strong>
+
+                  <span>
+                    {{ descricaoVaga(ocupacao) }}
+                  </span>
+                </td>
+
+                <td class="periodo">
+                  <span>
+                    Início:
+                    {{
+                      formatarDataHora(
+                        ocupacao.inicioEm
+                      )
+                    }}
+                  </span>
+
+                  <span>
+                    {{
+                      ocupacao.status === 'ENCERRADA'
+                        ? 'Encerrada:'
+                        : 'Previsão:'
+                    }}
+
+                    {{
+                      formatarDataHora(
+                        ocupacao.status === 'ENCERRADA'
+                          ? ocupacao.encerradaEm
+                          : ocupacao.fimPrevistoEm
+                      )
+                    }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.status--ativa]="
+                      ocupacao.status === 'ATIVA'
+                    "
+                    [class.status--encerrada]="
+                      ocupacao.status
+                        === 'ENCERRADA'
+                    "
+                  >
+                    {{
+                      rotuloStatus(
+                        ocupacao.status
+                      )
+                    }}
+                  </span>
+                </td>
+
+                <td class="coluna-acoes">
+                  @if (
+                    ocupacao.status === 'ATIVA'
+                  ) {
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="Abrir ações da ocupação"
+                      [matMenuTriggerFor]="menuAcoes"
+                      [disabled]="
+                        encerrandoId()
+                          === ocupacao.id
+                      "
+                    >
+                      <span class="conteudo-icone">
+                        @if (
+                          encerrandoId()
+                            === ocupacao.id
+                        ) {
+                          <mat-spinner
+                            diameter="20"
+                          ></mat-spinner>
+                        } @else {
+                          <mat-icon>
+                            more_vert
+                          </mat-icon>
+                        }
+                      </span>
+                    </button>
+
+                    <mat-menu
+                      #menuAcoes="matMenu"
+                      xPosition="before"
+                    >
+                      <button
+                        mat-menu-item
+                        type="button"
+                        [routerLink]="[
+                          '/ocupacoes',
+                          ocupacao.id,
+                          'editar'
+                        ]"
+                      >
+                        <mat-icon>edit</mat-icon>
+                        <span>Editar</span>
+                      </button>
+
+                      <button
+                        mat-menu-item
+                        type="button"
+                        (click)="
+                          solicitarEncerramento(
+                            ocupacao
+                          )
+                        "
+                      >
+                        <mat-icon>logout</mat-icon>
+                        <span>
+                          Encerrar ocupação
+                        </span>
+                      </button>
+                    </mat-menu>
+                  } @else {
+                    <span
+                      class="sem-acoes"
+                      aria-label="Ocupação encerrada"
+                    >
+                      —
+                    </span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    } @else {
+      <section class="lista-cards">
+        @for (
+          ocupacao of ocupacoes();
+          track ocupacao.id
+        ) {
+          <article class="ocupacao-card">
+            <header class="ocupacao-card__topo">
+              <div class="ocupacao-icone">
+                <mat-icon>
+                  directions_boat
+                </mat-icon>
+              </div>
+
+              <div class="ocupacao-card__identidade">
+                <strong>
+                  {{ ocupacao.embarcacaoNome }}
+                </strong>
+
+                <span>
+                  {{ descricaoEmbarcacao(ocupacao) }}
+                </span>
+              </div>
+
+              <span
+                class="status"
+                [class.status--ativa]="
+                  ocupacao.status === 'ATIVA'
+                "
+                [class.status--encerrada]="
+                  ocupacao.status === 'ENCERRADA'
+                "
+              >
+                {{
+                  rotuloStatus(
+                    ocupacao.status
+                  )
+                }}
+              </span>
+            </header>
+
+            <dl class="ocupacao-card__dados">
+              <div>
+                <dt>Vaga</dt>
+                <dd>{{ ocupacao.vagaCodigo }}</dd>
+              </div>
+
+              <div>
+                <dt>Tipo</dt>
+                <dd>
+                  {{
+                    formatarTipoVaga(
+                      ocupacao.vagaTipo
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div class="dado-completo">
+                <dt>Localização</dt>
+                <dd>
+                  {{ descricaoVaga(ocupacao) }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Início</dt>
+                <dd>
+                  {{
+                    formatarDataHora(
+                      ocupacao.inicioEm
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>
+                  {{
+                    ocupacao.status === 'ENCERRADA'
+                      ? 'Encerrada'
+                      : 'Fim previsto'
+                  }}
+                </dt>
+
+                <dd>
+                  {{
+                    formatarDataHora(
+                      ocupacao.status === 'ENCERRADA'
+                        ? ocupacao.encerradaEm
+                        : ocupacao.fimPrevistoEm
+                    )
+                  }}
+                </dd>
+              </div>
+            </dl>
+
+            @if (ocupacao.status === 'ATIVA') {
+              <footer class="ocupacao-card__acoes">
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [routerLink]="[
+                    '/ocupacoes',
+                    ocupacao.id,
+                    'editar'
+                  ]"
+                  [disabled]="
+                    encerrandoId()
+                      === ocupacao.id
+                  "
+                >
+                  <span class="conteudo-botao">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                  </span>
+                </button>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="botao-encerrar"
+                  [disabled]="
+                    encerrandoId()
+                      === ocupacao.id
+                  "
+                  (click)="
+                    solicitarEncerramento(
+                      ocupacao
+                    )
+                  "
+                >
+                  <span class="conteudo-botao">
+                    @if (
+                      encerrandoId()
+                        === ocupacao.id
+                    ) {
+                      <mat-spinner
+                        diameter="20"
+                      ></mat-spinner>
+                    } @else {
+                      <mat-icon>logout</mat-icon>
+                    }
+
+                    <span>
+                      {{
+                        encerrandoId()
+                          === ocupacao.id
+                          ? 'Encerrando...'
+                          : 'Encerrar'
+                      }}
+                    </span>
+                  </span>
+                </button>
+              </footer>
+            }
+          </article>
+        }
+      </section>
+    }
+
+    @if (totalPaginas() > 1) {
+      <nav
+        class="paginacao"
+        aria-label="Paginação das ocupações"
+      >
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="
+            paginaAtual() === 0
+            || carregando()
+          "
+          (click)="paginaAnterior()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+          <span>Anterior</span>
+        </button>
+
+        <span class="paginacao__texto">
+          Página {{ paginaAtual() + 1 }}
+          de {{ totalPaginas() }}
+        </span>
+
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="
+            paginaAtual() + 1
+              >= totalPaginas()
+            || carregando()
+          "
+          (click)="proximaPagina()"
+        >
+          <span>Próxima</span>
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </nav>
+    }
+  }
+</section>

@@ -148,6 +148,11 @@ export class LayoutComponent implements OnInit {
       rotulo: 'Vagas',
       icone: 'anchor',
       rota: '/vagas'
+    },
+    {
+      rotulo: 'Ocupações',
+      icone: 'garage',
+      rota: '/ocupacoes'
     }
   ];
 

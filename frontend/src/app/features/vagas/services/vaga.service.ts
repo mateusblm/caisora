@@ -5,7 +5,13 @@ import {
   HttpParams
 } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  expand,
+  map,
+  reduce
+} from 'rxjs';
 
 import { environment } from
   '../../../../environments/environment';
@@ -76,6 +82,34 @@ export class VagaService {
       }
     );
   }
+
+  listarTodas(): Observable<Vaga[]> {
+      const tamanho = 100;
+
+      return this.listar({
+        pagina: 0,
+        tamanho
+      }).pipe(
+        expand((pagina) =>
+          pagina.last
+            ? EMPTY
+            : this.listar({
+                pagina: pagina.number + 1,
+                tamanho
+              })
+        ),
+
+        map((pagina) => pagina.content),
+
+        reduce(
+          (todas, paginaAtual) => [
+            ...todas,
+            ...paginaAtual
+          ],
+          [] as Vaga[]
+        )
+      );
+    }
 
   buscarPorId(
     id: string
