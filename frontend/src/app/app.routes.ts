@@ -52,6 +52,17 @@ export const routes: Routes = [
             (componente) =>
               componente.DashboardComponent
           )
+      },
+      {
+        path: 'clientes',
+        title: 'Clientes | Caisora',
+        loadComponent: () =>
+          import(
+            './features/clientes/pages/cliente-listagem/cliente-listagem.component'
+          ).then(
+            (componente) =>
+              componente.ClienteListagemComponent
+          )
       }
     ]
   },

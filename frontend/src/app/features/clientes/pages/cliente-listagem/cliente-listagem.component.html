@@ -1,0 +1,357 @@
+<section class="pagina-clientes">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">
+        Cadastros
+      </span>
+
+      <h1>Clientes</h1>
+
+      <p>
+        Consulte os clientes vinculados à marina.
+      </p>
+    </div>
+
+    <!-- A rota será habilitada no próximo passo. -->
+    <button
+      mat-flat-button
+      class="botao-novo"
+      type="button"
+      disabled
+    >
+      <mat-icon>person_add</mat-icon>
+      <span>Novo cliente</span>
+    </button>
+  </header>
+
+  <section
+    class="filtros"
+    aria-label="Filtros de clientes"
+  >
+    <form
+      class="campo-busca"
+      (ngSubmit)="pesquisar()"
+    >
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>
+          Buscar por nome
+        </mat-label>
+
+        <input
+          matInput
+          [formControl]="busca"
+          autocomplete="off"
+        />
+
+        <mat-icon matPrefix>
+          search
+        </mat-icon>
+
+        @if (busca.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Limpar busca"
+            (click)="limparFiltros()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        class="botao-pesquisar"
+        type="submit"
+      >
+        Pesquisar
+      </button>
+    </form>
+
+    <mat-form-field
+      appearance="outline"
+      subscriptSizing="dynamic"
+      class="campo-status"
+    >
+      <mat-label>Status</mat-label>
+
+      <mat-select
+        [formControl]="filtroStatus"
+        (selectionChange)="alterarFiltroStatus()"
+      >
+        <mat-option value="TODOS">
+          Todos
+        </mat-option>
+
+        <mat-option value="ATIVOS">
+          Ativos
+        </mat-option>
+
+        <mat-option value="INATIVOS">
+          Inativos
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <div class="resumo-listagem">
+    <span>
+      {{ totalElementos() }}
+      {{
+        totalElementos() === 1
+          ? 'cliente encontrado'
+          : 'clientes encontrados'
+      }}
+    </span>
+  </div>
+
+  @if (carregando()) {
+    <section
+      class="estado-listagem"
+      aria-live="polite"
+    >
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando clientes...</p>
+    </section>
+  } @else if (mensagemErro()) {
+    <section
+      class="estado-listagem estado-erro"
+      role="alert"
+    >
+      <mat-icon>error_outline</mat-icon>
+
+      <h2>Não foi possível carregar</h2>
+
+      <p>{{ mensagemErro() }}</p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="pesquisar()"
+      >
+        Tentar novamente
+      </button>
+    </section>
+  } @else if (clientes().length === 0) {
+    <section class="estado-listagem">
+      <mat-icon>person_search</mat-icon>
+
+      <h2>Nenhum cliente encontrado</h2>
+
+      <p>
+        Altere os filtros ou cadastre um novo cliente.
+      </p>
+    </section>
+  } @else {
+    @if (telaDesktop()) {
+      <section class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Documento</th>
+              <th>Contato</th>
+              <th>Status</th>
+              <th class="coluna-acoes">
+                Ações
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (
+              cliente of clientes();
+              track cliente.id
+            ) {
+              <tr>
+                <td>
+                  <div class="cliente-principal">
+                    <strong>
+                      {{ cliente.nome }}
+                    </strong>
+
+                    <span>
+                      {{
+                        formatarTipoPessoa(cliente)
+                      }}
+                    </span>
+                  </div>
+                </td>
+
+                <td>
+                  {{
+                    formatarDocumento(
+                      cliente.cpfCnpj
+                    )
+                  }}
+                </td>
+
+                <td>
+                  <div class="contato">
+                    <span>
+                      {{ obterContato(cliente) }}
+                    </span>
+
+                    @if (cliente.email) {
+                      <small>
+                        {{ cliente.email }}
+                      </small>
+                    }
+                  </div>
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.status--ativo]="
+                      cliente.ativo
+                    "
+                    [class.status--inativo]="
+                      !cliente.ativo
+                    "
+                  >
+                    {{
+                      cliente.ativo
+                        ? 'Ativo'
+                        : 'Inativo'
+                    }}
+                  </span>
+                </td>
+
+                <td class="coluna-acoes">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    aria-label="Editar cliente"
+                    disabled
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    } @else {
+      <section class="lista-cards">
+        @for (
+          cliente of clientes();
+          track cliente.id
+        ) {
+          <article class="cliente-card">
+            <header class="cliente-card__topo">
+              <div class="cliente-avatar">
+                {{
+                  cliente.nome
+                    .charAt(0)
+                    .toUpperCase()
+                }}
+              </div>
+
+              <div class="cliente-card__identidade">
+                <strong>
+                  {{ cliente.nome }}
+                </strong>
+
+                <span>
+                  {{
+                    formatarTipoPessoa(cliente)
+                  }}
+                </span>
+              </div>
+
+              <span
+                class="status"
+                [class.status--ativo]="
+                  cliente.ativo
+                "
+                [class.status--inativo]="
+                  !cliente.ativo
+                "
+              >
+                {{
+                  cliente.ativo
+                    ? 'Ativo'
+                    : 'Inativo'
+                }}
+              </span>
+            </header>
+
+            <dl class="cliente-card__dados">
+              <div>
+                <dt>Documento</dt>
+                <dd>
+                  {{
+                    formatarDocumento(
+                      cliente.cpfCnpj
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Contato</dt>
+                <dd>
+                  {{ obterContato(cliente) }}
+                </dd>
+              </div>
+
+              @if (cliente.email) {
+                <div>
+                  <dt>E-mail</dt>
+                  <dd>{{ cliente.email }}</dd>
+                </div>
+              }
+            </dl>
+
+            <footer class="cliente-card__acoes">
+              <button
+                mat-stroked-button
+                type="button"
+                disabled
+              >
+                <mat-icon>edit</mat-icon>
+                Editar
+              </button>
+            </footer>
+          </article>
+        }
+      </section>
+    }
+
+    <footer class="paginacao">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="paginaAtual() === 0"
+        (click)="paginaAnterior()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+        <span>Anterior</span>
+      </button>
+
+      <span class="paginacao__texto">
+        Página {{ paginaAtual() + 1 }}
+        de {{ totalPaginas() }}
+      </span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="
+          paginaAtual() + 1
+          >= totalPaginas()
+        "
+        (click)="proximaPagina()"
+      >
+        <span>Próxima</span>
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </footer>
+  }
+</section>
