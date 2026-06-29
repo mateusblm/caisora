@@ -1,11 +1,14 @@
 package br.com.caisora.organizacao.aplicacao;
 
 import br.com.caisora.compartilhado.excecao.RecursoNaoEncontradoException;
+import br.com.caisora.compartilhado.excecao.ConflitoDadosException;
+import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import br.com.caisora.organizacao.api.AtualizarOrganizacaoRequest;
 import br.com.caisora.organizacao.api.CriarOrganizacaoRequest;
 import br.com.caisora.organizacao.api.OrganizacaoResponse;
 import br.com.caisora.organizacao.dominio.Organizacao;
 import br.com.caisora.organizacao.dominio.OrganizacaoRepository;
+import br.com.caisora.organizacao.dominio.SlugOrganizacao;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,12 @@ public class OrganizacaoService {
 
     @Transactional
     public OrganizacaoResponse criar(CriarOrganizacaoRequest request) {
+        String slug = normalizarSlug(request.slug());
+
+        if (organizacaoRepository.existsBySlugIgnoreCase(slug)) {
+            throw new ConflitoDadosException("Codigo da marina ja esta em uso");
+        }
+
         Organizacao organizacao = organizacaoMapper.paraEntidade(request);
         Organizacao organizacaoSalva = organizacaoRepository.save(organizacao);
         return organizacaoMapper.paraResponse(organizacaoSalva);
@@ -67,5 +76,13 @@ public class OrganizacaoService {
     private Organizacao buscarEntidadePorId(UUID id) {
         return organizacaoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Organizacao nao encontrada"));
+    }
+
+    private String normalizarSlug(String slug) {
+        try {
+            return SlugOrganizacao.normalizar(slug);
+        } catch (IllegalArgumentException exception) {
+            throw new DadosInvalidosException("SLUG_ORGANIZACAO_INVALIDO", exception.getMessage());
+        }
     }
 }

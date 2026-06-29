@@ -50,9 +50,6 @@ import {
   ErroApi
 } from '../../../../shared/modelos/erro-api.model';
 
-const PADRAO_UUID =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 @Component({
   selector: 'app-login',
   imports: [
@@ -88,11 +85,10 @@ export class LoginComponent {
   ) {
     this.formulario =
       this.formBuilder.nonNullable.group({
-        organizacaoId: [
+        codigoOrganizacao: [
           '',
           [
-            Validators.required,
-            Validators.pattern(PADRAO_UUID)
+            Validators.required
           ]
         ],
         email: [
@@ -132,7 +128,7 @@ export class LoginComponent {
     }
 
     const {
-      organizacaoId,
+      codigoOrganizacao,
       email,
       senha
     } = this.formulario.getRawValue();
@@ -141,8 +137,11 @@ export class LoginComponent {
 
     this.autenticacaoService
       .autenticar(
-        organizacaoId.trim(),
         {
+          codigoOrganizacao:
+            codigoOrganizacao
+              .trim()
+              .toLowerCase(),
           email: email.trim(),
           senha
         }
@@ -197,7 +196,7 @@ export class LoginComponent {
       resposta?.codigo ===
       'CREDENCIAIS_INVALIDAS'
     ) {
-      return 'E-mail, senha ou organização inválidos.';
+      return 'Codigo da marina, e-mail ou senha invalidos.';
     }
 
     if (

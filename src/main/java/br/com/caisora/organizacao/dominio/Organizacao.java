@@ -23,6 +23,9 @@ public class Organizacao {
     @Column(nullable = false, length = 150)
     private String nome;
 
+    @Column(nullable = false, length = 80)
+    private String slug;
+
     @Column(length = 200)
     private String razaoSocial;
 
@@ -47,8 +50,9 @@ public class Organizacao {
     protected Organizacao() {
     }
 
-    private Organizacao(String nome, String razaoSocial, String documento, String email, String telefone) {
+    private Organizacao(String nome, String slug, String razaoSocial, String documento, String email, String telefone) {
         this.nome = nome;
+        this.slug = SlugOrganizacao.normalizar(slug);
         this.razaoSocial = razaoSocial;
         this.documento = documento;
         this.email = normalizarEmail(email);
@@ -58,12 +62,13 @@ public class Organizacao {
 
     public static Organizacao criar(
             String nome,
+            String slug,
             String razaoSocial,
             String documento,
             String email,
             String telefone
     ) {
-        return new Organizacao(nome, razaoSocial, documento, email, telefone);
+        return new Organizacao(nome, slug, razaoSocial, documento, email, telefone);
     }
 
     public void atualizar(

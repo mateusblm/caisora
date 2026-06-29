@@ -4,8 +4,7 @@ import {
 } from '@angular/core';
 
 import {
-  HttpClient,
-  HttpHeaders
+  HttpClient
 } from '@angular/common/http';
 
 import {
@@ -55,20 +54,11 @@ export class AutenticacaoService {
   }
 
   autenticar(
-    organizacaoId: string,
     solicitacao: SolicitacaoLogin
   ): Observable<RespostaLogin> {
-
-    const headers = new HttpHeaders({
-      'X-Organizacao-Id': organizacaoId
-    });
-
     return this.http.post<RespostaLogin>(
       `${this.endpoint}/login`,
-      solicitacao,
-      {
-        headers
-      }
+      solicitacao
     ).pipe(
       tap((resposta) =>
         this.salvarSessao(resposta)

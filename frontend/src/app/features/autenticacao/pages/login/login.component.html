@@ -68,13 +68,14 @@
         (ngSubmit)="entrar()"
       >
         <mat-form-field appearance="outline">
-          <mat-label>Identificador da marina</mat-label>
+          <mat-label>Codigo da marina</mat-label>
 
           <input
             matInput
-            formControlName="organizacaoId"
-            autocomplete="off"
+            formControlName="codigoOrganizacao"
+            autocomplete="organization"
             inputmode="text"
+            placeholder="marina-exemplo"
           />
 
           <mat-icon matPrefix>
@@ -82,22 +83,14 @@
           </mat-icon>
 
           @if (
-            formulario.controls.organizacaoId
+            formulario.controls.codigoOrganizacao
               .hasError('required')
           ) {
             <mat-error>
-              Informe o identificador da marina.
+              Informe o codigo da marina.
             </mat-error>
           }
 
-          @if (
-            formulario.controls.organizacaoId
-              .hasError('pattern')
-          ) {
-            <mat-error>
-              Informe um UUID válido.
-            </mat-error>
-          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -193,11 +186,13 @@
 
             <span>Entrando...</span>
           } @else {
-            <span>Entrar</span>
+            <span class="botao-entrar__conteudo">
+              <span>Entrar</span>
 
-            <mat-icon>
-              arrow_forward
-            </mat-icon>
+              <mat-icon>
+                arrow_forward
+              </mat-icon>
+            </span>
           }
         </button>
       </form>

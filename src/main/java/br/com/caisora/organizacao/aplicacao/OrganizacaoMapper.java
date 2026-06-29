@@ -11,6 +11,7 @@ public class OrganizacaoMapper {
     public Organizacao paraEntidade(CriarOrganizacaoRequest request) {
         return Organizacao.criar(
                 request.nome(),
+                request.slug(),
                 request.razaoSocial(),
                 request.documento(),
                 request.email(),
@@ -21,6 +22,7 @@ public class OrganizacaoMapper {
         return new OrganizacaoResponse(
                 organizacao.getId(),
                 organizacao.getNome(),
+                organizacao.getSlug(),
                 organizacao.getRazaoSocial(),
                 organizacao.getDocumento(),
                 organizacao.getEmail(),

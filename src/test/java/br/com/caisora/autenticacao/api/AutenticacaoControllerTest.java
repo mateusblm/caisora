@@ -1,7 +1,6 @@
 package br.com.caisora.autenticacao.api;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +48,7 @@ class AutenticacaoControllerTest {
     void deveAutenticarComSucesso() throws Exception {
         UUID organizacaoId = UUID.randomUUID();
         UUID usuarioId = UUID.randomUUID();
-        when(autenticacaoService.autenticar(eq(organizacaoId), any(SolicitacaoLogin.class)))
+        when(autenticacaoService.autenticar(any(SolicitacaoLogin.class)))
                 .thenReturn(new RespostaLogin(
                         "token.jwt",
                         "Bearer",
@@ -63,10 +62,10 @@ class AutenticacaoControllerTest {
                                 "Marina Teste")));
 
         mockMvc.perform(post("/api/v1/autenticacao/login")
-                        .header(AutenticacaoController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "marina-teste",
                                   "email": "maria@marina.com",
                                   "senha": "SenhaForte123"
                                 }
@@ -78,28 +77,27 @@ class AutenticacaoControllerTest {
     }
 
     @Test
-    void deveRetornarBadRequestQuandoHeaderOrganizacaoNaoForInformado() throws Exception {
+    void deveRetornarBadRequestQuandoCodigoOrganizacaoNaoForInformado() throws Exception {
         mockMvc.perform(post("/api/v1/autenticacao/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "",
                                   "email": "maria@marina.com",
                                   "senha": "SenhaForte123"
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.codigo").value("HEADER_OBRIGATORIO_AUSENTE"));
+                .andExpect(jsonPath("$.codigo").value("ERRO_VALIDACAO"));
     }
 
     @Test
     void deveRetornarBadRequestQuandoLoginForInvalido() throws Exception {
-        UUID organizacaoId = UUID.randomUUID();
-
         mockMvc.perform(post("/api/v1/autenticacao/login")
-                        .header(AutenticacaoController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "marina-teste",
                                   "email": "email-invalido",
                                   "senha": ""
                                 }
@@ -110,15 +108,14 @@ class AutenticacaoControllerTest {
 
     @Test
     void deveRetornarUnauthorizedQuandoCredenciaisForemInvalidas() throws Exception {
-        UUID organizacaoId = UUID.randomUUID();
-        when(autenticacaoService.autenticar(eq(organizacaoId), any(SolicitacaoLogin.class)))
+        when(autenticacaoService.autenticar(any(SolicitacaoLogin.class)))
                 .thenThrow(new CredenciaisInvalidasException());
 
         mockMvc.perform(post("/api/v1/autenticacao/login")
-                        .header(AutenticacaoController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "marina-teste",
                                   "email": "maria@marina.com",
                                   "senha": "senha-errada"
                                 }
@@ -129,15 +126,14 @@ class AutenticacaoControllerTest {
 
     @Test
     void deveRetornarForbiddenQuandoUsuarioEstiverInativo() throws Exception {
-        UUID organizacaoId = UUID.randomUUID();
-        when(autenticacaoService.autenticar(eq(organizacaoId), any(SolicitacaoLogin.class)))
+        when(autenticacaoService.autenticar(any(SolicitacaoLogin.class)))
                 .thenThrow(new UsuarioInativoException());
 
         mockMvc.perform(post("/api/v1/autenticacao/login")
-                        .header(AutenticacaoController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "marina-teste",
                                   "email": "maria@marina.com",
                                   "senha": "SenhaForte123"
                                 }
@@ -148,15 +144,14 @@ class AutenticacaoControllerTest {
 
     @Test
     void deveRetornarForbiddenQuandoOrganizacaoEstiverInativa() throws Exception {
-        UUID organizacaoId = UUID.randomUUID();
-        when(autenticacaoService.autenticar(eq(organizacaoId), any(SolicitacaoLogin.class)))
+        when(autenticacaoService.autenticar(any(SolicitacaoLogin.class)))
                 .thenThrow(new OrganizacaoInativaException());
 
         mockMvc.perform(post("/api/v1/autenticacao/login")
-                        .header(AutenticacaoController.HEADER_ORGANIZACAO_ID, organizacaoId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "codigoOrganizacao": "marina-teste",
                                   "email": "maria@marina.com",
                                   "senha": "SenhaForte123"
                                 }

@@ -704,6 +704,7 @@ class ClienteServiceTest {
     private Organizacao criarOrganizacaoPersistida(UUID id) {
         Organizacao organizacao = Organizacao.criar(
                 "Marina Teste",
+                "marina-teste",
                 "Marina Teste LTDA",
                 "12345678000199",
                 "contato@marinateste.com",

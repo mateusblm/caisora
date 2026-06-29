@@ -62,6 +62,7 @@ class OrganizacaoControllerTest {
                         .content("""
                                 {
                                   "nome": "Marina Teste",
+                                  "slug": "marina-teste",
                                   "razaoSocial": "Marina Teste LTDA",
                                   "documento": "12345678000199",
                                   "email": "contato@marinateste.com",
@@ -71,6 +72,7 @@ class OrganizacaoControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(response.id().toString()))
                 .andExpect(jsonPath("$.nome").value("Marina Teste"))
+                .andExpect(jsonPath("$.slug").value("marina-teste"))
                 .andExpect(jsonPath("$.ativa").value(true));
     }
 
@@ -148,6 +150,7 @@ class OrganizacaoControllerTest {
         return new OrganizacaoResponse(
                 id,
                 "Marina Teste",
+                "marina-teste",
                 "Marina Teste LTDA",
                 "12345678000199",
                 "contato@marinateste.com",
