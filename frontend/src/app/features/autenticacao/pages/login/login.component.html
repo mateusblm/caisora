@@ -180,11 +180,13 @@
           [disabled]="carregando()"
         >
           @if (carregando()) {
-            <mat-spinner
-              diameter="22"
-            ></mat-spinner>
+            <span class="botao-entrar__conteudo">
+              <mat-spinner
+                diameter="22"
+              ></mat-spinner>
 
-            <span>Entrando...</span>
+              <span>Entrando...</span>
+            </span>
           } @else {
             <span class="botao-entrar__conteudo">
               <span>Entrar</span>

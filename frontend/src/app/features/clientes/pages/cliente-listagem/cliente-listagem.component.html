@@ -18,8 +18,10 @@
         type="button"
         routerLink="/clientes/novo"
         >
-      <mat-icon>person_add</mat-icon>
-      <span>Novo cliente</span>
+      <span class="botao-novo__conteudo">
+        <mat-icon>person_add</mat-icon>
+        <span>Novo cliente</span>
+      </span>
     </button>
   </header>
 
@@ -395,31 +397,33 @@
                 solicitarAlteracaoStatus(cliente)
                 "
             >
-                @if (
-                alterandoStatusId() === cliente.id
-                ) {
-                <mat-spinner
-                    diameter="20"
-                ></mat-spinner>
+                <span class="botao-conteudo">
+                  @if (
+                    alterandoStatusId() === cliente.id
+                  ) {
+                    <mat-spinner
+                      diameter="20"
+                    ></mat-spinner>
 
-                <span>Alterando...</span>
-                } @else {
-                <mat-icon>
-                    {{
-                    cliente.ativo
-                        ? 'person_off'
-                        : 'person_add'
-                    }}
-                </mat-icon>
+                    <span>Alterando...</span>
+                  } @else {
+                    <mat-icon>
+                      {{
+                        cliente.ativo
+                          ? 'person_off'
+                          : 'person_add'
+                      }}
+                    </mat-icon>
 
-                <span>
-                    {{
-                    cliente.ativo
-                        ? 'Inativar'
-                        : 'Ativar'
-                    }}
+                    <span>
+                      {{
+                        cliente.ativo
+                          ? 'Inativar'
+                          : 'Ativar'
+                      }}
+                    </span>
+                  }
                 </span>
-                }
             </button>
             </footer>
           </article>

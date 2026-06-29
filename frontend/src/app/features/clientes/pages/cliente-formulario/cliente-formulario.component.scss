@@ -169,6 +169,19 @@ mat-form-field {
   }
 }
 
+.botao-salvar__conteudo {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  mat-icon,
+  mat-spinner {
+    margin: 0;
+  }
+}
+
 @media (min-width: 720px) {
   .pagina-formulario {
     padding-bottom: 0;

@@ -412,13 +412,16 @@
           [disabled]="salvando()"
         >
           @if (salvando()) {
-            <mat-spinner
-              diameter="22"
-            ></mat-spinner>
+            <span class="botao-salvar__conteudo">
+              <mat-spinner
+                diameter="22"
+              ></mat-spinner>
 
-            <span>Salvando...</span>
+              <span>Salvando...</span>
+            </span>
           } @else {
-            <mat-icon>save</mat-icon>
+            <span class="botao-salvar__conteudo">
+              <mat-icon>save</mat-icon>
 
             <span>
               {{
@@ -426,6 +429,7 @@
                   ? 'Salvar alterações'
                   : 'Cadastrar cliente'
               }}
+            </span>
             </span>
           }
         </button>
