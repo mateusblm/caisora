@@ -1,0 +1,529 @@
+<section class="pagina-formulario">
+  <header class="cabecalho-pagina">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Voltar para vagas"
+      (click)="cancelar()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <span class="sobrelinha">
+        Vagas
+      </span>
+
+      <h1>
+        {{
+          modoEdicao()
+            ? 'Editar vaga'
+            : 'Nova vaga'
+        }}
+      </h1>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Atualize os limites e recursos da vaga.'
+            : 'Cadastre uma vaga de agua, seco, poita ou outro tipo.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <section class="estado-carregamento">
+      <mat-spinner diameter="42"></mat-spinner>
+
+      <p>Carregando vaga...</p>
+    </section>
+  } @else {
+    @if (mensagemErro()) {
+      <div
+        class="alerta-erro"
+        role="alert"
+      >
+        <mat-icon>
+          error_outline
+        </mat-icon>
+
+        <span>
+          {{ mensagemErro() }}
+        </span>
+      </div>
+    }
+
+    <form
+      [formGroup]="formulario"
+      (ngSubmit)="salvar()"
+    >
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>anchor</mat-icon>
+          </div>
+
+          <div>
+            <h2>Identificacao</h2>
+
+            <p>
+              Codigo, tipo e localizacao da vaga.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>Codigo</mat-label>
+
+            <input
+              matInput
+              formControlName="codigo"
+              maxlength="50"
+              autocomplete="off"
+              (blur)="normalizarCodigo()"
+            />
+
+            <mat-icon matPrefix>
+              tag
+            </mat-icon>
+
+            @if (
+              formulario.controls.codigo
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe o codigo.
+              </mat-error>
+            }
+
+            @if (erroApi('codigo')) {
+              <mat-error>
+                {{ erroApi('codigo') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo</mat-label>
+
+            <mat-select formControlName="tipo">
+              @for (
+                tipo of tipos;
+                track tipo.valor
+              ) {
+                <mat-option
+                  [value]="tipo.valor"
+                >
+                  {{ tipo.rotulo }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matPrefix>
+              category
+            </mat-icon>
+
+            @if (
+              formulario.controls.tipo
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione o tipo.
+              </mat-error>
+            }
+
+            @if (erroApi('tipo')) {
+              <mat-error>
+                {{ erroApi('tipo') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Setor</mat-label>
+
+            <input
+              matInput
+              formControlName="setor"
+              maxlength="100"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              grid_view
+            </mat-icon>
+
+            @if (erroApi('setor')) {
+              <mat-error>
+                {{ erroApi('setor') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Localizacao</mat-label>
+
+            <input
+              matInput
+              formControlName="localizacao"
+              maxlength="200"
+              autocomplete="off"
+            />
+
+            <mat-icon matPrefix>
+              place
+            </mat-icon>
+
+            @if (erroApi('localizacao')) {
+              <mat-error>
+                {{ erroApi('localizacao') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>straighten</mat-icon>
+          </div>
+
+          <div>
+            <h2>Dimensoes</h2>
+
+            <p>
+              Limites fisicos aceitos pela vaga.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-medidas">
+          <mat-form-field appearance="outline">
+            <mat-label>
+              Comprimento maximo
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="comprimentoMaximoMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .comprimentoMaximoMetros
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe o comprimento.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls
+                .comprimentoMaximoMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi(
+                'comprimentoMaximoMetros'
+              )
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'comprimentoMaximoMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Boca maxima</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="bocaMaximaMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .bocaMaximaMetros
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe a boca.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls
+                .bocaMaximaMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('bocaMaximaMetros')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'bocaMaximaMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Calado maximo</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="caladoMaximoMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .caladoMaximoMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('caladoMaximoMetros')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'caladoMaximoMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Altura maxima</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="alturaMaximaMetros"
+            />
+
+            <span matTextSuffix>m</span>
+
+            @if (
+              formulario.controls
+                .alturaMaximaMetros
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (
+              erroApi('alturaMaximaMetros')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'alturaMaximaMetros'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Peso maximo</mat-label>
+
+            <input
+              matInput
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.01"
+              formControlName="pesoMaximoKg"
+            />
+
+            <span matTextSuffix>kg</span>
+
+            @if (
+              formulario.controls
+                .pesoMaximoKg
+                .hasError('min')
+            ) {
+              <mat-error>
+                O valor deve ser positivo.
+              </mat-error>
+            }
+
+            @if (erroApi('pesoMaximoKg')) {
+              <mat-error>
+                {{ erroApi('pesoMaximoKg') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>settings_input_component</mat-icon>
+          </div>
+
+          <div>
+            <h2>Infraestrutura</h2>
+
+            <p>
+              Recursos disponiveis para uso da vaga.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-infra">
+          <mat-checkbox formControlName="possuiAgua">
+            Possui agua
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="possuiEnergia">
+            Possui energia
+          </mat-checkbox>
+        </div>
+
+        @if (erroApi('possuiAgua')) {
+          <p class="erro-campo">
+            {{ erroApi('possuiAgua') }}
+          </p>
+        }
+
+        @if (erroApi('possuiEnergia')) {
+          <p class="erro-campo">
+            {{ erroApi('possuiEnergia') }}
+          </p>
+        }
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>notes</mat-icon>
+          </div>
+
+          <div>
+            <h2>Observacoes</h2>
+
+            <p>
+              Informacoes adicionais sobre a vaga.
+            </p>
+          </div>
+        </header>
+
+        <mat-form-field
+          appearance="outline"
+          class="campo-completo"
+        >
+          <mat-label>Observacoes</mat-label>
+
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="5"
+            maxlength="2000"
+          ></textarea>
+
+          <mat-hint align="end">
+            {{
+              formulario.controls
+                .observacoes.value.length
+            }}/2000
+          </mat-hint>
+
+          @if (erroApi('observacoes')) {
+            <mat-error>
+              {{ erroApi('observacoes') }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <footer class="acoes-formulario">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="salvando()"
+          (click)="cancelar()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          mat-flat-button
+          type="submit"
+          class="botao-salvar"
+          [disabled]="salvando()"
+        >
+          <span class="botao-salvar__conteudo">
+            @if (salvando()) {
+              <mat-spinner
+                diameter="22"
+              ></mat-spinner>
+
+              <span>Salvando...</span>
+            } @else {
+              <mat-icon>save</mat-icon>
+
+              <span>
+                {{
+                  modoEdicao()
+                    ? 'Salvar alteracoes'
+                    : 'Cadastrar vaga'
+                }}
+              </span>
+            }
+          </span>
+        </button>
+      </footer>
+    </form>
+  }
+</section>

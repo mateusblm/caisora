@@ -143,6 +143,11 @@ export class LayoutComponent implements OnInit {
       rotulo: 'Embarcações',
       icone: 'directions_boat',
       rota: '/embarcacoes'
+    },
+    {
+      rotulo: 'Vagas',
+      icone: 'anchor',
+      rota: '/vagas'
     }
   ];
 

@@ -119,6 +119,39 @@ export const routes: Routes = [
             (componente) =>
               componente.EmbarcacaoFormularioComponent
           )
+      },
+      {
+        path: 'vagas',
+        title: 'Vagas | Caisora',
+        loadComponent: () =>
+          import(
+            './features/vagas/pages/vaga-listagem/vaga-listagem.component'
+          ).then(
+            (componente) =>
+              componente.VagaListagemComponent
+          )
+      },
+      {
+        path: 'vagas/nova',
+        title: 'Nova vaga | Caisora',
+        loadComponent: () =>
+          import(
+            './features/vagas/pages/vaga-formulario/vaga-formulario.component'
+          ).then(
+            (componente) =>
+              componente.VagaFormularioComponent
+          )
+      },
+      {
+        path: 'vagas/:id/editar',
+        title: 'Editar vaga | Caisora',
+        loadComponent: () =>
+          import(
+            './features/vagas/pages/vaga-formulario/vaga-formulario.component'
+          ).then(
+            (componente) =>
+              componente.VagaFormularioComponent
+          )
       }
     ]
   },

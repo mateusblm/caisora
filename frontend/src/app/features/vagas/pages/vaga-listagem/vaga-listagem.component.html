@@ -1,0 +1,518 @@
+<section class="pagina-vagas">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">
+        Marina
+      </span>
+
+      <h1>Vagas</h1>
+
+      <p>
+        Gerencie os pontos de atracacao e guarda
+        disponiveis para operacao.
+      </p>
+    </div>
+
+    <button
+      mat-flat-button
+      class="botao-novo"
+      type="button"
+      routerLink="/vagas/nova"
+    >
+      <mat-icon>anchor</mat-icon>
+      <span>Nova vaga</span>
+    </button>
+  </header>
+
+  <section
+    class="filtros"
+    aria-label="Filtros de vagas"
+  >
+    <form
+      class="campo-busca"
+      (ngSubmit)="pesquisar()"
+    >
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>Filtro</mat-label>
+
+        <mat-select
+          [formControl]="modoBusca"
+          (selectionChange)="alterarModoBusca()"
+        >
+          <mat-option value="codigo">
+            Codigo
+          </mat-option>
+
+          <mat-option value="setor">
+            Setor
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>
+          {{ rotuloBusca() }}
+        </mat-label>
+
+        <input
+          matInput
+          [formControl]="busca"
+          autocomplete="off"
+        />
+
+        <mat-icon matPrefix>
+          search
+        </mat-icon>
+
+        @if (busca.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Limpar filtros"
+            (click)="limparFiltros()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        class="botao-pesquisar"
+        type="submit"
+      >
+        Pesquisar
+      </button>
+    </form>
+
+    <mat-form-field
+      appearance="outline"
+      subscriptSizing="dynamic"
+    >
+      <mat-label>Tipo</mat-label>
+
+      <mat-select
+        [formControl]="filtroTipo"
+        (selectionChange)="alterarFiltroTipo()"
+      >
+        <mat-option value="TODAS">
+          Todos os tipos
+        </mat-option>
+
+        @for (
+          tipo of tipos;
+          track tipo.valor
+        ) {
+          <mat-option [value]="tipo.valor">
+            {{ tipo.rotulo }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      subscriptSizing="dynamic"
+    >
+      <mat-label>Status</mat-label>
+
+      <mat-select
+        [formControl]="filtroStatus"
+        (selectionChange)="alterarFiltroStatus()"
+      >
+        <mat-option value="TODAS">
+          Todas
+        </mat-option>
+
+        <mat-option value="ATIVAS">
+          Ativas
+        </mat-option>
+
+        <mat-option value="INATIVAS">
+          Inativas
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <div class="resumo-listagem">
+    <span>
+      {{ totalElementos() }}
+      {{
+        totalElementos() === 1
+          ? 'vaga encontrada'
+          : 'vagas encontradas'
+      }}
+    </span>
+  </div>
+
+  @if (carregando()) {
+    <section class="estado-listagem">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando vagas...</p>
+    </section>
+  } @else if (mensagemErro()) {
+    <section
+      class="estado-listagem estado-erro"
+      role="alert"
+    >
+      <mat-icon>error_outline</mat-icon>
+
+      <h2>Nao foi possivel carregar</h2>
+
+      <p>{{ mensagemErro() }}</p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="pesquisar()"
+      >
+        Tentar novamente
+      </button>
+    </section>
+  } @else if (vagas().length === 0) {
+    <section class="estado-listagem">
+      <mat-icon>anchor</mat-icon>
+
+      <h2>Nenhuma vaga encontrada</h2>
+
+      <p>
+        Altere os filtros ou cadastre uma nova
+        vaga.
+      </p>
+    </section>
+  } @else {
+    @if (telaDesktop()) {
+      <section class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Vaga</th>
+              <th>Tipo</th>
+              <th>Dimensoes</th>
+              <th>Infraestrutura</th>
+              <th>Status</th>
+              <th class="coluna-acoes">
+                Acoes
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (
+              vaga of vagas();
+              track vaga.id
+            ) {
+              <tr>
+                <td>
+                  <div class="dado-principal">
+                    <strong>
+                      {{ vaga.codigo }}
+                    </strong>
+
+                    <span>
+                      {{ descricaoLocalizacao(vaga) }}
+                    </span>
+                  </div>
+                </td>
+
+                <td>
+                  {{ formatarTipo(vaga.tipo) }}
+                </td>
+
+                <td>
+                  <div class="dado-principal">
+                    <strong>
+                      {{
+                        formatarMetros(
+                          vaga
+                            .comprimentoMaximoMetros
+                        )
+                      }}
+                    </strong>
+
+                    <span>
+                      Boca:
+                      {{
+                        formatarMetros(
+                          vaga.bocaMaximaMetros
+                        )
+                      }}
+                    </span>
+                  </div>
+                </td>
+
+                <td>
+                  {{ infraestrutura(vaga) }}
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.status--ativo]="vaga.ativa"
+                    [class.status--inativo]="!vaga.ativa"
+                  >
+                    {{
+                      vaga.ativa
+                        ? 'Ativa'
+                        : 'Inativa'
+                    }}
+                  </span>
+                </td>
+
+                <td class="coluna-acoes">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    aria-label="Abrir acoes da vaga"
+                    [matMenuTriggerFor]="menuAcoes"
+                    [disabled]="
+                      alterandoStatusId() === vaga.id
+                    "
+                  >
+                    @if (
+                      alterandoStatusId() === vaga.id
+                    ) {
+                      <mat-spinner
+                        diameter="20"
+                      ></mat-spinner>
+                    } @else {
+                      <mat-icon>more_vert</mat-icon>
+                    }
+                  </button>
+
+                  <mat-menu
+                    #menuAcoes="matMenu"
+                    xPosition="before"
+                  >
+                    <button
+                      mat-menu-item
+                      type="button"
+                      [routerLink]="[
+                        '/vagas',
+                        vaga.id,
+                        'editar'
+                      ]"
+                    >
+                      <mat-icon>edit</mat-icon>
+                      <span>Editar</span>
+                    </button>
+
+                    <button
+                      mat-menu-item
+                      type="button"
+                      (click)="
+                        solicitarAlteracaoStatus(
+                          vaga
+                        )
+                      "
+                    >
+                      <mat-icon>
+                        {{
+                          vaga.ativa
+                            ? 'block'
+                            : 'anchor'
+                        }}
+                      </mat-icon>
+
+                      <span>
+                        {{
+                          vaga.ativa
+                            ? 'Inativar'
+                            : 'Ativar'
+                        }}
+                      </span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    } @else {
+      <section class="lista-cards">
+        @for (
+          vaga of vagas();
+          track vaga.id
+        ) {
+          <article class="vaga-card">
+            <header class="vaga-card__topo">
+              <div class="vaga-icone">
+                <mat-icon>anchor</mat-icon>
+              </div>
+
+              <div class="vaga-card__identidade">
+                <strong>
+                  {{ vaga.codigo }}
+                </strong>
+
+                <span>
+                  {{ descricaoLocalizacao(vaga) }}
+                </span>
+              </div>
+
+              <span
+                class="status"
+                [class.status--ativo]="vaga.ativa"
+                [class.status--inativo]="!vaga.ativa"
+              >
+                {{
+                  vaga.ativa
+                    ? 'Ativa'
+                    : 'Inativa'
+                }}
+              </span>
+            </header>
+
+            <dl class="vaga-card__dados">
+              <div>
+                <dt>Tipo</dt>
+                <dd>{{ formatarTipo(vaga.tipo) }}</dd>
+              </div>
+
+              <div>
+                <dt>Infra</dt>
+                <dd>{{ infraestrutura(vaga) }}</dd>
+              </div>
+
+              <div>
+                <dt>Comprimento</dt>
+                <dd>
+                  {{
+                    formatarMetros(
+                      vaga.comprimentoMaximoMetros
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Boca</dt>
+                <dd>
+                  {{
+                    formatarMetros(
+                      vaga.bocaMaximaMetros
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div class="dado-completo">
+                <dt>Peso maximo</dt>
+                <dd>
+                  {{
+                    formatarPeso(
+                      vaga.pesoMaximoKg
+                    )
+                  }}
+                </dd>
+              </div>
+            </dl>
+
+            <footer class="vaga-card__acoes">
+              <button
+                mat-stroked-button
+                type="button"
+                [routerLink]="[
+                  '/vagas',
+                  vaga.id,
+                  'editar'
+                ]"
+                [disabled]="
+                  alterandoStatusId() === vaga.id
+                "
+              >
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+
+              <button
+                mat-stroked-button
+                type="button"
+                class="botao-status"
+                [class.botao-status--perigo]="
+                  vaga.ativa
+                "
+                [class.botao-status--sucesso]="
+                  !vaga.ativa
+                "
+                [disabled]="
+                  alterandoStatusId() === vaga.id
+                "
+                (click)="
+                  solicitarAlteracaoStatus(vaga)
+                "
+              >
+                <span class="conteudo-botao">
+                  @if (
+                    alterandoStatusId() === vaga.id
+                  ) {
+                    <mat-spinner
+                      diameter="20"
+                    ></mat-spinner>
+
+                    <span>Alterando...</span>
+                  } @else {
+                    <mat-icon>
+                      {{
+                        vaga.ativa
+                          ? 'block'
+                          : 'anchor'
+                      }}
+                    </mat-icon>
+
+                    <span>
+                      {{
+                        vaga.ativa
+                          ? 'Inativar'
+                          : 'Ativar'
+                      }}
+                    </span>
+                  }
+                </span>
+              </button>
+            </footer>
+          </article>
+        }
+      </section>
+    }
+
+    <footer class="paginacao">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="paginaAtual() === 0"
+        (click)="paginaAnterior()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+        <span>Anterior</span>
+      </button>
+
+      <span class="paginacao__texto">
+        Pagina {{ paginaAtual() + 1 }}
+        de {{ totalPaginas() }}
+      </span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="
+          paginaAtual() + 1
+          >= totalPaginas()
+        "
+        (click)="proximaPagina()"
+      >
+        <span>Proxima</span>
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </footer>
+  }
+</section>
