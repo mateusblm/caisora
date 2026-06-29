@@ -172,10 +172,10 @@ export class EmbarcacaoFormularioComponent
     signal(this.embarcacaoId !== null);
 
   protected readonly carregando =
-    signal(false);
+    signal(this.embarcacaoId !== null);
 
   protected readonly carregandoProprietarios =
-    signal(false);
+    signal(this.embarcacaoId === null);
 
   protected readonly salvando =
     signal(false);
@@ -763,6 +763,7 @@ export class EmbarcacaoFormularioComponent
 
   private carregarProprietariosAtivos(): void {
     this.carregandoProprietarios.set(true);
+    this.mensagemErro.set(null);
 
     this.clienteService
       .listarTodosAtivos()

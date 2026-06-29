@@ -32,15 +32,24 @@
     </div>
   </header>
 
-  @if (carregando()) {
+    @if (
+    carregando()
+    || carregandoProprietarios()
+    ) {
     <section class="estado-carregamento">
-      <mat-spinner
+        <mat-spinner
         diameter="42"
-      ></mat-spinner>
+        ></mat-spinner>
 
-      <p>Carregando embarcação...</p>
+        <p>
+        {{
+            modoEdicao()
+            ? 'Carregando embarcação...'
+            : 'Carregando proprietários...'
+        }}
+        </p>
     </section>
-  } @else {
+    } @else {
     @if (mensagemErro()) {
       <div
         class="alerta-erro"
@@ -207,10 +216,6 @@
             <mat-icon matPrefix>
               sailing
             </mat-icon>
-
-            <mat-hint>
-              Opcional
-            </mat-hint>
 
             @if (erroApi('nome')) {
               <mat-error>
@@ -567,9 +572,7 @@
               inputmode="decimal"
               min="0.01"
               step="0.01"
-              formControlName="
-                comprimentoTotalMetros
-              "
+              formControlName="comprimentoTotalMetros"
             />
 
             <span matTextSuffix>m</span>
@@ -719,9 +722,7 @@
               inputmode="decimal"
               min="0.01"
               step="0.01"
-              formControlName="
-                alturaTotalMetros
-              "
+              formControlName="alturaTotalMetros"
             />
 
             <span matTextSuffix>m</span>
@@ -857,9 +858,7 @@
               inputmode="numeric"
               min="1"
               step="1"
-              formControlName="
-                capacidadePessoas
-              "
+              formControlName="capacidadePessoas"
             />
 
             <mat-icon matPrefix>
@@ -949,32 +948,34 @@
           Cancelar
         </button>
 
-        <button
-          mat-flat-button
-          type="submit"
-          class="botao-salvar"
-          [disabled]="
+     <button
+        mat-flat-button
+        type="submit"
+        class="botao-salvar"
+        [disabled]="
             salvando()
             || carregandoProprietarios()
-          "
+        "
         >
-          @if (salvando()) {
+        <span class="botao-salvar__conteudo">
+            @if (salvando()) {
             <mat-spinner
-              diameter="22"
+                diameter="22"
             ></mat-spinner>
 
             <span>Salvando...</span>
-          } @else {
+            } @else {
             <mat-icon>save</mat-icon>
 
             <span>
-              {{
+                {{
                 modoEdicao()
-                  ? 'Salvar alterações'
-                  : 'Cadastrar embarcação'
-              }}
+                    ? 'Salvar alterações'
+                    : 'Cadastrar embarcação'
+                }}
             </span>
-          }
+            }
+        </span>
         </button>
       </footer>
     </form>
