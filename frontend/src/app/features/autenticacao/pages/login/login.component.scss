@@ -1,0 +1,231 @@
+.pagina-login {
+  min-height: 100dvh;
+  background: var(--caisora-superficie);
+}
+
+.apresentacao {
+  position: relative;
+  min-height: 230px;
+  overflow: hidden;
+  padding: 24px 20px 64px;
+  background:
+    linear-gradient(
+      150deg,
+      var(--caisora-marinho-900),
+      var(--caisora-oceano-700)
+    );
+  color: white;
+}
+
+.marca {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    font-size: 1.4rem;
+  }
+
+  span {
+    margin-top: 2px;
+    color: rgb(255 255 255 / 76%);
+    font-size: 0.74rem;
+  }
+}
+
+.marca__icone {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--caisora-turquesa-500);
+}
+
+.mensagem-marca {
+  position: relative;
+  z-index: 2;
+  margin-top: 34px;
+
+  h1 {
+    max-width: 520px;
+    margin: 8px 0 10px;
+    font-size: clamp(1.7rem, 8vw, 2.5rem);
+    line-height: 1.08;
+  }
+
+  p {
+    max-width: 500px;
+    margin: 0;
+    color: rgb(255 255 255 / 76%);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+}
+
+.sobrelinha {
+  color: var(--caisora-turquesa-500);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ondas {
+  position: absolute;
+  right: -80px;
+  bottom: -110px;
+  width: 330px;
+  height: 200px;
+  border: 34px solid rgb(255 255 255 / 7%);
+  border-radius: 50%;
+  transform: rotate(-10deg);
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    border: 26px solid rgb(255 255 255 / 6%);
+    border-radius: 50%;
+  }
+
+  &::before {
+    inset: 24px -70px -60px 50px;
+  }
+
+  &::after {
+    inset: 60px -110px -100px 100px;
+  }
+}
+
+.area-formulario {
+  position: relative;
+  z-index: 3;
+  min-height: calc(100dvh - 202px);
+  margin-top: -28px;
+  padding: 32px 20px 24px;
+  border-radius: 28px 28px 0 0;
+  background: var(--caisora-superficie);
+}
+
+.formulario-container {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.cabecalho-formulario {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 6px 0 8px;
+    color: var(--caisora-texto);
+    font-size: 1.65rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--caisora-texto-secundario);
+    line-height: 1.5;
+  }
+}
+
+.alerta-erro {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 13px 14px;
+  border: 1px solid
+    rgb(214 83 83 / 28%);
+  border-radius: 10px;
+  background: rgb(214 83 83 / 8%);
+  color: var(--caisora-erro);
+  font-size: 0.86rem;
+  line-height: 1.4;
+
+  mat-icon {
+    flex: 0 0 auto;
+  }
+}
+
+form {
+  display: grid;
+  gap: 6px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.botao-entrar {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 6px;
+  border-radius: 10px;
+  background: var(--caisora-oceano-600);
+  color: white;
+
+  mat-spinner {
+    display: inline-block;
+    margin-right: 8px;
+
+    --mdc-circular-progress-active-indicator-color:
+      #ffffff;
+  }
+
+  mat-icon {
+    margin-left: 6px;
+  }
+}
+
+.rodape-formulario {
+  margin-top: 28px;
+  color: var(--caisora-texto-secundario);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .pagina-login {
+    display: grid;
+    grid-template-columns:
+      minmax(420px, 44%)
+      minmax(480px, 1fr);
+  }
+
+  .apresentacao {
+    display: flex;
+    min-height: 100dvh;
+    padding: 44px;
+    flex-direction: column;
+  }
+
+  .mensagem-marca {
+    margin: auto 0;
+
+    h1 {
+      font-size: clamp(2.6rem, 4vw, 4rem);
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .area-formulario {
+    display: grid;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 48px;
+    place-items: center;
+    border-radius: 0;
+  }
+}

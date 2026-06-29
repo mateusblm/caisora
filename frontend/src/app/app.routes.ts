@@ -5,6 +5,16 @@ import { LayoutComponent } from
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () =>
+      import(
+        './features/autenticacao/pages/login/login.component'
+      ).then(
+        (componente) =>
+          componente.LoginComponent
+      )
+  },
+  {
     path: '',
     component: LayoutComponent,
     children: [

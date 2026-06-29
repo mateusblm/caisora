@@ -1,0 +1,199 @@
+import {
+  Component,
+  signal
+} from '@angular/core';
+
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
+import {
+  HttpErrorResponse
+} from '@angular/common/http';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+  finalize
+} from 'rxjs';
+
+import {
+  MatButtonModule
+} from '@angular/material/button';
+
+import {
+  MatFormFieldModule
+} from '@angular/material/form-field';
+
+import {
+  MatIconModule
+} from '@angular/material/icon';
+
+import {
+  MatInputModule
+} from '@angular/material/input';
+
+import {
+  MatProgressSpinnerModule
+} from '@angular/material/progress-spinner';
+
+import {
+  AutenticacaoService
+} from '../../../../core/autenticacao/autenticacao.service';
+
+import {
+  ErroApi
+} from '../../../../core/autenticacao/autenticacao.model';
+
+const PADRAO_UUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+@Component({
+  selector: 'app-login',
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
+})
+export class LoginComponent {
+
+  protected readonly carregando =
+    signal(false);
+
+  protected readonly ocultarSenha =
+    signal(true);
+
+  protected readonly mensagemErro =
+    signal<string | null>(null);
+
+  protected readonly formulario;
+
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly autenticacaoService:
+      AutenticacaoService,
+    private readonly router: Router
+  ) {
+    this.formulario =
+      this.formBuilder.nonNullable.group({
+        organizacaoId: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(PADRAO_UUID)
+          ]
+        ],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.email
+          ]
+        ],
+        senha: [
+          '',
+          [
+            Validators.required
+          ]
+        ]
+      });
+  }
+
+  protected entrar(): void {
+    this.mensagemErro.set(null);
+
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+
+      return;
+    }
+
+    const {
+      organizacaoId,
+      email,
+      senha
+    } = this.formulario.getRawValue();
+
+    this.carregando.set(true);
+
+    this.autenticacaoService
+      .autenticar(
+        organizacaoId.trim(),
+        {
+          email: email.trim(),
+          senha
+        }
+      )
+      .pipe(
+        finalize(() =>
+          this.carregando.set(false)
+        )
+      )
+      .subscribe({
+        next: () => {
+          void this.router.navigateByUrl(
+            '/dashboard'
+          );
+        },
+        error: (erro: HttpErrorResponse) => {
+          this.mensagemErro.set(
+            this.obterMensagemErro(erro)
+          );
+        }
+      });
+  }
+
+  protected alternarSenha(): void {
+    this.ocultarSenha.update(
+      (oculta) => !oculta
+    );
+  }
+
+  private obterMensagemErro(
+    erro: HttpErrorResponse
+  ): string {
+    const resposta =
+      erro.error as ErroApi | null;
+
+    if (
+      resposta?.codigo ===
+      'CREDENCIAIS_INVALIDAS'
+    ) {
+      return 'E-mail, senha ou organização inválidos.';
+    }
+
+    if (
+      resposta?.codigo ===
+      'USUARIO_INATIVO'
+    ) {
+      return 'Este usuário está inativo.';
+    }
+
+    if (
+      resposta?.codigo ===
+      'ORGANIZACAO_INATIVA'
+    ) {
+      return 'Esta organização está inativa.';
+    }
+
+    if (resposta?.mensagem) {
+      return resposta.mensagem;
+    }
+
+    if (erro.status === 0) {
+      return 'Não foi possível conectar ao servidor.';
+    }
+
+    return 'Não foi possível realizar o login.';
+  }
+}
