@@ -14,6 +14,7 @@ import {
 } from '@angular/common/http';
 
 import {
+  ActivatedRoute,
   Router
 } from '@angular/router';
 
@@ -82,7 +83,8 @@ export class LoginComponent {
     private readonly formBuilder: FormBuilder,
     private readonly autenticacaoService:
       AutenticacaoService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.formulario =
       this.formBuilder.nonNullable.group({
@@ -107,6 +109,17 @@ export class LoginComponent {
           ]
         ]
       });
+
+    const sessaoExpirada =
+      this.activatedRoute.snapshot
+        .queryParamMap
+        .get('sessao') === 'expirada';
+
+    if (sessaoExpirada) {
+      this.mensagemErro.set(
+        'Sua sessão expirou. Entre novamente.'
+      );
+    }
   }
 
   protected entrar(): void {
@@ -141,11 +154,26 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => {
+          const retorno =
+            this.activatedRoute.snapshot
+              .queryParamMap
+              .get('retorno');
+
+          const retornoValido =
+            retorno !== null
+            && retorno.startsWith('/')
+            && !retorno.startsWith('//')
+            && retorno !== '/login';
+
           void this.router.navigateByUrl(
-            '/dashboard'
+            retornoValido
+              ? retorno
+              : '/dashboard'
           );
         },
-        error: (erro: HttpErrorResponse) => {
+        error: (
+          erro: HttpErrorResponse
+        ) => {
           this.mensagemErro.set(
             this.obterMensagemErro(erro)
           );

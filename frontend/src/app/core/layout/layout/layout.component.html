@@ -21,7 +21,9 @@
         Marina atual
       </span>
 
-      <strong>Marina Teste</strong>
+      <strong>
+        {{ usuario()?.organizacaoNome ?? 'Marina' }}
+      </strong>
     </div>
 
     <mat-nav-list class="navegacao">
@@ -74,19 +76,25 @@
 
       <div class="usuario">
         <div class="usuario__avatar">
-          A
+          {{ iniciaisUsuario() }}
         </div>
 
         <div class="usuario__dados">
-          <strong>Administrador</strong>
-          <span>Administrador da marina</span>
+          <strong>
+            {{ usuario()?.nome ?? 'Usuário' }}
+          </strong>
+
+          <span>
+            {{ perfilUsuario() }}
+          </span>
         </div>
       </div>
 
       <button
         mat-icon-button
         type="button"
-        aria-label="Sair"
+        aria-label="Sair do Caisora"
+        (click)="sair()"
       >
         <mat-icon>logout</mat-icon>
       </button>

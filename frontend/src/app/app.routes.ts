@@ -3,9 +3,22 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from
   './core/layout/layout/layout.component';
 
+import {
+  autenticacaoFilhosGuard,
+  autenticacaoGuard
+} from './core/autenticacao/autenticacao.guard';
+
+import {
+  naoAutenticadoGuard
+} from './core/autenticacao/nao-autenticado.guard';
+
 export const routes: Routes = [
   {
     path: 'login',
+    title: 'Entrar | Caisora',
+    canActivate: [
+      naoAutenticadoGuard
+    ],
     loadComponent: () =>
       import(
         './features/autenticacao/pages/login/login.component'
@@ -17,6 +30,12 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [
+      autenticacaoGuard
+    ],
+    canActivateChild: [
+      autenticacaoFilhosGuard
+    ],
     children: [
       {
         path: '',
@@ -25,6 +44,7 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
+        title: 'Dashboard | Caisora',
         loadComponent: () =>
           import(
             './features/dashboard/pages/dashboard/dashboard.component'

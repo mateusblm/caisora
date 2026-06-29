@@ -50,6 +50,8 @@ export class AutenticacaoService {
   constructor(
     private readonly http: HttpClient
   ) {
+    // Valida imediatamente os dados encontrados no storage.
+    this.obterToken();
   }
 
   autenticar(
@@ -74,6 +76,18 @@ export class AutenticacaoService {
     );
   }
 
+  atualizarUsuarioAtual():
+    Observable<UsuarioAutenticado> {
+
+    return this.http.get<UsuarioAutenticado>(
+      `${this.endpoint}/me`
+    ).pipe(
+      tap((usuario) =>
+        this.salvarUsuario(usuario)
+      )
+    );
+  }
+
   obterToken(): string | null {
     const token =
       localStorage.getItem(this.chaveToken);
@@ -82,11 +96,12 @@ export class AutenticacaoService {
       localStorage.getItem(this.chaveExpiracao);
 
     if (!token || !expiracaoTexto) {
+      this.encerrarSessao();
+
       return null;
     }
 
-    const expiracao =
-      Number(expiracaoTexto);
+    const expiracao = Number(expiracaoTexto);
 
     if (
       Number.isNaN(expiracao)
@@ -128,12 +143,18 @@ export class AutenticacaoService {
       expiracao.toString()
     );
 
+    this.salvarUsuario(resposta.usuario);
+  }
+
+  private salvarUsuario(
+    usuario: UsuarioAutenticado
+  ): void {
     localStorage.setItem(
       this.chaveUsuario,
-      JSON.stringify(resposta.usuario)
+      JSON.stringify(usuario)
     );
 
-    this.usuarioSignal.set(resposta.usuario);
+    this.usuarioSignal.set(usuario);
   }
 
   private carregarUsuario():
