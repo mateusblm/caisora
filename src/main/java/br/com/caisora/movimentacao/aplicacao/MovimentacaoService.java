@@ -1,7 +1,7 @@
 package br.com.caisora.movimentacao.aplicacao;
 
-import br.com.caisora.autenticacao.api.UsuarioAutenticadoResponse;
 import br.com.caisora.autenticacao.aplicacao.LeitorTokenJwt;
+import br.com.caisora.autenticacao.aplicacao.UsuarioAutenticado;
 import br.com.caisora.compartilhado.excecao.ConflitoDadosException;
 import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import br.com.caisora.compartilhado.excecao.RecursoNaoEncontradoException;
@@ -20,7 +20,6 @@ import br.com.caisora.movimentacao.dominio.Movimentacao;
 import br.com.caisora.movimentacao.dominio.MovimentacaoRepository;
 import br.com.caisora.movimentacao.dominio.PosicaoEmbarcacao;
 import br.com.caisora.movimentacao.dominio.PosicaoEmbarcacaoRepository;
-import br.com.caisora.movimentacao.dominio.PrioridadeMovimentacao;
 import br.com.caisora.movimentacao.dominio.StatusMovimentacao;
 import br.com.caisora.movimentacao.dominio.TipoMovimentacao;
 import br.com.caisora.movimentacao.dominio.TipoPosicaoEmbarcacao;
@@ -49,147 +48,93 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MovimentacaoService {
 
-    private static final Duration
-        TOLERANCIA_RELOGIO =
-            Duration.ofMinutes(1);
+    private static final Duration TOLERANCIA_RELOGIO = Duration.ofMinutes(1);
 
-    private static final Collection<
-        StatusMovimentacao
-    > STATUS_ABERTOS = List.of(
+    private static final Collection<StatusMovimentacao> STATUS_ABERTOS = List.of(
         StatusMovimentacao.AGENDADA,
         StatusMovimentacao.EM_EXECUCAO
     );
 
-    private final MovimentacaoRepository
-        movimentacaoRepository;
-
-    private final PosicaoEmbarcacaoRepository
-        posicaoRepository;
-
-    private final HistoricoMovimentacaoRepository
-        historicoRepository;
-
-    private final EmbarcacaoRepository
-        embarcacaoRepository;
-
+    private final MovimentacaoRepository movimentacaoRepository;
+    private final PosicaoEmbarcacaoRepository posicaoRepository;
+    private final HistoricoMovimentacaoRepository historicoRepository;
+    private final EmbarcacaoRepository embarcacaoRepository;
     private final VagaRepository vagaRepository;
-
-    private final UsuarioRepository
-        usuarioRepository;
-
-    private final OcupacaoRepository
-        ocupacaoRepository;
-
-    private final PosicaoEmbarcacaoService
-        posicaoService;
-
-    private final MovimentacaoMapper
-        movimentacaoMapper;
-
-    private final HistoricoMovimentacaoMapper
-        historicoMapper;
-
+    private final UsuarioRepository usuarioRepository;
+    private final OcupacaoRepository ocupacaoRepository;
+    private final PosicaoEmbarcacaoService posicaoService;
+    private final MovimentacaoMapper movimentacaoMapper;
+    private final HistoricoMovimentacaoMapper historicoMapper;
     private final LeitorTokenJwt leitorTokenJwt;
 
     public MovimentacaoService(
-        MovimentacaoRepository
-            movimentacaoRepository,
-        PosicaoEmbarcacaoRepository
-            posicaoRepository,
-        HistoricoMovimentacaoRepository
-            historicoRepository,
-        EmbarcacaoRepository
-            embarcacaoRepository,
+        MovimentacaoRepository movimentacaoRepository,
+        PosicaoEmbarcacaoRepository posicaoRepository,
+        HistoricoMovimentacaoRepository historicoRepository,
+        EmbarcacaoRepository embarcacaoRepository,
         VagaRepository vagaRepository,
         UsuarioRepository usuarioRepository,
-        OcupacaoRepository
-            ocupacaoRepository,
-        PosicaoEmbarcacaoService
-            posicaoService,
-        MovimentacaoMapper
-            movimentacaoMapper,
-        HistoricoMovimentacaoMapper
-            historicoMapper,
+        OcupacaoRepository ocupacaoRepository,
+        PosicaoEmbarcacaoService posicaoService,
+        MovimentacaoMapper movimentacaoMapper,
+        HistoricoMovimentacaoMapper historicoMapper,
         LeitorTokenJwt leitorTokenJwt
     ) {
-        this.movimentacaoRepository =
-            movimentacaoRepository;
-        this.posicaoRepository =
-            posicaoRepository;
-        this.historicoRepository =
-            historicoRepository;
-        this.embarcacaoRepository =
-            embarcacaoRepository;
-        this.vagaRepository =
-            vagaRepository;
-        this.usuarioRepository =
-            usuarioRepository;
-        this.ocupacaoRepository =
-            ocupacaoRepository;
+        this.movimentacaoRepository = movimentacaoRepository;
+        this.posicaoRepository = posicaoRepository;
+        this.historicoRepository = historicoRepository;
+        this.embarcacaoRepository = embarcacaoRepository;
+        this.vagaRepository = vagaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.ocupacaoRepository = ocupacaoRepository;
         this.posicaoService = posicaoService;
-        this.movimentacaoMapper =
-            movimentacaoMapper;
-        this.historicoMapper =
-            historicoMapper;
+        this.movimentacaoMapper = movimentacaoMapper;
+        this.historicoMapper = historicoMapper;
         this.leitorTokenJwt = leitorTokenJwt;
     }
 
     @Transactional
-    public MovimentacaoResponse criar(
-        CriarMovimentacaoRequest request
-    ) {
+    public MovimentacaoResponse criar(CriarMovimentacaoRequest request) {
         validarRequest(request);
 
-        UsuarioAutenticadoResponse autenticado =
-            obterUsuarioAutenticado();
+        UsuarioAutenticado autenticado = obterUsuarioAutenticado();
+        UUID organizacaoId = autenticado.organizacaoId();
 
-        UUID organizacaoId =
-            autenticado.organizacaoId();
+        validarAgendamento(request.agendadaPara());
 
-        validarAgendamento(
-            request.agendadaPara()
+        Embarcacao embarcacao = buscarEmbarcacao(
+            request.embarcacaoId(),
+            organizacaoId
         );
-
-        Embarcacao embarcacao =
-            buscarEmbarcacao(
-                request.embarcacaoId(),
-                organizacaoId
-            );
-
         validarEmbarcacaoAtiva(embarcacao);
 
-        Usuario solicitante =
-            buscarUsuarioAtivo(
-                autenticado.id(),
-                organizacaoId
-            );
-
-        Usuario operador =
-            buscarOperadorOpcional(
-                request.operadorResponsavelId(),
-                organizacaoId
-            );
+        Usuario solicitante = buscarUsuarioAtivo(
+            autenticado.id(),
+            organizacaoId
+        );
+        Usuario operador = buscarOperadorOpcional(
+            request.operadorResponsavelId(),
+            organizacaoId
+        );
 
         validarSemMovimentacaoAberta(
             organizacaoId,
             embarcacao.getId()
         );
 
-        PosicaoEmbarcacao posicao =
-            posicaoService.obterOuCriarPosicao(
-                embarcacao,
-                organizacaoId
-            );
+        PosicaoEmbarcacao posicao = posicaoService.obterOuCriarPosicao(
+            embarcacao,
+            organizacaoId
+        );
 
-        DestinoResolvido destino =
-            resolverDestino(
-                request.tipo(),
-                request.tipoPosicaoDestino(),
-                request.vagaDestinoId(),
-                embarcacao,
-                organizacaoId,
-                null
-            );
+        DestinoResolvido destino = resolverDestino(
+            request.tipo(),
+            request.tipoPosicaoDestino(),
+            request.vagaDestinoId(),
+            embarcacao,
+            organizacaoId,
+            null
+        );
 
         validarCoerenciaOperacional(
             request.tipo(),
@@ -199,15 +144,14 @@ public class MovimentacaoService {
             organizacaoId
         );
 
-        Movimentacao movimentacao =
-            criarEntidade(
-                embarcacao,
-                request,
-                posicao,
-                destino,
-                solicitante,
-                operador
-            );
+        Movimentacao movimentacao = criarEntidade(
+            embarcacao,
+            request,
+            posicao,
+            destino,
+            solicitante,
+            operador
+        );
 
         salvarMovimentacao(movimentacao);
 
@@ -219,8 +163,7 @@ public class MovimentacaoService {
             )
         );
 
-        return movimentacaoMapper
-            .paraResponse(movimentacao);
+        return movimentacaoMapper.paraResponse(movimentacao);
     }
 
     @Transactional(readOnly = true)
@@ -240,9 +183,7 @@ public class MovimentacaoService {
             fim
         );
 
-        UUID organizacaoId =
-            obterUsuarioAutenticado()
-                .organizacaoId();
+        UUID organizacaoId = obterUsuarioAutenticado().organizacaoId();
 
         Page<Movimentacao> pagina;
 
@@ -276,31 +217,21 @@ public class MovimentacaoService {
                     paginacao
                 );
         } else {
-            pagina = movimentacaoRepository
-                .findAllByOrganizacaoId(
-                    organizacaoId,
-                    paginacao
-                );
+            pagina = movimentacaoRepository.findAllByOrganizacaoId(
+                organizacaoId,
+                paginacao
+            );
         }
 
-        return pagina.map(
-            movimentacaoMapper::paraResponse
-        );
+        return pagina.map(movimentacaoMapper::paraResponse);
     }
 
     @Transactional(readOnly = true)
-    public MovimentacaoResponse buscarPorId(
-        UUID id
-    ) {
-        UUID organizacaoId =
-            obterUsuarioAutenticado()
-                .organizacaoId();
+    public MovimentacaoResponse buscarPorId(UUID id) {
+        UUID organizacaoId = obterUsuarioAutenticado().organizacaoId();
 
         return movimentacaoMapper.paraResponse(
-            buscarMovimentacao(
-                id,
-                organizacaoId
-            )
+            buscarMovimentacao(id, organizacaoId)
         );
     }
 
@@ -311,49 +242,39 @@ public class MovimentacaoService {
     ) {
         validarRequest(request);
 
-        UsuarioAutenticadoResponse autenticado =
-            obterUsuarioAutenticado();
+        UsuarioAutenticado autenticado = obterUsuarioAutenticado();
+        UUID organizacaoId = autenticado.organizacaoId();
 
-        UUID organizacaoId =
-            autenticado.organizacaoId();
+        validarAgendamento(request.agendadaPara());
 
-        validarAgendamento(
-            request.agendadaPara()
+        Movimentacao movimentacao = buscarMovimentacao(
+            id,
+            organizacaoId
         );
 
-        Movimentacao movimentacao =
-            buscarMovimentacao(
-                id,
-                organizacaoId
-            );
+        Usuario usuario = buscarUsuarioAtivo(
+            autenticado.id(),
+            organizacaoId
+        );
 
-        Usuario usuario =
-            buscarUsuarioAtivo(
-                autenticado.id(),
-                organizacaoId
-            );
+        Usuario operador = buscarOperadorOpcional(
+            request.operadorResponsavelId(),
+            organizacaoId
+        );
 
-        Usuario operador =
-            buscarOperadorOpcional(
-                request.operadorResponsavelId(),
-                organizacaoId
-            );
+        DestinoResolvido destino = resolverDestino(
+            movimentacao.getTipo(),
+            request.tipoPosicaoDestino(),
+            request.vagaDestinoId(),
+            movimentacao.getEmbarcacao(),
+            organizacaoId,
+            movimentacao.getId()
+        );
 
-        DestinoResolvido destino =
-            resolverDestino(
-                movimentacao.getTipo(),
-                request.tipoPosicaoDestino(),
-                request.vagaDestinoId(),
-                movimentacao.getEmbarcacao(),
-                organizacaoId,
-                movimentacao.getId()
-            );
-
-        PosicaoEmbarcacao posicao =
-            buscarPosicao(
-                movimentacao.getEmbarcacao(),
-                organizacaoId
-            );
+        PosicaoEmbarcacao posicao = buscarPosicao(
+            movimentacao.getEmbarcacao(),
+            organizacaoId
+        );
 
         validarCoerenciaOperacional(
             movimentacao.getTipo(),
@@ -363,13 +284,10 @@ public class MovimentacaoService {
             organizacaoId
         );
 
-        Instant agendamentoAnterior =
-            movimentacao.getAgendadaPara();
-
-        Map<String, Object> dadosAnteriores =
-            criarSnapshotAtualizavel(
-                movimentacao
-            );
+        Instant agendamentoAnterior = movimentacao.getAgendadaPara();
+        Map<String, Object> dadosAnteriores = criarSnapshotAtualizavel(
+            movimentacao
+        );
 
         executarRegraDominio(
             () -> movimentacao.atualizarDados(
@@ -383,40 +301,31 @@ public class MovimentacaoService {
             )
         );
 
-        Map<String, Object> dadosNovos =
-            criarSnapshotAtualizavel(
-                movimentacao
-            );
+        Map<String, Object> dadosNovos = criarSnapshotAtualizavel(
+            movimentacao
+        );
 
         salvarMovimentacao(movimentacao);
 
         Instant ocorridoEm = Instant.now();
 
-        if (
-            !Objects.equals(
-                agendamentoAnterior,
-                movimentacao.getAgendadaPara()
-            )
-        ) {
+        if (!Objects.equals(
+            agendamentoAnterior,
+            movimentacao.getAgendadaPara()
+        )) {
             historicoRepository.save(
                 HistoricoMovimentacao.reagendada(
                     movimentacao,
                     usuario,
                     agendamentoAnterior,
-                    movimentacao
-                        .getAgendadaPara(),
+                    movimentacao.getAgendadaPara(),
                     null,
                     ocorridoEm
                 )
             );
         }
 
-        if (
-            !Objects.equals(
-                dadosAnteriores,
-                dadosNovos
-            )
-        ) {
+        if (!Objects.equals(dadosAnteriores, dadosNovos)) {
             historicoRepository.save(
                 HistoricoMovimentacao.atualizada(
                     movimentacao,
@@ -429,8 +338,7 @@ public class MovimentacaoService {
             );
         }
 
-        return movimentacaoMapper
-            .paraResponse(movimentacao);
+        return movimentacaoMapper.paraResponse(movimentacao);
     }
 
     @Transactional
@@ -440,23 +348,18 @@ public class MovimentacaoService {
     ) {
         validarRequest(request);
 
-        UsuarioAutenticadoResponse autenticado =
-            obterUsuarioAutenticado();
+        UsuarioAutenticado autenticado = obterUsuarioAutenticado();
+        UUID organizacaoId = autenticado.organizacaoId();
 
-        UUID organizacaoId =
-            autenticado.organizacaoId();
+        Movimentacao movimentacao = buscarMovimentacao(
+            id,
+            organizacaoId
+        );
 
-        Movimentacao movimentacao =
-            buscarMovimentacao(
-                id,
-                organizacaoId
-            );
-
-        Usuario operador =
-            buscarUsuarioAtivo(
-                autenticado.id(),
-                organizacaoId
-            );
+        Usuario operador = buscarUsuarioAtivo(
+            autenticado.id(),
+            organizacaoId
+        );
 
         validarDataOperacional(
             request.iniciadaEm(),
@@ -483,8 +386,7 @@ public class MovimentacaoService {
             )
         );
 
-        return movimentacaoMapper
-            .paraResponse(movimentacao);
+        return movimentacaoMapper.paraResponse(movimentacao);
     }
 
     @Transactional
@@ -494,23 +396,18 @@ public class MovimentacaoService {
     ) {
         validarRequest(request);
 
-        UsuarioAutenticadoResponse autenticado =
-            obterUsuarioAutenticado();
+        UsuarioAutenticado autenticado = obterUsuarioAutenticado();
+        UUID organizacaoId = autenticado.organizacaoId();
 
-        UUID organizacaoId =
-            autenticado.organizacaoId();
+        Movimentacao movimentacao = buscarMovimentacao(
+            id,
+            organizacaoId
+        );
 
-        Movimentacao movimentacao =
-            buscarMovimentacao(
-                id,
-                organizacaoId
-            );
-
-        Usuario operador =
-            buscarUsuarioAtivo(
-                autenticado.id(),
-                organizacaoId
-            );
+        Usuario operador = buscarUsuarioAtivo(
+            autenticado.id(),
+            organizacaoId
+        );
 
         validarDataOperacional(
             request.concluidaEm(),
@@ -519,21 +416,16 @@ public class MovimentacaoService {
             "A conclusao da movimentacao"
         );
 
-        PosicaoEmbarcacao posicao =
-            buscarPosicao(
-                movimentacao.getEmbarcacao(),
-                organizacaoId
-            );
+        PosicaoEmbarcacao posicao = buscarPosicao(
+            movimentacao.getEmbarcacao(),
+            organizacaoId
+        );
 
         validarPosicaoAindaCorrespondeOrigem(
             movimentacao,
             posicao
         );
-
-        validarDestinoNaConclusao(
-            movimentacao,
-            organizacaoId
-        );
+        validarDestinoNaConclusao(movimentacao, organizacaoId);
 
         executarRegraDominio(
             () -> movimentacao.concluir(
@@ -560,8 +452,7 @@ public class MovimentacaoService {
             )
         );
 
-        return movimentacaoMapper
-            .paraResponse(movimentacao);
+        return movimentacaoMapper.paraResponse(movimentacao);
     }
 
     @Transactional
@@ -571,23 +462,18 @@ public class MovimentacaoService {
     ) {
         validarRequest(request);
 
-        UsuarioAutenticadoResponse autenticado =
-            obterUsuarioAutenticado();
+        UsuarioAutenticado autenticado = obterUsuarioAutenticado();
+        UUID organizacaoId = autenticado.organizacaoId();
 
-        UUID organizacaoId =
-            autenticado.organizacaoId();
+        Movimentacao movimentacao = buscarMovimentacao(
+            id,
+            organizacaoId
+        );
 
-        Movimentacao movimentacao =
-            buscarMovimentacao(
-                id,
-                organizacaoId
-            );
-
-        Usuario usuario =
-            buscarUsuarioAtivo(
-                autenticado.id(),
-                organizacaoId
-            );
+        Usuario usuario = buscarUsuarioAtivo(
+            autenticado.id(),
+            organizacaoId
+        );
 
         validarDataOperacional(
             request.canceladaEm(),
@@ -614,24 +500,17 @@ public class MovimentacaoService {
             )
         );
 
-        return movimentacaoMapper
-            .paraResponse(movimentacao);
+        return movimentacaoMapper.paraResponse(movimentacao);
     }
 
     @Transactional(readOnly = true)
-    public Page<HistoricoMovimentacaoResponse>
-    listarHistorico(
+    public Page<HistoricoMovimentacaoResponse> listarHistorico(
         UUID movimentacaoId,
         Pageable paginacao
     ) {
-        UUID organizacaoId =
-            obterUsuarioAutenticado()
-                .organizacaoId();
+        UUID organizacaoId = obterUsuarioAutenticado().organizacaoId();
 
-        buscarMovimentacao(
-            movimentacaoId,
-            organizacaoId
-        );
+        buscarMovimentacao(movimentacaoId, organizacaoId);
 
         return historicoRepository
             .findAllByOrganizacaoIdAndMovimentacaoId(
@@ -667,10 +546,7 @@ public class MovimentacaoService {
                 operador,
                 request.observacoes()
             );
-        } catch (
-            IllegalArgumentException
-                | NullPointerException excecao
-        ) {
+        } catch (IllegalArgumentException | NullPointerException excecao) {
             throw new DadosInvalidosException(
                 "MOVIMENTACAO_INVALIDA",
                 excecao.getMessage()
@@ -684,10 +560,7 @@ public class MovimentacaoService {
         Instant concluidaEm,
         UUID organizacaoId
     ) {
-        if (
-            movimentacao.getTipo()
-                == TipoMovimentacao.TRANSFERENCIA
-        ) {
+        if (movimentacao.getTipo() == TipoMovimentacao.TRANSFERENCIA) {
             transferirOcupacao(
                 movimentacao,
                 concluidaEm,
@@ -696,11 +569,9 @@ public class MovimentacaoService {
         }
 
         posicao.atualizar(
-            movimentacao
-                .getTipoPosicaoDestino(),
+            movimentacao.getTipoPosicaoDestino(),
             movimentacao.getVagaDestino(),
-            movimentacao
-                .getDescricaoDestino(),
+            movimentacao.getDescricaoDestino(),
             movimentacao
         );
 
@@ -712,47 +583,30 @@ public class MovimentacaoService {
         Instant concluidaEm,
         UUID organizacaoId
     ) {
-        Ocupacao ocupacaoAtual =
-            buscarOcupacaoAtivaDaEmbarcacao(
-                organizacaoId,
-                movimentacao
-                    .getEmbarcacao()
-                    .getId()
-            );
+        Ocupacao ocupacaoAtual = buscarOcupacaoAtivaDaEmbarcacao(
+            organizacaoId,
+            movimentacao.getEmbarcacao().getId()
+        );
 
-        if (
-            !Objects.equals(
-                ocupacaoAtual
-                    .getVaga()
-                    .getId(),
-                movimentacao
-                    .getVagaOrigem()
-                    .getId()
-            )
-        ) {
+        if (!Objects.equals(
+            ocupacaoAtual.getVaga().getId(),
+            movimentacao.getVagaOrigem().getId()
+        )) {
             throw new ConflitoDadosException(
-                "A ocupacao ativa nao corresponde "
-                    + "a vaga de origem"
+                "A ocupacao ativa nao corresponde a vaga de origem"
             );
         }
 
-        Instant fimPrevisto =
-            ocupacaoAtual.getFimPrevistoEm();
+        Instant fimPrevisto = ocupacaoAtual.getFimPrevistoEm();
 
-        if (
-            fimPrevisto != null
-            && !fimPrevisto.isAfter(
-                concluidaEm
-            )
-        ) {
+        if (fimPrevisto != null && !fimPrevisto.isAfter(concluidaEm)) {
             fimPrevisto = null;
         }
 
-        String observacoes =
-            criarObservacaoTransferencia(
-                ocupacaoAtual.getObservacoes(),
-                movimentacao.getId()
-            );
+        String observacoes = criarObservacaoTransferencia(
+            ocupacaoAtual.getObservacoes(),
+            movimentacao.getId()
+        );
 
         ocupacaoAtual.encerrar(concluidaEm);
         ocupacaoRepository.save(ocupacaoAtual);
@@ -764,15 +618,14 @@ public class MovimentacaoService {
          */
         ocupacaoRepository.flush();
 
-        Ocupacao novaOcupacao =
-            new Ocupacao(
-                movimentacao.getOrganizacao(),
-                movimentacao.getEmbarcacao(),
-                movimentacao.getVagaDestino(),
-                concluidaEm,
-                fimPrevisto,
-                observacoes
-            );
+        Ocupacao novaOcupacao = new Ocupacao(
+            movimentacao.getOrganizacao(),
+            movimentacao.getEmbarcacao(),
+            movimentacao.getVagaDestino(),
+            concluidaEm,
+            fimPrevisto,
+            observacoes
+        );
 
         ocupacaoRepository.save(novaOcupacao);
     }
@@ -781,63 +634,44 @@ public class MovimentacaoService {
         Movimentacao movimentacao,
         UUID organizacaoId
     ) {
-        Vaga vagaDestino =
-            movimentacao.getVagaDestino();
+        Vaga vagaDestino = movimentacao.getVagaDestino();
 
         if (vagaDestino == null) {
             return;
         }
 
         validarVagaAtiva(vagaDestino);
-
         validarCompatibilidade(
             movimentacao.getEmbarcacao(),
             vagaDestino
         );
 
-        if (
-            movimentacao.getTipo()
-                == TipoMovimentacao.TRANSFERENCIA
-        ) {
+        if (movimentacao.getTipo() == TipoMovimentacao.TRANSFERENCIA) {
             ocupacaoRepository
                 .findByOrganizacaoIdAndVagaIdAndStatus(
                     organizacaoId,
                     vagaDestino.getId(),
                     StatusOcupacao.ATIVA
                 )
-                .ifPresent(
-                    ocupacao -> {
-                        throw new ConflitoDadosException(
-                            "A vaga de destino possui "
-                                + "uma ocupacao ativa"
-                        );
-                    }
-                );
+                .ifPresent(ocupacao -> {
+                    throw new ConflitoDadosException(
+                        "A vaga de destino possui uma ocupacao ativa"
+                    );
+                });
         }
 
-        if (
-            movimentacao.getTipo()
-                == TipoMovimentacao.RETIRADA
-        ) {
-            Ocupacao ocupacaoAtiva =
-                buscarOcupacaoAtivaDaEmbarcacao(
-                    organizacaoId,
-                    movimentacao
-                        .getEmbarcacao()
-                        .getId()
-                );
+        if (movimentacao.getTipo() == TipoMovimentacao.RETIRADA) {
+            Ocupacao ocupacaoAtiva = buscarOcupacaoAtivaDaEmbarcacao(
+                organizacaoId,
+                movimentacao.getEmbarcacao().getId()
+            );
 
-            if (
-                !Objects.equals(
-                    ocupacaoAtiva
-                        .getVaga()
-                        .getId(),
-                    vagaDestino.getId()
-                )
-            ) {
+            if (!Objects.equals(
+                ocupacaoAtiva.getVaga().getId(),
+                vagaDestino.getId()
+            )) {
                 throw new ConflitoDadosException(
-                    "A vaga da ocupacao ativa foi "
-                        + "alterada"
+                    "A vaga da ocupacao ativa foi alterada"
                 );
             }
         }
@@ -847,49 +681,32 @@ public class MovimentacaoService {
         Movimentacao movimentacao,
         PosicaoEmbarcacao posicao
     ) {
-        if (
-            posicao.getTipo()
-                != movimentacao
-                    .getTipoPosicaoOrigem()
-        ) {
+        if (posicao.getTipo() != movimentacao.getTipoPosicaoOrigem()) {
             throw new ConflitoDadosException(
-                "A posicao atual da embarcacao "
-                    + "nao corresponde a origem "
-                    + "da movimentacao"
+                "A posicao atual da embarcacao nao corresponde "
+                    + "a origem da movimentacao"
             );
         }
 
-        UUID vagaAtualId =
-            posicao.getVaga() == null
-                ? null
-                : posicao.getVaga().getId();
+        UUID vagaAtualId = posicao.getVaga() == null
+            ? null
+            : posicao.getVaga().getId();
 
-        UUID vagaOrigemId =
-            movimentacao.getVagaOrigem()
-                == null
-                    ? null
-                    : movimentacao
-                        .getVagaOrigem()
-                        .getId();
+        UUID vagaOrigemId = movimentacao.getVagaOrigem() == null
+            ? null
+            : movimentacao.getVagaOrigem().getId();
 
-        if (
-            !Objects.equals(
-                vagaAtualId,
-                vagaOrigemId
-            )
-        ) {
+        if (!Objects.equals(vagaAtualId, vagaOrigemId)) {
             throw new ConflitoDadosException(
-                "A vaga atual da embarcacao "
-                    + "nao corresponde a origem "
-                    + "da movimentacao"
+                "A vaga atual da embarcacao nao corresponde "
+                    + "a origem da movimentacao"
             );
         }
     }
 
     private DestinoResolvido resolverDestino(
         TipoMovimentacao tipo,
-        TipoPosicaoEmbarcacao
-            tipoPosicaoDestino,
+        TipoPosicaoEmbarcacao tipoPosicaoDestino,
         UUID vagaDestinoId,
         Embarcacao embarcacao,
         UUID organizacaoId,
@@ -905,21 +722,16 @@ public class MovimentacaoService {
         if (tipoPosicaoDestino == null) {
             throw new DadosInvalidosException(
                 "TIPO_DESTINO_OBRIGATORIO",
-                "Tipo da posicao de destino "
-                    + "obrigatorio"
+                "Tipo da posicao de destino obrigatorio"
             );
         }
 
-        if (
-            tipoPosicaoDestino
-                != TipoPosicaoEmbarcacao.VAGA
-        ) {
+        if (tipoPosicaoDestino != TipoPosicaoEmbarcacao.VAGA) {
             if (vagaDestinoId != null) {
                 throw new DadosInvalidosException(
                     "VAGA_DESTINO_INDEVIDA",
-                    "A vaga de destino deve ser "
-                        + "nula quando o destino "
-                        + "nao for VAGA"
+                    "A vaga de destino deve ser nula quando "
+                        + "o destino nao for VAGA"
                 );
             }
 
@@ -933,66 +745,45 @@ public class MovimentacaoService {
             );
         }
 
-        Vaga vaga =
-            buscarVaga(
-                vagaDestinoId,
-                organizacaoId
-            );
+        Vaga vaga = buscarVaga(vagaDestinoId, organizacaoId);
 
         validarVagaAtiva(vaga);
-        validarCompatibilidade(
-            embarcacao,
-            vaga
-        );
-
+        validarCompatibilidade(embarcacao, vaga);
         validarReservaDestino(
             organizacaoId,
             vaga.getId(),
             movimentacaoIdIgnorada
         );
 
-        if (
-            tipo
-                == TipoMovimentacao.RETIRADA
-        ) {
-            Ocupacao ocupacao =
-                buscarOcupacaoAtivaDaEmbarcacao(
-                    organizacaoId,
-                    embarcacao.getId()
-                );
+        if (tipo == TipoMovimentacao.RETIRADA) {
+            Ocupacao ocupacao = buscarOcupacaoAtivaDaEmbarcacao(
+                organizacaoId,
+                embarcacao.getId()
+            );
 
-            if (
-                !Objects.equals(
-                    ocupacao.getVaga().getId(),
-                    vaga.getId()
-                )
-            ) {
+            if (!Objects.equals(
+                ocupacao.getVaga().getId(),
+                vaga.getId()
+            )) {
                 throw new DadosInvalidosException(
                     "DESTINO_RETIRADA_INVALIDO",
-                    "A retirada deve terminar na "
-                        + "vaga da ocupacao ativa"
+                    "A retirada deve terminar na vaga da ocupacao ativa"
                 );
             }
         }
 
-        if (
-            tipo
-                == TipoMovimentacao.TRANSFERENCIA
-        ) {
+        if (tipo == TipoMovimentacao.TRANSFERENCIA) {
             ocupacaoRepository
                 .findByOrganizacaoIdAndVagaIdAndStatus(
                     organizacaoId,
                     vaga.getId(),
                     StatusOcupacao.ATIVA
                 )
-                .ifPresent(
-                    ocupacao -> {
-                        throw new ConflitoDadosException(
-                            "A vaga de destino ja "
-                                + "possui ocupacao ativa"
-                        );
-                    }
-                );
+                .ifPresent(ocupacao -> {
+                    throw new ConflitoDadosException(
+                        "A vaga de destino ja possui ocupacao ativa"
+                    );
+                });
         }
 
         return new DestinoResolvido(vaga);
@@ -1007,47 +798,41 @@ public class MovimentacaoService {
     ) {
         if (
             tipo == TipoMovimentacao.LANCAMENTO
-            || tipo
-                == TipoMovimentacao.TRANSFERENCIA
+                || tipo == TipoMovimentacao.TRANSFERENCIA
         ) {
-            Ocupacao ocupacao =
-                buscarOcupacaoAtivaDaEmbarcacao(
-                    organizacaoId,
-                    embarcacao.getId()
-                );
+            Ocupacao ocupacao = buscarOcupacaoAtivaDaEmbarcacao(
+                organizacaoId,
+                embarcacao.getId()
+            );
 
             if (
-                posicao.getTipo()
-                    != TipoPosicaoEmbarcacao.VAGA
-                || posicao.getVaga() == null
-                || !Objects.equals(
-                    posicao.getVaga().getId(),
-                    ocupacao.getVaga().getId()
-                )
+                posicao.getTipo() != TipoPosicaoEmbarcacao.VAGA
+                    || posicao.getVaga() == null
+                    || !Objects.equals(
+                        posicao.getVaga().getId(),
+                        ocupacao.getVaga().getId()
+                    )
             ) {
                 throw new ConflitoDadosException(
-                    "A posicao da embarcacao nao "
-                        + "corresponde a ocupacao "
-                        + "ativa"
+                    "A posicao da embarcacao nao corresponde "
+                        + "a ocupacao ativa"
                 );
             }
         }
 
         if (
             tipo == TipoMovimentacao.RETIRADA
-            && destino.vaga() == null
+                && destino.vaga() == null
         ) {
             throw new DadosInvalidosException(
                 "DESTINO_RETIRADA_INVALIDO",
-                "A retirada precisa terminar "
-                    + "em uma vaga"
+                "A retirada precisa terminar em uma vaga"
             );
         }
 
         /*
-         * O construtor da entidade valida as
-         * combinacoes finais entre tipo,
-         * origem e destino.
+         * O construtor da entidade valida as combinacoes finais
+         * entre tipo, origem e destino.
          */
     }
 
@@ -1077,8 +862,7 @@ public class MovimentacaoService {
 
         if (reservada) {
             throw new ConflitoDadosException(
-                "A vaga de destino ja esta "
-                    + "reservada por outra "
+                "A vaga de destino ja esta reservada por outra "
                     + "movimentacao aberta"
             );
         }
@@ -1088,18 +872,16 @@ public class MovimentacaoService {
         UUID organizacaoId,
         UUID embarcacaoId
     ) {
-        boolean existe =
-            movimentacaoRepository
-                .existsByOrganizacaoIdAndEmbarcacaoIdAndStatusIn(
-                    organizacaoId,
-                    embarcacaoId,
-                    STATUS_ABERTOS
-                );
+        boolean existe = movimentacaoRepository
+            .existsByOrganizacaoIdAndEmbarcacaoIdAndStatusIn(
+                organizacaoId,
+                embarcacaoId,
+                STATUS_ABERTOS
+            );
 
         if (existe) {
             throw new ConflitoDadosException(
-                "A embarcacao ja possui uma "
-                    + "movimentacao aberta"
+                "A embarcacao ja possui uma movimentacao aberta"
             );
         }
     }
@@ -1114,11 +896,9 @@ public class MovimentacaoService {
                 embarcacao.getId()
             )
             .orElseThrow(
-                () ->
-                    new RecursoNaoEncontradoException(
-                        "Posicao da embarcacao "
-                            + "nao encontrada"
-                    )
+                () -> new RecursoNaoEncontradoException(
+                    "Posicao da embarcacao nao encontrada"
+                )
             );
     }
 
@@ -1134,15 +914,11 @@ public class MovimentacaoService {
         }
 
         return movimentacaoRepository
-            .findByIdAndOrganizacaoId(
-                id,
-                organizacaoId
-            )
+            .findByIdAndOrganizacaoId(id, organizacaoId)
             .orElseThrow(
-                () ->
-                    new RecursoNaoEncontradoException(
-                        "Movimentacao nao encontrada"
-                    )
+                () -> new RecursoNaoEncontradoException(
+                    "Movimentacao nao encontrada"
+                )
             );
     }
 
@@ -1158,32 +934,21 @@ public class MovimentacaoService {
         }
 
         return embarcacaoRepository
-            .findByIdAndOrganizacaoId(
-                id,
-                organizacaoId
-            )
+            .findByIdAndOrganizacaoId(id, organizacaoId)
             .orElseThrow(
-                () ->
-                    new RecursoNaoEncontradoException(
-                        "Embarcacao nao encontrada"
-                    )
+                () -> new RecursoNaoEncontradoException(
+                    "Embarcacao nao encontrada"
+                )
             );
     }
 
-    private Vaga buscarVaga(
-        UUID id,
-        UUID organizacaoId
-    ) {
+    private Vaga buscarVaga(UUID id, UUID organizacaoId) {
         return vagaRepository
-            .findByIdAndOrganizacaoId(
-                id,
-                organizacaoId
-            )
+            .findByIdAndOrganizacaoId(id, organizacaoId)
             .orElseThrow(
-                () ->
-                    new RecursoNaoEncontradoException(
-                        "Vaga nao encontrada"
-                    )
+                () -> new RecursoNaoEncontradoException(
+                    "Vaga nao encontrada"
+                )
             );
     }
 
@@ -1191,18 +956,13 @@ public class MovimentacaoService {
         UUID id,
         UUID organizacaoId
     ) {
-        Usuario usuario =
-            usuarioRepository
-                .findByIdAndOrganizacaoId(
-                    id,
-                    organizacaoId
+        Usuario usuario = usuarioRepository
+            .findByIdAndOrganizacaoId(id, organizacaoId)
+            .orElseThrow(
+                () -> new RecursoNaoEncontradoException(
+                    "Usuario nao encontrado"
                 )
-                .orElseThrow(
-                    () ->
-                        new RecursoNaoEncontradoException(
-                            "Usuario nao encontrado"
-                        )
-                );
+            );
 
         if (!usuario.isAtivo()) {
             throw new ConflitoDadosException(
@@ -1221,14 +981,10 @@ public class MovimentacaoService {
             return null;
         }
 
-        return buscarUsuarioAtivo(
-            id,
-            organizacaoId
-        );
+        return buscarUsuarioAtivo(id, organizacaoId);
     }
 
-    private Ocupacao
-    buscarOcupacaoAtivaDaEmbarcacao(
+    private Ocupacao buscarOcupacaoAtivaDaEmbarcacao(
         UUID organizacaoId,
         UUID embarcacaoId
     ) {
@@ -1239,30 +995,19 @@ public class MovimentacaoService {
                 StatusOcupacao.ATIVA
             )
             .orElseThrow(
-                () ->
-                    new ConflitoDadosException(
-                        "A embarcacao nao possui "
-                            + "ocupacao ativa"
-                    )
+                () -> new ConflitoDadosException(
+                    "A embarcacao nao possui ocupacao ativa"
+                )
             );
     }
 
-    private void salvarMovimentacao(
-        Movimentacao movimentacao
-    ) {
+    private void salvarMovimentacao(Movimentacao movimentacao) {
         try {
-            movimentacaoRepository.save(
-                movimentacao
-            );
-
+            movimentacaoRepository.save(movimentacao);
             movimentacaoRepository.flush();
-        } catch (
-            DataIntegrityViolationException
-                excecao
-        ) {
+        } catch (DataIntegrityViolationException excecao) {
             throw new ConflitoDadosException(
-                "A movimentacao conflita com "
-                    + "outra operacao aberta"
+                "A movimentacao conflita com outra operacao aberta"
             );
         }
     }
@@ -1274,25 +1019,17 @@ public class MovimentacaoService {
         Instant inicio,
         Instant fim
     ) {
-        if (
-            (inicio == null)
-                != (fim == null)
-        ) {
+        if ((inicio == null) != (fim == null)) {
             throw new DadosInvalidosException(
                 "PERIODO_INCOMPLETO",
-                "Inicio e fim do periodo devem "
-                    + "ser informados juntos"
+                "Inicio e fim do periodo devem ser informados juntos"
             );
         }
 
-        if (
-            inicio != null
-            && !fim.isAfter(inicio)
-        ) {
+        if (inicio != null && !fim.isAfter(inicio)) {
             throw new DadosInvalidosException(
                 "PERIODO_INVALIDO",
-                "O fim do periodo deve ser "
-                    + "posterior ao inicio"
+                "O fim do periodo deve ser posterior ao inicio"
             );
         }
 
@@ -1301,15 +1038,12 @@ public class MovimentacaoService {
         if (status != null) {
             quantidadeFiltros++;
         }
-
         if (tipo != null) {
             quantidadeFiltros++;
         }
-
         if (embarcacaoId != null) {
             quantidadeFiltros++;
         }
-
         if (inicio != null) {
             quantidadeFiltros++;
         }
@@ -1322,9 +1056,7 @@ public class MovimentacaoService {
         }
     }
 
-    private void validarAgendamento(
-        Instant agendadaPara
-    ) {
+    private void validarAgendamento(Instant agendadaPara) {
         if (agendadaPara == null) {
             throw new DadosInvalidosException(
                 "AGENDAMENTO_OBRIGATORIO",
@@ -1332,20 +1064,12 @@ public class MovimentacaoService {
             );
         }
 
-        Instant limitePassado =
-            Instant.now().minus(
-                TOLERANCIA_RELOGIO
-            );
+        Instant limitePassado = Instant.now().minus(TOLERANCIA_RELOGIO);
 
-        if (
-            agendadaPara.isBefore(
-                limitePassado
-            )
-        ) {
+        if (agendadaPara.isBefore(limitePassado)) {
             throw new DadosInvalidosException(
                 "AGENDAMENTO_PASSADO",
-                "A movimentacao nao pode ser "
-                    + "agendada no passado"
+                "A movimentacao nao pode ser agendada no passado"
             );
         }
     }
@@ -1365,48 +1089,36 @@ public class MovimentacaoService {
 
         if (
             limiteInferior != null
-            && data.isBefore(limiteInferior)
+                && data.isBefore(limiteInferior)
         ) {
             throw new DadosInvalidosException(
                 codigo,
-                descricao
-                    + " nao pode ser anterior "
-                    + "ao evento precedente"
+                descricao + " nao pode ser anterior ao evento precedente"
             );
         }
 
-        Instant limiteFuturo =
-            Instant.now().plus(
-                TOLERANCIA_RELOGIO
-            );
+        Instant limiteFuturo = Instant.now().plus(TOLERANCIA_RELOGIO);
 
         if (data.isAfter(limiteFuturo)) {
             throw new DadosInvalidosException(
                 codigo,
-                descricao
-                    + " nao pode estar no futuro"
+                descricao + " nao pode estar no futuro"
             );
         }
     }
 
-    private void validarEmbarcacaoAtiva(
-        Embarcacao embarcacao
-    ) {
+    private void validarEmbarcacaoAtiva(Embarcacao embarcacao) {
         if (!embarcacao.isAtiva()) {
             throw new ConflitoDadosException(
-                "Nao e possivel movimentar uma "
-                    + "embarcacao inativa"
+                "Nao e possivel movimentar uma embarcacao inativa"
             );
         }
     }
 
-    private void validarVagaAtiva(
-        Vaga vaga
-    ) {
+    private void validarVagaAtiva(Vaga vaga) {
         if (!vaga.isAtiva()) {
             throw new ConflitoDadosException(
-                "Nao e possivel usar uma "
-                    + "vaga inativa"
+                "Nao e possivel usar uma vaga inativa"
             );
         }
     }
@@ -1416,45 +1128,38 @@ public class MovimentacaoService {
         Vaga vaga
     ) {
         validarLimite(
-            embarcacao
-                .getComprimentoTotalMetros(),
+            embarcacao.getComprimentoTotalMetros(),
             vaga.getComprimentoMaximoMetros(),
             "COMPRIMENTO_EXCEDE_LIMITE_VAGA",
-            "O comprimento da embarcacao "
-                + "excede o limite da vaga"
+            "O comprimento da embarcacao excede o limite da vaga"
         );
 
         validarLimite(
             embarcacao.getBocaMetros(),
             vaga.getBocaMaximaMetros(),
             "BOCA_EXCEDE_LIMITE_VAGA",
-            "A boca da embarcacao excede "
-                + "o limite da vaga"
+            "A boca da embarcacao excede o limite da vaga"
         );
 
         validarLimite(
             embarcacao.getCaladoMetros(),
             vaga.getCaladoMaximoMetros(),
             "CALADO_EXCEDE_LIMITE_VAGA",
-            "O calado da embarcacao excede "
-                + "o limite da vaga"
+            "O calado da embarcacao excede o limite da vaga"
         );
 
         validarLimite(
-            embarcacao
-                .getAlturaTotalMetros(),
+            embarcacao.getAlturaTotalMetros(),
             vaga.getAlturaMaximaMetros(),
             "ALTURA_EXCEDE_LIMITE_VAGA",
-            "A altura da embarcacao excede "
-                + "o limite da vaga"
+            "A altura da embarcacao excede o limite da vaga"
         );
 
         validarLimite(
             embarcacao.getPesoKg(),
             vaga.getPesoMaximoKg(),
             "PESO_EXCEDE_LIMITE_VAGA",
-            "O peso da embarcacao excede "
-                + "o limite da vaga"
+            "O peso da embarcacao excede o limite da vaga"
         );
     }
 
@@ -1466,63 +1171,43 @@ public class MovimentacaoService {
     ) {
         if (
             medida != null
-            && limite != null
-            && medida.compareTo(limite) > 0
+                && limite != null
+                && medida.compareTo(limite) > 0
         ) {
-            throw new DadosInvalidosException(
-                codigo,
-                mensagem
-            );
+            throw new DadosInvalidosException(codigo, mensagem);
         }
     }
 
-    private Map<String, Object>
-    criarSnapshotAtualizavel(
+    private Map<String, Object> criarSnapshotAtualizavel(
         Movimentacao movimentacao
     ) {
-        Map<String, Object> dados =
-            new LinkedHashMap<>();
+        Map<String, Object> dados = new LinkedHashMap<>();
 
         dados.put(
             "prioridade",
-            nomeEnum(
-                movimentacao.getPrioridade()
-            )
+            nomeEnum(movimentacao.getPrioridade())
         );
-
         dados.put(
             "tipoPosicaoDestino",
-            nomeEnum(
-                movimentacao
-                    .getTipoPosicaoDestino()
-            )
+            nomeEnum(movimentacao.getTipoPosicaoDestino())
         );
-
         dados.put(
             "vagaDestinoId",
-            uuidTexto(
-                movimentacao.getVagaDestino()
-            )
+            uuidTexto(movimentacao.getVagaDestino())
         );
-
         dados.put(
             "descricaoDestino",
-            movimentacao
-                .getDescricaoDestino()
+            movimentacao.getDescricaoDestino()
         );
-
         dados.put(
             "operadorResponsavelId",
-            movimentacao
-                .getOperadorResponsavel()
-                == null
-                    ? null
-                    : movimentacao
-                        .getOperadorResponsavel()
-                        .getId()
-                        .toString()
+            movimentacao.getOperadorResponsavel() == null
+                ? null
+                : movimentacao
+                    .getOperadorResponsavel()
+                    .getId()
+                    .toString()
         );
-
         dados.put(
             "observacoes",
             movimentacao.getObservacoes()
@@ -1531,43 +1216,32 @@ public class MovimentacaoService {
         return dados;
     }
 
-    private String nomeEnum(
-        Enum<?> valor
-    ) {
-        return valor == null
-            ? null
-            : valor.name();
+    private String nomeEnum(Enum<?> valor) {
+        return valor == null ? null : valor.name();
     }
 
-    private String uuidTexto(
-        Vaga vaga
-    ) {
-        return vaga == null
-            ? null
-            : vaga.getId().toString();
+    private String uuidTexto(Vaga vaga) {
+        return vaga == null ? null : vaga.getId().toString();
     }
 
     private String criarObservacaoTransferencia(
         String observacaoAnterior,
         UUID movimentacaoId
     ) {
-        String complemento =
-            "Transferencia concluida pela "
-                + "movimentacao "
-                + movimentacaoId;
+        String complemento = "Transferencia concluida pela movimentacao "
+            + movimentacaoId;
 
         String resultado;
 
         if (
             observacaoAnterior == null
-            || observacaoAnterior.isBlank()
+                || observacaoAnterior.isBlank()
         ) {
             resultado = complemento;
         } else {
-            resultado =
-                observacaoAnterior.trim()
-                    + "\n"
-                    + complemento;
+            resultado = observacaoAnterior.trim()
+                + "\n"
+                + complemento;
         }
 
         if (resultado.length() > 2000) {
@@ -1577,9 +1251,7 @@ public class MovimentacaoService {
         return resultado;
     }
 
-    private void executarRegraDominio(
-        Runnable operacao
-    ) {
+    private void executarRegraDominio(Runnable operacao) {
         try {
             operacao.run();
         } catch (
@@ -1594,9 +1266,7 @@ public class MovimentacaoService {
         }
     }
 
-    private void validarRequest(
-        Object request
-    ) {
+    private void validarRequest(Object request) {
         if (request == null) {
             throw new DadosInvalidosException(
                 "CORPO_REQUISICAO_OBRIGATORIO",
@@ -1605,14 +1275,10 @@ public class MovimentacaoService {
         }
     }
 
-    private UsuarioAutenticadoResponse
-    obterUsuarioAutenticado() {
-        return leitorTokenJwt
-            .obterUsuarioAutenticado();
+    private UsuarioAutenticado obterUsuarioAutenticado() {
+        return leitorTokenJwt.obterUsuarioAutenticado();
     }
 
-    private record DestinoResolvido(
-        Vaga vaga
-    ) {
+    private record DestinoResolvido(Vaga vaga) {
     }
 }
