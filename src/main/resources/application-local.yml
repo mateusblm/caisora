@@ -6,6 +6,10 @@ spring:
   jpa:
     show-sql: true
 
+  devtools:
+    restart:
+      additional-exclude: db/migration/**,db/migration/*.sql,db/migration/*.tmp
+
 caisora:
   seguranca:
     jwt:

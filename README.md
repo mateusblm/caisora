@@ -55,6 +55,29 @@ docker compose up -d
 
 As variaveis locais podem ser copiadas a partir de `.env.example`.
 
+## Fluxo seguro de migrations
+
+No desenvolvimento local use o profile `local`. Ele mantem o Flyway ativo, mas exclui `db/migration` do restart automatico do DevTools para evitar que uma migration seja aplicada enquanto ainda esta sendo escrita.
+
+Fluxo recomendado:
+
+1. Pare a aplicacao ou rode com o profile `local`.
+2. Crie a migration primeiro com extensao temporaria, por exemplo `V12__criar_movimentacoes.sql.tmp`.
+3. Escreva e revise todo o SQL.
+4. Renomeie para `.sql` somente quando a migration estiver completa.
+5. Execute `.\scripts\flyway-info.ps1`.
+6. Confirme que a migration aparece como `Pending`.
+7. Execute `.\scripts\flyway-validate.ps1`. O script aceita migrations `Pending` para validar o historico antes do `migrate`.
+8. Faca backup do banco antes de aplicar alteracoes relevantes.
+9. Execute `.\scripts\flyway-migrate.ps1`.
+10. Execute `.\scripts\flyway-info.ps1` novamente e confirme `Success`.
+11. Nunca edite novamente uma migration ja aplicada.
+12. Para qualquer correcao posterior, crie uma nova versao.
+
+Os scripts usam `DB_URL`, `DB_USERNAME` e `DB_PASSWORD`. Se `DB_URL` ou `DB_USERNAME` nao forem informados, os valores locais padrao sao usados. A senha deve vir de `DB_PASSWORD` ou do parametro `-Password`.
+
+`flyway repair` nao executa novamente uma migration, nao recria tabela e nao corrige estrutura ausente. Ele apenas ajusta metadados do historico, como checksums. Checksum mismatch nao deve ser resolvido cegamente com `repair`: primeiro confirme qual arquivo mudou, qual checksum sera alterado, se o banco esta compativel com o conteudo correto e se existe backup.
+
 ## Execucao
 
 ```bash
