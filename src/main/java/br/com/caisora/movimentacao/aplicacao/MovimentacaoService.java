@@ -153,7 +153,7 @@ public class MovimentacaoService {
             operador
         );
 
-        salvarMovimentacao(movimentacao);
+        movimentacao = salvarMovimentacao(movimentacao);
 
         historicoRepository.save(
             HistoricoMovimentacao.criada(
@@ -1001,17 +1001,22 @@ public class MovimentacaoService {
             );
     }
 
-    private void salvarMovimentacao(Movimentacao movimentacao) {
+    private Movimentacao salvarMovimentacao(
+        Movimentacao movimentacao
+    ) {
         try {
-            movimentacaoRepository.save(movimentacao);
+            Movimentacao movimentacaoSalva =
+                movimentacaoRepository.save(movimentacao);
+
             movimentacaoRepository.flush();
+
+            return movimentacaoSalva;
         } catch (DataIntegrityViolationException excecao) {
             throw new ConflitoDadosException(
                 "A movimentacao conflita com outra operacao aberta"
             );
         }
     }
-
     private void validarFiltrosListagem(
         StatusMovimentacao status,
         TipoMovimentacao tipo,

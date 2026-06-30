@@ -1,0 +1,652 @@
+<section class="pagina-formulario">
+  <header class="cabecalho-pagina">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Voltar para movimentações"
+      (click)="cancelar()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <span class="sobrelinha">Movimentações</span>
+
+      <h1>
+        {{
+          modoEdicao()
+            ? 'Editar movimentação'
+            : 'Nova movimentação'
+        }}
+      </h1>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Atualize o agendamento, destino, prioridade e responsável.'
+            : 'Agende um deslocamento compatível com a posição atual da embarcação.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <section class="estado-carregamento">
+      <mat-spinner diameter="42"></mat-spinner>
+
+      <p>
+        {{
+          modoEdicao()
+            ? 'Carregando movimentação...'
+            : 'Carregando opções disponíveis...'
+        }}
+      </p>
+    </section>
+  } @else {
+    @if (mensagemErro()) {
+      <div
+        class="alerta-erro"
+        role="alert"
+      >
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ mensagemErro() }}</span>
+      </div>
+    }
+
+    @if (semEmbarcacoesDisponiveis()) {
+      <div class="alerta-informativo">
+        <mat-icon>info</mat-icon>
+
+        <div>
+          <strong>
+            Não há embarcações disponíveis
+          </strong>
+
+          <p>
+            Todas as embarcações ativas já possuem
+            uma movimentação agendada ou em execução.
+          </p>
+        </div>
+      </div>
+    }
+
+    <form
+      [formGroup]="formulario"
+      (ngSubmit)="salvar()"
+    >
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>directions_boat</mat-icon>
+          </div>
+
+          <div>
+            <h2>Embarcação e operação</h2>
+
+            <p>
+              A posição atual determina quais tipos
+              de movimentação podem ser agendados.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>Embarcação</mat-label>
+
+            <mat-select
+              formControlName="embarcacaoId"
+            >
+              @for (
+                embarcacao of embarcacoesDisponiveis();
+                track embarcacao.id
+              ) {
+                <mat-option [value]="embarcacao.id">
+                  {{
+                    nomeExibicaoEmbarcacao(
+                      embarcacao
+                    )
+                  }}
+                  —
+                  {{ embarcacao.proprietarioNome }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>
+              directions_boat
+            </mat-icon>
+
+            @if (
+              formulario.controls
+                .embarcacaoId
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione uma embarcação.
+              </mat-error>
+            }
+
+            @if (erroApi('embarcacaoId')) {
+              <mat-error>
+                {{ erroApi('embarcacaoId') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de movimentação</mat-label>
+
+            <mat-select formControlName="tipo">
+              @for (
+                opcao of tiposDisponiveis();
+                track opcao.valor
+              ) {
+                <mat-option [value]="opcao.valor">
+                  {{ opcao.rotulo }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>
+              swap_horiz
+            </mat-icon>
+
+            @if (
+              formulario.controls.tipo
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione o tipo de movimentação.
+              </mat-error>
+            }
+
+            @if (erroApi('tipo')) {
+              <mat-error>
+                {{ erroApi('tipo') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (carregandoPosicao()) {
+          <div class="posicao-carregando">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Carregando posição atual...</span>
+          </div>
+        } @else if (posicaoAtual()) {
+          <div class="resumo-posicao">
+            <mat-icon>my_location</mat-icon>
+
+            <div>
+              <span>Posição atual</span>
+              <strong>
+                {{ descricaoPosicaoAtual() }}
+              </strong>
+            </div>
+          </div>
+        }
+
+        @if (tipoSelecionado()) {
+          @for (
+            opcao of tiposDisponiveis();
+            track opcao.valor
+          ) {
+            @if (
+              opcao.valor === tipoSelecionado()
+            ) {
+              <div class="explicacao-tipo">
+                <mat-icon>info_outline</mat-icon>
+                <span>{{ opcao.descricao }}</span>
+              </div>
+            }
+          }
+        }
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>place</mat-icon>
+          </div>
+
+          <div>
+            <h2>Destino</h2>
+
+            <p>
+              Defina o local de destino permitido
+              para o tipo selecionado.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>Prioridade</mat-label>
+
+            <mat-select formControlName="prioridade">
+              <mat-option value="NORMAL">
+                Normal
+              </mat-option>
+
+              <mat-option value="ALTA">
+                Alta
+              </mat-option>
+
+              <mat-option value="URGENTE">
+                Urgente
+              </mat-option>
+            </mat-select>
+
+            <mat-icon matSuffix>
+              priority_high
+            </mat-icon>
+
+            @if (erroApi('prioridade')) {
+              <mat-error>
+                {{ erroApi('prioridade') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de destino</mat-label>
+
+            <mat-select
+              formControlName="tipoPosicaoDestino"
+            >
+              @for (
+                destino of destinosDisponiveis();
+                track destino.valor
+              ) {
+                <mat-option [value]="destino.valor">
+                  {{ destino.rotulo }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>location_on</mat-icon>
+
+            @if (
+              formulario.controls
+                .tipoPosicaoDestino
+                .hasError('required')
+            ) {
+              <mat-error>
+                Selecione o tipo de destino.
+              </mat-error>
+            }
+
+            @if (erroApi('tipoPosicaoDestino')) {
+              <mat-error>
+                {{ erroApi('tipoPosicaoDestino') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          @if (
+            tipoDestinoSelecionado() === 'VAGA'
+          ) {
+            <mat-form-field appearance="outline">
+              <mat-label>Vaga de destino</mat-label>
+
+              <mat-select
+                formControlName="vagaDestinoId"
+              >
+                @for (
+                  vaga of vagasDestinoDisponiveis();
+                  track vaga.id
+                ) {
+                  <mat-option [value]="vaga.id">
+                    {{ vaga.codigo }}
+                    —
+                    {{
+                      vaga.setor
+                      || 'Setor não informado'
+                    }}
+                  </mat-option>
+                }
+              </mat-select>
+
+              <mat-icon matSuffix>garage</mat-icon>
+
+              @if (
+                tipoSelecionado() === 'RETIRADA'
+              ) {
+                <mat-hint>
+                  Definida pela ocupação ativa.
+                </mat-hint>
+              }
+
+              @if (
+                formulario.controls
+                  .vagaDestinoId
+                  .hasError('required')
+              ) {
+                <mat-error>
+                  Selecione a vaga de destino.
+                </mat-error>
+              }
+
+              @if (erroApi('vagaDestinoId')) {
+                <mat-error>
+                  {{ erroApi('vagaDestinoId') }}
+                </mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <mat-form-field
+            appearance="outline"
+            class="campo-completo"
+          >
+            <mat-label>Descrição do destino</mat-label>
+
+            <input
+              matInput
+              formControlName="descricaoDestino"
+              maxlength="255"
+              placeholder="Ex.: rampa principal ou box 2"
+            >
+
+            <mat-icon matSuffix>description</mat-icon>
+
+            <mat-hint align="end">
+              {{
+                formulario.controls
+                  .descricaoDestino
+                  .value.length
+              }}/255
+            </mat-hint>
+
+            @if (
+              formulario.controls
+                .descricaoDestino
+                .hasError('maxlength')
+            ) {
+              <mat-error>
+                O limite é de 255 caracteres.
+              </mat-error>
+            }
+
+            @if (erroApi('descricaoDestino')) {
+              <mat-error>
+                {{ erroApi('descricaoDestino') }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (vagaDestinoSelecionada(); as vaga) {
+          <article class="resumo-vaga">
+            <header>
+              <mat-icon>garage</mat-icon>
+
+              <div>
+                <strong>Vaga {{ vaga.codigo }}</strong>
+                <span>{{ descricaoVaga(vaga) }}</span>
+              </div>
+            </header>
+
+            <dl>
+              <div>
+                <dt>Comprimento máximo</dt>
+                <dd>
+                  {{
+                    formatarMetros(
+                      vaga.comprimentoMaximoMetros
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Boca máxima</dt>
+                <dd>
+                  {{
+                    formatarMetros(
+                      vaga.bocaMaximaMetros
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Calado máximo</dt>
+                <dd>
+                  {{
+                    formatarMetros(
+                      vaga.caladoMaximoMetros
+                    )
+                  }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Peso máximo</dt>
+                <dd>
+                  {{
+                    formatarPeso(
+                      vaga.pesoMaximoKg
+                    )
+                  }}
+                </dd>
+              </div>
+            </dl>
+          </article>
+        }
+
+        @if (incompatibilidades().length > 0) {
+          <div class="alerta-compatibilidade">
+            <mat-icon>warning</mat-icon>
+
+            <div>
+              <strong>Embarcação incompatível</strong>
+
+              <ul>
+                @for (
+                  mensagem of incompatibilidades();
+                  track mensagem
+                ) {
+                  <li>{{ mensagem }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>schedule</mat-icon>
+          </div>
+
+          <div>
+            <h2>Agendamento</h2>
+
+            <p>
+              Informe o horário previsto e,
+              opcionalmente, atribua um operador.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-formulario">
+          <mat-form-field appearance="outline">
+            <mat-label>Agendada para</mat-label>
+
+            <input
+              matInput
+              type="datetime-local"
+              formControlName="agendadaPara"
+            >
+
+            <mat-icon matSuffix>event</mat-icon>
+
+            @if (
+              formulario.controls
+                .agendadaPara
+                .hasError('required')
+            ) {
+              <mat-error>
+                Informe a data e o horário.
+              </mat-error>
+            }
+
+            @if (
+              formulario.controls
+                .agendadaPara
+                .hasError('dataInvalida')
+            ) {
+              <mat-error>
+                Informe uma data válida.
+              </mat-error>
+            }
+
+            @if (erroApi('agendadaPara')) {
+              <mat-error>
+                {{ erroApi('agendadaPara') }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Operador responsável</mat-label>
+
+            <mat-select
+              formControlName="operadorResponsavelId"
+            >
+              <mat-option value="">
+                Atribuir no início
+              </mat-option>
+
+              @for (
+                usuario of usuarios();
+                track usuario.id
+              ) {
+                <mat-option [value]="usuario.id">
+                  {{ usuario.nome }}
+                  —
+                  {{ usuario.email }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-icon matSuffix>engineering</mat-icon>
+
+            <mat-hint>
+              Campo opcional.
+            </mat-hint>
+
+            @if (
+              erroApi('operadorResponsavelId')
+            ) {
+              <mat-error>
+                {{
+                  erroApi(
+                    'operadorResponsavelId'
+                  )
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header class="secao-formulario__cabecalho">
+          <div class="secao-formulario__icone">
+            <mat-icon>notes</mat-icon>
+          </div>
+
+          <div>
+            <h2>Observações</h2>
+
+            <p>
+              Registre instruções adicionais
+              para a equipe operacional.
+            </p>
+          </div>
+        </header>
+
+        <mat-form-field
+          appearance="outline"
+          class="campo-completo"
+        >
+          <mat-label>Observações</mat-label>
+
+          <textarea
+            matInput
+            rows="5"
+            maxlength="2000"
+            formControlName="observacoes"
+          ></textarea>
+
+          <mat-hint align="end">
+            {{
+              formulario.controls
+                .observacoes
+                .value.length
+            }}/2000
+          </mat-hint>
+
+          @if (
+            formulario.controls
+              .observacoes
+              .hasError('maxlength')
+          ) {
+            <mat-error>
+              O limite é de 2000 caracteres.
+            </mat-error>
+          }
+
+          @if (erroApi('observacoes')) {
+            <mat-error>
+              {{ erroApi('observacoes') }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <footer class="acoes-formulario">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="salvando()"
+          (click)="cancelar()"
+        >
+          Cancelar
+        </button>
+
+        @if (!somenteConsulta()) {
+          <button
+            mat-flat-button
+            type="submit"
+            class="botao-salvar"
+            [disabled]="
+              salvando()
+              || semEmbarcacoesDisponiveis()
+            "
+          >
+            <span class="botao-salvar__conteudo">
+              @if (salvando()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>save</mat-icon>
+              }
+
+              {{
+                salvando()
+                  ? 'Salvando...'
+                  : modoEdicao()
+                    ? 'Salvar alterações'
+                    : 'Agendar movimentação'
+              }}
+            </span>
+          </button>
+        }
+      </footer>
+    </form>
+  }
+</section>

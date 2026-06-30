@@ -86,7 +86,6 @@ public class PosicaoEmbarcacao {
         this.vaga = vaga;
         this.descricaoLocal = normalizarTexto(descricaoLocal);
         this.movimentacaoOrigem = null;
-        this.versao = 0L;
         this.criadaEm = agora;
         this.atualizadaEm = agora;
     }

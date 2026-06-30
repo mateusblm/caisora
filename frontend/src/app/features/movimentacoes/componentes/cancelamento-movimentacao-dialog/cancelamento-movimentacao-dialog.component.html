@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>
+  Cancelar movimentação
+</h2>
+
+<mat-dialog-content>
+  <p>
+    Informe o motivo do cancelamento da movimentação
+    da embarcação
+    <strong>{{ dados.embarcacaoNome }}</strong>.
+  </p>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Motivo do cancelamento</mat-label>
+
+    <textarea
+      matInput
+      rows="5"
+      maxlength="1000"
+      [formControl]="motivo"
+      placeholder="Descreva por que a movimentação foi cancelada"
+    ></textarea>
+
+    <mat-hint align="end">
+      {{ motivo.value.length }}/1000
+    </mat-hint>
+
+    @if (motivo.touched && motivo.hasError('required')) {
+      <mat-error>
+        O motivo do cancelamento é obrigatório.
+      </mat-error>
+    }
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    type="button"
+    (click)="cancelar()"
+  >
+    Voltar
+  </button>
+
+  <button
+    mat-flat-button
+    type="button"
+    class="botao-confirmar"
+    [disabled]="motivo.invalid"
+    (click)="confirmar()"
+  >
+    Cancelar movimentação
+  </button>
+</mat-dialog-actions>

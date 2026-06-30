@@ -1,16 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { LayoutComponent } from
-  './core/layout/layout/layout.component';
-
 import {
   autenticacaoFilhosGuard,
   autenticacaoGuard
 } from './core/autenticacao/autenticacao.guard';
-
-import {
-  naoAutenticadoGuard
-} from './core/autenticacao/nao-autenticado.guard';
+import { naoAutenticadoGuard } from './core/autenticacao/nao-autenticado.guard';
+import { LayoutComponent } from './core/layout/layout/layout.component';
 
 export const routes: Routes = [
   {
@@ -23,8 +18,7 @@ export const routes: Routes = [
       import(
         './features/autenticacao/pages/login/login.component'
       ).then(
-        (componente) =>
-          componente.LoginComponent
+        (componente) => componente.LoginComponent
       )
   },
   {
@@ -97,7 +91,6 @@ export const routes: Routes = [
               componente.EmbarcacaoListagemComponent
           )
       },
-
       {
         path: 'embarcacoes/nova',
         title: 'Nova embarcação | Caisora',
@@ -184,6 +177,39 @@ export const routes: Routes = [
           ).then(
             (componente) =>
               componente.OcupacaoListagemComponent
+          )
+      },
+      {
+        path: 'movimentacoes/nova',
+        title: 'Nova movimentação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/movimentacoes/pages/movimentacao-formulario/movimentacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.MovimentacaoFormularioComponent
+          )
+      },
+      {
+        path: 'movimentacoes/:id/editar',
+        title: 'Editar movimentação | Caisora',
+        loadComponent: () =>
+          import(
+            './features/movimentacoes/pages/movimentacao-formulario/movimentacao-formulario.component'
+          ).then(
+            (componente) =>
+              componente.MovimentacaoFormularioComponent
+          )
+      },
+      {
+        path: 'movimentacoes',
+        title: 'Movimentações | Caisora',
+        loadComponent: () =>
+          import(
+            './features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component'
+          ).then(
+            (componente) =>
+              componente.MovimentacaoListagemComponent
           )
       }
     ]

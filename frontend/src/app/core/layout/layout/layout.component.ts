@@ -1,54 +1,30 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   Component,
+  OnInit,
   computed,
-  inject,
-  OnInit
+  inject
 } from '@angular/core';
-
-import {
-  BreakpointObserver
-} from '@angular/cdk/layout';
-
-import {
-  toSignal
-} from '@angular/core/rxjs-interop';
-
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet
 } from '@angular/router';
-
 import { map } from 'rxjs';
-
-import {
-  MatButtonModule
-} from '@angular/material/button';
-
-import {
-  MatIconModule
-} from '@angular/material/icon';
-
-import {
-  MatListModule
-} from '@angular/material/list';
-
-import {
-  MatSidenavModule
-} from '@angular/material/sidenav';
-
-import {
-  MatToolbarModule
-} from '@angular/material/toolbar';
-
-import {
-  AutenticacaoService
-} from '../../autenticacao/autenticacao.service';
 
 import {
   PerfilUsuario
 } from '../../autenticacao/autenticacao.model';
+import {
+  AutenticacaoService
+} from '../../autenticacao/autenticacao.service';
 
 interface ItemMenu {
   rotulo: string;
@@ -96,37 +72,30 @@ export class LayoutComponent implements OnInit {
     }
   );
 
-  protected readonly iniciaisUsuario =
-    computed(() => {
-      const nome =
-        this.usuario()?.nome.trim();
+  protected readonly iniciaisUsuario = computed(() => {
+    const nome = this.usuario()?.nome.trim();
 
-      if (!nome) {
-        return 'U';
-      }
+    if (!nome) {
+      return 'U';
+    }
 
-      const partes =
-        nome.split(/\s+/);
+    const partes = nome.split(/\s+/);
+    const primeiraInicial = partes[0].charAt(0);
+    const ultimaInicial =
+      partes.length > 1
+        ? partes[partes.length - 1].charAt(0)
+        : '';
 
-      const primeiraInicial =
-        partes[0].charAt(0);
+    return (
+      primeiraInicial + ultimaInicial
+    ).toUpperCase();
+  });
 
-      const ultimaInicial =
-        partes.length > 1
-          ? partes[partes.length - 1].charAt(0)
-          : '';
-
-      return (
-        primeiraInicial + ultimaInicial
-      ).toUpperCase();
-    });
-
-  protected readonly perfilUsuario =
-    computed(() =>
-      this.formatarPerfil(
-        this.usuario()?.perfil
-      )
-    );
+  protected readonly perfilUsuario = computed(
+    () => this.formatarPerfil(
+      this.usuario()?.perfil
+    )
+  );
 
   protected readonly itensMenu: ItemMenu[] = [
     {
@@ -153,6 +122,11 @@ export class LayoutComponent implements OnInit {
       rotulo: 'Ocupações',
       icone: 'garage',
       rota: '/ocupacoes'
+    },
+    {
+      rotulo: 'Movimentações',
+      icone: 'swap_horiz',
+      rota: '/movimentacoes'
     }
   ];
 
@@ -168,7 +142,6 @@ export class LayoutComponent implements OnInit {
 
   protected sair(): void {
     this.autenticacaoService.encerrarSessao();
-
     void this.router.navigateByUrl('/login');
   }
 

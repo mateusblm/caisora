@@ -1,0 +1,16 @@
+mat-dialog-content {
+  p {
+    margin: 0 0 18px;
+    color: var(--caisora-texto-secundario);
+    line-height: 1.5;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.botao-confirmar {
+  --mdc-filled-button-container-color: var(--caisora-erro);
+  --mdc-filled-button-label-text-color: #ffffff;
+}

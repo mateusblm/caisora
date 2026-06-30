@@ -163,7 +163,6 @@ public class Movimentacao {
         this.solicitadaPor = solicitadaPor;
         this.operadorResponsavel = operadorResponsavel;
         this.observacoes = normalizarTexto(observacoes);
-        this.versao = 0L;
         this.criadaEm = agora;
         this.atualizadaEm = agora;
     }

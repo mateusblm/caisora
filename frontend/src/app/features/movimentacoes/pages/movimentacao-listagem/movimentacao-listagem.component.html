@@ -1,0 +1,561 @@
+<section class="pagina-movimentacoes">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">Operação</span>
+      <h1>Movimentações</h1>
+      <p>
+        Acompanhe os deslocamentos das embarcações e execute
+        as ordens operacionais da marina.
+      </p>
+    </div>
+
+    <a
+      mat-flat-button
+      routerLink="/movimentacoes/nova"
+      class="botao-nova-movimentacao"
+    >
+      <mat-icon>add</mat-icon>
+      Nova movimentação
+    </a>
+  </header>
+
+  <section
+    class="filtros"
+    aria-label="Filtros de movimentações"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select
+        [formControl]="filtroStatus"
+        (selectionChange)="alterarFiltroStatus()"
+      >
+        <mat-option value="TODAS">
+          Todos
+        </mat-option>
+
+        <mat-option value="AGENDADA">
+          Agendadas
+        </mat-option>
+
+        <mat-option value="EM_EXECUCAO">
+          Em execução
+        </mat-option>
+
+        <mat-option value="CONCLUIDA">
+          Concluídas
+        </mat-option>
+
+        <mat-option value="CANCELADA">
+          Canceladas
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+
+      <mat-select
+        [formControl]="filtroTipo"
+        (selectionChange)="alterarFiltroTipo()"
+      >
+        <mat-option value="TODOS">
+          Todos
+        </mat-option>
+
+        <mat-option value="LANCAMENTO">
+          Lançamento
+        </mat-option>
+
+        <mat-option value="RETIRADA">
+          Retirada
+        </mat-option>
+
+        <mat-option value="TRANSFERENCIA">
+          Transferência
+        </mat-option>
+
+        <mat-option value="DESLOCAMENTO_INTERNO">
+          Deslocamento interno
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Embarcação</mat-label>
+
+      <mat-select
+        [formControl]="filtroEmbarcacao"
+        (selectionChange)="alterarFiltroEmbarcacao()"
+      >
+        <mat-option value="TODAS">
+          Todas as embarcações
+        </mat-option>
+
+        @for (
+          embarcacao of embarcacoes();
+          track embarcacao.id
+        ) {
+          <mat-option [value]="embarcacao.id">
+            {{ nomeExibicaoEmbarcacao(embarcacao) }}
+          </mat-option>
+        }
+      </mat-select>
+
+      @if (carregandoEmbarcacoes()) {
+        <mat-hint>Carregando embarcações...</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Início do período</mat-label>
+
+      <input
+        matInput
+        type="datetime-local"
+        [formControl]="filtroInicio"
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fim do período</mat-label>
+
+      <input
+        matInput
+        type="datetime-local"
+        [formControl]="filtroFim"
+      >
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="botao-periodo"
+      (click)="aplicarFiltroPeriodo()"
+    >
+      <mat-icon>date_range</mat-icon>
+      Aplicar período
+    </button>
+
+    <button
+      mat-button
+      type="button"
+      class="botao-limpar"
+      (click)="limparFiltros()"
+    >
+      <mat-icon>filter_alt_off</mat-icon>
+      Limpar filtros
+    </button>
+  </section>
+
+  <p class="resumo-listagem">
+    {{ totalElementos() }}
+    {{
+      totalElementos() === 1
+        ? 'movimentação encontrada'
+        : 'movimentações encontradas'
+    }}
+  </p>
+
+  @if (carregando()) {
+    <section class="estado-listagem">
+      <mat-spinner diameter="38"></mat-spinner>
+      <p>Carregando movimentações...</p>
+    </section>
+  } @else if (mensagemErro()) {
+    <section class="estado-listagem">
+      <mat-icon>error_outline</mat-icon>
+
+      <h2>Não foi possível carregar</h2>
+
+      <p>{{ mensagemErro() }}</p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="carregarMovimentacoes(paginaAtual())"
+      >
+        Tentar novamente
+      </button>
+    </section>
+  } @else if (movimentacoes().length === 0) {
+    <section class="estado-listagem">
+      <mat-icon>swap_horiz</mat-icon>
+
+      <h2>Nenhuma movimentação encontrada</h2>
+
+      <p>
+        Altere os filtros para consultar outras ordens.
+      </p>
+    </section>
+  } @else {
+    @if (telaDesktop()) {
+      <div class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Agendamento</th>
+              <th>Prioridade</th>
+              <th>Tipo</th>
+              <th>Embarcação</th>
+              <th>Origem e destino</th>
+              <th>Status</th>
+              <th>Operador</th>
+              <th class="coluna-acoes">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (
+              movimentacao of movimentacoes();
+              track movimentacao.id
+            ) {
+              <tr>
+                <td class="agendamento">
+                  <strong>
+                    {{ formatarDataHora(
+                      movimentacao.agendadaPara
+                    ) }}
+                  </strong>
+
+                  <span>
+                    Criada em
+                    {{ formatarDataHora(
+                      movimentacao.criadaEm
+                    ) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="prioridade"
+                    [ngClass]="classePrioridade(
+                      movimentacao.prioridade
+                    )"
+                  >
+                    {{
+                      rotuloPrioridade(
+                        movimentacao.prioridade
+                      )
+                    }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ rotuloTipo(movimentacao.tipo) }}
+                </td>
+
+                <td class="dado-principal">
+                  <strong>
+                    {{ movimentacao.embarcacaoNome }}
+                  </strong>
+
+                  <span>
+                    {{ descricaoEmbarcacao(movimentacao) }}
+                  </span>
+                </td>
+
+                <td class="rota">
+                  <span>
+                    {{ descricaoOrigem(movimentacao) }}
+                  </span>
+
+                  <mat-icon>arrow_forward</mat-icon>
+
+                  <strong>
+                    {{ descricaoDestino(movimentacao) }}
+                  </strong>
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [ngClass]="classeStatus(
+                      movimentacao.status
+                    )"
+                  >
+                    {{ rotuloStatus(movimentacao.status) }}
+                  </span>
+                </td>
+
+                <td>
+                  {{
+                    movimentacao.operadorResponsavelNome
+                    || 'Não atribuído'
+                  }}
+                </td>
+
+                <td class="coluna-acoes">
+                  @if (possuiAcao(movimentacao)) {
+                    @if (
+                      operacaoId() === movimentacao.id
+                    ) {
+                      <mat-spinner
+                        diameter="22"
+                        aria-label="Executando operação"
+                      ></mat-spinner>
+                    } @else {
+                      <button
+                        mat-icon-button
+                        type="button"
+                        [matMenuTriggerFor]="menuAcoes"
+                        [attr.aria-label]="
+                          'Ações da movimentação de '
+                          + movimentacao.embarcacaoNome
+                        "
+                      >
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+
+                      <mat-menu #menuAcoes="matMenu">
+                        @if (
+                          movimentacao.status === 'AGENDADA'
+                        ) {
+                          <a
+                            mat-menu-item
+                            [routerLink]="[
+                              '/movimentacoes',
+                              movimentacao.id,
+                              'editar'
+                            ]"
+                          >
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                          </a>
+
+                          <button
+                            mat-menu-item
+                            type="button"
+                            (click)="solicitarInicio(
+                              movimentacao
+                            )"
+                          >
+                            <mat-icon>play_arrow</mat-icon>
+                            <span>Iniciar</span>
+                          </button>
+
+                          <button
+                            mat-menu-item
+                            type="button"
+                            (click)="solicitarCancelamento(
+                              movimentacao
+                            )"
+                          >
+                            <mat-icon>cancel</mat-icon>
+                            <span>Cancelar</span>
+                          </button>
+                        }
+
+                        @if (
+                          movimentacao.status
+                          === 'EM_EXECUCAO'
+                        ) {
+                          <button
+                            mat-menu-item
+                            type="button"
+                            (click)="solicitarConclusao(
+                              movimentacao
+                            )"
+                          >
+                            <mat-icon>check_circle</mat-icon>
+                            <span>Concluir</span>
+                          </button>
+                        }
+                      </mat-menu>
+                    }
+                  } @else {
+                    <span class="sem-acoes">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="lista-cards">
+        @for (
+          movimentacao of movimentacoes();
+          track movimentacao.id
+        ) {
+          <article class="movimentacao-card">
+            <div class="movimentacao-card__topo">
+              <div class="movimentacao-icone">
+                <mat-icon>swap_horiz</mat-icon>
+              </div>
+
+              <div class="movimentacao-card__identidade">
+                <strong>
+                  {{ movimentacao.embarcacaoNome }}
+                </strong>
+
+                <span>
+                  {{ descricaoEmbarcacao(movimentacao) }}
+                </span>
+              </div>
+
+              <span
+                class="status"
+                [ngClass]="classeStatus(
+                  movimentacao.status
+                )"
+              >
+                {{ rotuloStatus(movimentacao.status) }}
+              </span>
+            </div>
+
+            <div class="movimentacao-card__marcadores">
+              <span
+                class="prioridade"
+                [ngClass]="classePrioridade(
+                  movimentacao.prioridade
+                )"
+              >
+                {{
+                  rotuloPrioridade(
+                    movimentacao.prioridade
+                  )
+                }}
+              </span>
+
+              <span class="tipo">
+                {{ rotuloTipo(movimentacao.tipo) }}
+              </span>
+            </div>
+
+            <dl class="movimentacao-card__dados">
+              <div class="dado-completo">
+                <dt>Agendamento</dt>
+                <dd>
+                  {{ formatarDataHora(
+                    movimentacao.agendadaPara
+                  ) }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Origem</dt>
+                <dd>
+                  {{ descricaoOrigem(movimentacao) }}
+                </dd>
+              </div>
+
+              <div>
+                <dt>Destino</dt>
+                <dd>
+                  {{ descricaoDestino(movimentacao) }}
+                </dd>
+              </div>
+
+              <div class="dado-completo">
+                <dt>Operador responsável</dt>
+                <dd>
+                  {{
+                    movimentacao.operadorResponsavelNome
+                    || 'Não atribuído'
+                  }}
+                </dd>
+              </div>
+            </dl>
+
+            @if (possuiAcao(movimentacao)) {
+              <div class="movimentacao-card__acoes">
+                @if (
+                  operacaoId() === movimentacao.id
+                ) {
+                  <div class="operacao-carregando">
+                    <mat-spinner diameter="22"></mat-spinner>
+                    <span>Processando...</span>
+                  </div>
+                } @else if (
+                  movimentacao.status === 'AGENDADA'
+                ) {
+                  <a
+                    mat-stroked-button
+                    [routerLink]="[
+                      '/movimentacoes',
+                      movimentacao.id,
+                      'editar'
+                    ]"
+                  >
+                    <mat-icon>edit</mat-icon>
+                    Editar
+                  </a>
+
+                  <button
+                    mat-flat-button
+                    type="button"
+                    (click)="solicitarInicio(movimentacao)"
+                  >
+                    <mat-icon>play_arrow</mat-icon>
+                    Iniciar
+                  </button>
+
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="botao-cancelar"
+                    (click)="solicitarCancelamento(
+                      movimentacao
+                    )"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                    Cancelar
+                  </button>
+                } @else if (
+                  movimentacao.status === 'EM_EXECUCAO'
+                ) {
+                  <button
+                    mat-flat-button
+                    type="button"
+                    class="botao-concluir"
+                    (click)="solicitarConclusao(
+                      movimentacao
+                    )"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                    Concluir movimentação
+                  </button>
+                }
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+
+    @if (totalPaginas() > 1) {
+      <nav
+        class="paginacao"
+        aria-label="Paginação das movimentações"
+      >
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="paginaAtual() === 0"
+          (click)="paginaAnterior()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+          Anterior
+        </button>
+
+        <span class="paginacao__texto">
+          Página {{ paginaAtual() + 1 }}
+          de {{ totalPaginas() }}
+        </span>
+
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="
+            paginaAtual() + 1 >= totalPaginas()
+          "
+          (click)="proximaPagina()"
+        >
+          Próxima
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </nav>
+    }
+  }
+</section>
