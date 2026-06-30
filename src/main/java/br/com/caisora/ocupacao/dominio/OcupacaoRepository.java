@@ -1,26 +1,30 @@
 package br.com.caisora.ocupacao.dominio;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface OcupacaoRepository {
 
     Ocupacao save(Ocupacao ocupacao);
 
-    Optional<Ocupacao> findByIdAndOrganizacaoId(
+    void flush();
+
+    Optional<Ocupacao>
+    findByIdAndOrganizacaoId(
         UUID id,
         UUID organizacaoId
     );
 
-    Page<Ocupacao> findAllByOrganizacaoId(
+    Page<Ocupacao>
+    findAllByOrganizacaoId(
         UUID organizacaoId,
         Pageable paginacao
     );
 
-    Page<Ocupacao> findAllByOrganizacaoIdAndStatus(
+    Page<Ocupacao>
+    findAllByOrganizacaoIdAndStatus(
         UUID organizacaoId,
         StatusOcupacao status,
         Pageable paginacao
