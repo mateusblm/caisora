@@ -1,0 +1,255 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.cartao-tv {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: clamp(10px, 0.85vw, 16px);
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 7%);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+
+.cartao-tv__faixa {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: #44b8dc;
+}
+
+.cartao-tv--atrasada {
+  border-color: rgb(255 102 102 / 48%);
+  background:
+    linear-gradient(
+      115deg,
+      rgb(168 31 37 / 34%),
+      rgb(255 255 255 / 6%)
+    );
+
+  .cartao-tv__faixa {
+    background: #ff6767;
+  }
+
+  .situacao,
+  .horario span {
+    color: #ff9c9c;
+  }
+}
+
+.cartao-tv--em_execucao {
+  border-color: rgb(57 218 197 / 42%);
+  background:
+    linear-gradient(
+      115deg,
+      rgb(18 139 136 / 27%),
+      rgb(255 255 255 / 6%)
+    );
+
+  .cartao-tv__faixa {
+    background: #39dac5;
+  }
+
+  .situacao,
+  .horario span {
+    color: #72eadb;
+  }
+}
+
+.cartao-tv--proxima {
+  border-color: rgb(255 185 73 / 35%);
+
+  .cartao-tv__faixa {
+    background: #ffb949;
+  }
+
+  .situacao,
+  .horario span {
+    color: #ffd089;
+  }
+}
+
+.cartao-tv--urgente {
+  box-shadow:
+    0 0 0 1px rgb(255 103 103 / 22%),
+    0 8px 24px rgb(0 0 0 / 18%);
+}
+
+.cartao-tv__topo,
+.cartao-tv__rodape,
+.cartao-tv__corpo,
+.rota,
+.operador,
+.alertas {
+  display: flex;
+  align-items: center;
+}
+
+.cartao-tv__topo,
+.cartao-tv__rodape {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.horario {
+  display: flex;
+  gap: 9px;
+  align-items: baseline;
+  min-width: 0;
+
+  strong {
+    font-size: clamp(1.05rem, 1.3vw, 1.5rem);
+    line-height: 1;
+  }
+
+  span {
+    overflow: hidden;
+    color: #86cfe5;
+    font-size: clamp(0.66rem, 0.72vw, 0.82rem);
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.situacao {
+  flex: 0 0 auto;
+  color: #a9dbea;
+  font-size: clamp(0.62rem, 0.67vw, 0.76rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cartao-tv__corpo {
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.icone-acao {
+  display: grid;
+  width: clamp(34px, 2.7vw, 46px);
+  height: clamp(34px, 2.7vw, 46px);
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+  background: rgb(54 196 218 / 15%);
+  color: #62d4e8;
+}
+
+.identidade {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    overflow: hidden;
+    font-size: clamp(1rem, 1.25vw, 1.45rem);
+    line-height: 1.05;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 4px 0 0;
+    overflow: hidden;
+    color: #a9c4cd;
+    font-size: clamp(0.66rem, 0.72vw, 0.82rem);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.rota {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+  gap: 7px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 16%);
+
+  strong {
+    overflow: hidden;
+    font-size: clamp(0.68rem, 0.74vw, 0.85rem);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  strong:last-child {
+    text-align: right;
+  }
+
+  mat-icon {
+    width: 17px;
+    height: 17px;
+    color: #789da9;
+    font-size: 17px;
+  }
+}
+
+.cartao-tv__rodape {
+  margin-top: 8px;
+}
+
+.operador {
+  min-width: 0;
+  gap: 5px;
+  overflow: hidden;
+  color: #adc4cc;
+  font-size: clamp(0.62rem, 0.68vw, 0.78rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  mat-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    font-size: 15px;
+  }
+}
+
+.alertas {
+  flex: 0 0 auto;
+  gap: 5px;
+}
+
+.selo {
+  padding: 3px 6px;
+  border-radius: 999px;
+  font-size: clamp(0.55rem, 0.58vw, 0.66rem);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.selo--urgente {
+  background: #b9323b;
+  color: #ffffff;
+}
+
+.selo--operador {
+  background: rgb(255 185 73 / 18%);
+  color: #ffd089;
+}
+
+.cartao-tv--compacto {
+  padding-block: 9px;
+
+  .cartao-tv__corpo {
+    margin-top: 7px;
+  }
+
+  .rota {
+    margin-top: 7px;
+  }
+
+  .cartao-tv__rodape {
+    display: none;
+  }
+}

@@ -104,6 +104,11 @@ export class LayoutComponent implements OnInit {
       rota: '/dashboard'
     },
     {
+      rotulo: 'Painel TV',
+      icone: 'tv',
+      rota: '/painel-tv'
+    },
+    {
       rotulo: 'Clientes',
       icone: 'groups',
       rota: '/clientes'

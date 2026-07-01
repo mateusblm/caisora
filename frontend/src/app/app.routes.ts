@@ -22,6 +22,20 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'painel-tv',
+    title: 'Painel operacional TV | Caisora',
+    canActivate: [
+      autenticacaoGuard
+    ],
+    loadComponent: () =>
+      import(
+        './features/painel-tv/pages/painel-tv/painel-tv.component'
+      ).then(
+        (componente) =>
+          componente.PainelTvComponent
+      )
+  },
+  {
     path: '',
     component: LayoutComponent,
     canActivate: [

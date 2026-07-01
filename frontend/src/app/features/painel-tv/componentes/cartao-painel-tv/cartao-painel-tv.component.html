@@ -1,0 +1,76 @@
+<article
+  class="cartao-tv"
+  [ngClass]="classesCartao()"
+>
+  <div class="cartao-tv__faixa"></div>
+
+  <header class="cartao-tv__topo">
+    <div class="horario">
+      <strong>
+        {{
+          formatarHora(
+            movimentacao.agendadaPara
+          )
+        }}
+      </strong>
+
+      <span>{{ rotuloTempo() }}</span>
+    </div>
+
+    <span class="situacao">
+      {{ rotuloSituacao() }}
+    </span>
+  </header>
+
+  <div class="cartao-tv__corpo">
+    <div class="icone-acao">
+      <mat-icon>{{ iconeAcao() }}</mat-icon>
+    </div>
+
+    <div class="identidade">
+      <h3>{{ movimentacao.embarcacaoNome }}</h3>
+
+      <p>
+        {{ rotuloAcao() }}
+        @if (movimentacao.embarcacaoModelo) {
+          <span>
+            · {{ movimentacao.embarcacaoModelo }}
+          </span>
+        }
+      </p>
+    </div>
+  </div>
+
+  <div class="rota">
+    <strong>{{ movimentacao.origem.rotulo }}</strong>
+
+    <mat-icon>arrow_forward</mat-icon>
+
+    <strong>{{ movimentacao.destino.rotulo }}</strong>
+  </div>
+
+  <footer class="cartao-tv__rodape">
+    <span class="operador">
+      <mat-icon>engineering</mat-icon>
+
+      {{
+        movimentacao.operadorResponsavelNome
+        || 'Sem operador'
+      }}
+    </span>
+
+    <div class="alertas">
+      @if (possuiAlerta('URGENTE')) {
+        <span class="selo selo--urgente">
+          Urgente
+        </span>
+      }
+
+      @if (possuiAlerta('SEM_OPERADOR')) {
+        <span class="selo selo--operador">
+          Sem operador
+        </span>
+      }
+    </div>
+  </footer>
+</article>

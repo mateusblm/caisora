@@ -1,0 +1,462 @@
+<main class="painel-tv">
+  <header class="topo">
+    <div class="marca">
+      <span class="marca__icone">
+        <mat-icon>sailing</mat-icon>
+      </span>
+
+      <div>
+        <strong>Caisora</strong>
+        <span>Painel operacional da marina</span>
+      </div>
+    </div>
+
+    <div class="status-topo">
+      <span
+        class="status-conexao"
+        [class.status-conexao--erro]="
+          mensagemErro()
+        "
+      ></span>
+
+      <span>
+        {{
+          mensagemErro()
+          || (
+            'Atualização automática · '
+            + (
+              painel()?.atualizarAposSegundos
+              ?? 15
+            )
+            + ' s'
+          )
+        }}
+      </span>
+
+      <span class="status-topo__separador">•</span>
+
+      <span>
+        Atualizado {{ formatarUltimaAtualizacao() }}
+      </span>
+    </div>
+
+    <div class="relogio">
+      <span>{{ formatarData() }}</span>
+      <strong>{{ formatarRelogio() }}</strong>
+    </div>
+
+    <div class="acoes-topo">
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Atualizar painel"
+        [disabled]="atualizando()"
+        (click)="atualizarAgora()"
+      >
+        @if (atualizando()) {
+          <mat-spinner diameter="21"></mat-spinner>
+        } @else {
+          <mat-icon>refresh</mat-icon>
+        }
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        [attr.aria-label]="
+          telaCheia()
+            ? 'Sair da tela cheia'
+            : 'Entrar em tela cheia'
+        "
+        (click)="alternarTelaCheia()"
+      >
+        <mat-icon>
+          {{
+            telaCheia()
+              ? 'fullscreen_exit'
+              : 'fullscreen'
+          }}
+        </mat-icon>
+      </button>
+
+      <a
+        mat-icon-button
+        routerLink="/dashboard"
+        aria-label="Voltar para o dashboard"
+      >
+        <mat-icon>close</mat-icon>
+      </a>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <section class="estado-painel">
+      <mat-spinner diameter="56"></mat-spinner>
+      <h1>Preparando painel operacional</h1>
+      <p>
+        Carregando as movimentações da marina.
+      </p>
+    </section>
+  } @else if (!painel()) {
+    <section class="estado-painel estado-painel--erro">
+      <mat-icon>cloud_off</mat-icon>
+      <h1>Painel indisponível</h1>
+      <p>
+        {{
+          mensagemErro()
+          || 'Não foi possível buscar os dados.'
+        }}
+      </p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="atualizarAgora()"
+      >
+        <mat-icon>refresh</mat-icon>
+        Tentar novamente
+      </button>
+    </section>
+  } @else {
+    <section
+      class="faixa-alertas"
+      [class.faixa-alertas--normal]="
+        painel()!.alertas.length === 0
+      "
+    >
+      <header>
+        <span class="faixa-alertas__icone">
+          <mat-icon>
+            {{
+              painel()!.alertas.length > 0
+                ? 'notification_important'
+                : 'check_circle'
+            }}
+          </mat-icon>
+        </span>
+
+        <div>
+          <strong>
+            {{
+              painel()!.alertas.length > 0
+                ? 'Atenção da equipe'
+                : 'Operação em dia'
+            }}
+          </strong>
+
+          <span>
+            {{
+              painel()!.alertas.length > 0
+                ? painel()!.resumo.alertas
+                  + ' operações exigem atenção'
+                : 'Nenhum alerta operacional'
+            }}
+          </span>
+        </div>
+      </header>
+
+      <div class="alertas-lista">
+        @for (
+          item of alertasVisiveis();
+          track item.id
+        ) {
+          <article
+            class="alerta-item"
+            [class.alerta-item--atrasada]="
+              item.alertas.includes('ATRASADA')
+            "
+            [class.alerta-item--urgente]="
+              !item.alertas.includes('ATRASADA')
+              && item.alertas.includes('URGENTE')
+            "
+          >
+            <span class="alerta-item__horario">
+              {{
+                formatarHora(
+                  item.agendadaPara
+                )
+              }}
+            </span>
+
+            <div>
+              <strong>
+                {{ item.embarcacaoNome }}
+              </strong>
+
+              <span>
+                {{ rotuloAcao(item.acaoOperacional) }}
+                · {{ descricaoAlerta(item) }}
+              </span>
+            </div>
+          </article>
+        } @empty {
+          <div class="sem-alertas">
+            <mat-icon>verified</mat-icon>
+            Equipe sem pendências críticas
+          </div>
+        }
+      </div>
+
+      @if (
+        quantidadeRestante(
+          painel()!.alertas.length,
+          limiteAlertas
+        ) > 0
+      ) {
+        <span class="mais-itens mais-itens--alerta">
+          +{{
+            quantidadeRestante(
+              painel()!.alertas.length,
+              limiteAlertas
+            )
+          }}
+        </span>
+      }
+    </section>
+
+    <section class="conteudo-tv">
+      <div class="grade-principal">
+        <section class="coluna coluna--descer">
+          <header class="coluna__cabecalho">
+            <span class="coluna__icone">
+              <mat-icon>south</mat-icon>
+            </span>
+
+            <div>
+              <h2>Descer para a água</h2>
+              <p>Lançamentos programados</p>
+            </div>
+
+            <strong>
+              {{
+                painel()!.resumo
+                  .descidasParaAgua
+              }}
+            </strong>
+          </header>
+
+          <div class="coluna__lista">
+            @for (
+              item of descidasVisiveis();
+              track item.id
+            ) {
+              <app-cartao-painel-tv
+                [movimentacao]="item"
+              />
+            } @empty {
+              <div class="coluna-vazia">
+                <mat-icon>water</mat-icon>
+                <strong>Nenhuma descida</strong>
+                <span>Sem lançamentos agendados</span>
+              </div>
+            }
+          </div>
+
+          @if (
+            quantidadeRestante(
+              painel()!.descidasParaAgua.length,
+              limitePrincipal
+            ) > 0
+          ) {
+            <div class="mais-itens">
+              +{{
+                quantidadeRestante(
+                  painel()!.descidasParaAgua
+                    .length,
+                  limitePrincipal
+                )
+              }}
+              aguardando
+            </div>
+          }
+        </section>
+
+        <section class="coluna coluna--retirar">
+          <header class="coluna__cabecalho">
+            <span class="coluna__icone">
+              <mat-icon>north</mat-icon>
+            </span>
+
+            <div>
+              <h2>Retirar da água</h2>
+              <p>Subidas para as vagas</p>
+            </div>
+
+            <strong>
+              {{
+                painel()!.resumo
+                  .retiradasDaAgua
+              }}
+            </strong>
+          </header>
+
+          <div class="coluna__lista">
+            @for (
+              item of retiradasVisiveis();
+              track item.id
+            ) {
+              <app-cartao-painel-tv
+                [movimentacao]="item"
+              />
+            } @empty {
+              <div class="coluna-vazia">
+                <mat-icon>anchor</mat-icon>
+                <strong>Nenhuma retirada</strong>
+                <span>
+                  Sem embarcações para subir
+                </span>
+              </div>
+            }
+          </div>
+
+          @if (
+            quantidadeRestante(
+              painel()!.retiradasDaAgua.length,
+              limitePrincipal
+            ) > 0
+          ) {
+            <div class="mais-itens">
+              +{{
+                quantidadeRestante(
+                  painel()!.retiradasDaAgua
+                    .length,
+                  limitePrincipal
+                )
+              }}
+              aguardando
+            </div>
+          }
+        </section>
+
+        <section class="coluna coluna--execucao">
+          <header class="coluna__cabecalho">
+            <span class="coluna__icone">
+              <mat-icon>
+                precision_manufacturing
+              </mat-icon>
+            </span>
+
+            <div>
+              <h2>Em execução</h2>
+              <p>Movimentações acontecendo agora</p>
+            </div>
+
+            <strong>
+              {{ painel()!.resumo.emExecucao }}
+            </strong>
+          </header>
+
+          <div class="coluna__lista">
+            @for (
+              item of execucoesVisiveis();
+              track item.id
+            ) {
+              <app-cartao-painel-tv
+                [movimentacao]="item"
+              />
+            } @empty {
+              <div class="coluna-vazia">
+                <mat-icon>pause_circle</mat-icon>
+                <strong>Nenhuma em execução</strong>
+                <span>
+                  A equipe está disponível
+                </span>
+              </div>
+            }
+          </div>
+
+          @if (
+            quantidadeRestante(
+              painel()!.emExecucao.length,
+              limitePrincipal
+            ) > 0
+          ) {
+            <div class="mais-itens">
+              +{{
+                quantidadeRestante(
+                  painel()!.emExecucao.length,
+                  limitePrincipal
+                )
+              }}
+              em andamento
+            </div>
+          }
+        </section>
+      </div>
+
+      <div class="grade-secundaria">
+        <section class="coluna coluna--secundaria">
+          <header class="coluna__cabecalho">
+            <span class="coluna__icone">
+              <mat-icon>swap_horiz</mat-icon>
+            </span>
+
+            <div>
+              <h2>Transferências de vaga</h2>
+              <p>Mudanças permanentes</p>
+            </div>
+
+            <strong>
+              {{
+                painel()!.resumo
+                  .transferenciasDeVaga
+              }}
+            </strong>
+          </header>
+
+          <div class="coluna__lista coluna__lista--horizontal">
+            @for (
+              item of transferenciasVisiveis();
+              track item.id
+            ) {
+              <app-cartao-painel-tv
+                [movimentacao]="item"
+                [compacto]="true"
+              />
+            } @empty {
+              <div class="coluna-vazia coluna-vazia--compacta">
+                Nenhuma transferência agendada
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="coluna coluna--secundaria">
+          <header class="coluna__cabecalho">
+            <span class="coluna__icone">
+              <mat-icon>move_up</mat-icon>
+            </span>
+
+            <div>
+              <h2>Deslocamentos internos</h2>
+              <p>Serviço, píer e área externa</p>
+            </div>
+
+            <strong>
+              {{
+                painel()!.resumo
+                  .deslocamentosInternos
+              }}
+            </strong>
+          </header>
+
+          <div class="coluna__lista coluna__lista--horizontal">
+            @for (
+              item of deslocamentosVisiveis();
+              track item.id
+            ) {
+              <app-cartao-painel-tv
+                [movimentacao]="item"
+                [compacto]="true"
+              />
+            } @empty {
+              <div class="coluna-vazia coluna-vazia--compacta">
+                Nenhum deslocamento agendado
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+    </section>
+  }
+</main>

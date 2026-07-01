@@ -49,6 +49,12 @@
   }
 }
 
+.botao-painel-tv {
+  grid-column: 1 / -1;
+  border-color: rgb(20 121 156 / 32%);
+  color: var(--caisora-oceano-600);
+}
+
 .botao-nova {
   background: var(--caisora-oceano-600);
   color: #ffffff;
@@ -666,6 +672,10 @@
     button,
     a {
       padding-inline: 17px;
+    }
+
+    .botao-painel-tv {
+      grid-column: auto;
     }
   }
 
