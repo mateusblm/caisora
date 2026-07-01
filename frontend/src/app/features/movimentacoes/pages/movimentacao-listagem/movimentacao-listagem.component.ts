@@ -690,6 +690,7 @@ export class MovimentacaoListagemComponent implements OnInit {
     > = {
       LANCAMENTO: 'Lançamento',
       RETIRADA: 'Retirada',
+      RETORNO_PARA_VAGA: 'Retorno para a vaga',
       TRANSFERENCIA: 'Transferência',
       DESLOCAMENTO_INTERNO: 'Deslocamento interno'
     };

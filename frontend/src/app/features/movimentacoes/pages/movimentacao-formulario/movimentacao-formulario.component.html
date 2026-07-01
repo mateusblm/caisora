@@ -142,8 +142,32 @@
                 opcao of tiposDisponiveis();
                 track opcao.valor
               ) {
-                <mat-option [value]="opcao.valor">
-                  {{ opcao.rotulo }}
+                <mat-option
+                  [value]="opcao.valor"
+                  [disabled]="opcao.disponivel === false"
+                >
+                  <span class="opcao-tipo">
+                    <strong>{{ opcao.rotulo }}</strong>
+
+                    @if (opcao.disponivel === false) {
+                      <small>
+                        Indisponivel:
+                        {{ opcao.motivoIndisponibilidade }}
+                      </small>
+                    } @else if (opcao.valor === 'RETORNO_PARA_VAGA') {
+                      <small>
+                        Disponivel
+                        @if (ocupacaoAtivaSelecionada()) {
+                          · Destino:
+                          Vaga
+                          {{
+                            ocupacaoAtivaSelecionada()
+                              ?.vagaCodigo
+                          }}
+                        }
+                      </small>
+                    }
+                  </span>
                 </mat-option>
               }
             </mat-select>

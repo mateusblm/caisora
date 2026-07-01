@@ -370,6 +370,18 @@ public class Movimentacao {
                     );
                 }
             }
+            case RETORNO_PARA_VAGA -> {
+                boolean origemValida =
+                    origem == TipoPosicaoEmbarcacao.AREA_SERVICO
+                    || origem == TipoPosicaoEmbarcacao.EXTERNA;
+
+                if (!origemValida || destino != TipoPosicaoEmbarcacao.VAGA) {
+                    throw new IllegalArgumentException(
+                        "Retorno para a vaga deve sair da area de servico "
+                            + "ou de area externa e terminar na vaga da ocupacao ativa"
+                    );
+                }
+            }
             case TRANSFERENCIA -> {
                 if (
                     origem != TipoPosicaoEmbarcacao.VAGA

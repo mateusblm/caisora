@@ -22,7 +22,8 @@ import { Vaga } from '../../../vagas/models/vaga.model';
 import { VagaService } from '../../../vagas/services/vaga.service';
 import {
   Movimentacao,
-  PosicaoEmbarcacao
+  PosicaoEmbarcacao,
+  UsuarioOperador
 } from '../../models/movimentacao.model';
 import { MovimentacaoService } from '../../services/movimentacao.service';
 import { MovimentacaoFormularioComponent } from './movimentacao-formulario.component';
@@ -250,6 +251,140 @@ describe(
     );
 
     it(
+      'deve mostrar todos os tipos com indisponiveis desabilitados',
+      () => {
+        const formulario =
+          fixture.componentInstance[
+            'formulario'
+          ];
+
+        formulario.controls
+          .embarcacaoId
+          .setValue('embarcacao-1');
+
+        const tipos =
+          fixture.componentInstance[
+            'tiposDisponiveis'
+          ]();
+
+        expect(
+          tipos.map((opcao) => opcao.valor)
+        ).toEqual([
+          'LANCAMENTO',
+          'RETIRADA',
+          'RETORNO_PARA_VAGA',
+          'TRANSFERENCIA',
+          'DESLOCAMENTO_INTERNO'
+        ]);
+
+        expect(
+          tipos.find(
+            (opcao) =>
+              opcao.valor === 'RETORNO_PARA_VAGA'
+          )
+        ).toEqual(
+          expect.objectContaining({
+            disponivel: false,
+            motivoIndisponibilidade:
+              expect.stringContaining(
+                'area de servico'
+              )
+          })
+        );
+      }
+    );
+
+    it(
+      'deve permitir retorno para vaga da area de servico com ocupacao ativa',
+      () => {
+        movimentacaoServiceMock
+          .buscarPosicaoEmbarcacao
+          .mockReturnValue(
+            of(
+              criarPosicao({
+                tipo: 'AREA_SERVICO',
+                vagaId: null,
+                vagaCodigo: null
+              })
+            )
+          );
+
+        const formulario =
+          fixture.componentInstance[
+            'formulario'
+          ];
+
+        formulario.controls
+          .embarcacaoId
+          .setValue('embarcacao-1');
+
+        formulario.controls.tipo
+          .setValue('RETORNO_PARA_VAGA');
+
+        expect(
+          formulario.controls
+            .tipoPosicaoDestino
+            .value
+        ).toBe('VAGA');
+
+        expect(
+          formulario.controls
+            .vagaDestinoId
+            .value
+        ).toBe('vaga-1');
+
+        expect(
+          formulario.controls
+            .vagaDestinoId
+            .disabled
+        ).toBe(true);
+      }
+    );
+
+    it(
+      'nao deve enviar tipo indisponivel mesmo se o HTML for manipulado',
+      () => {
+        const componente =
+          fixture.componentInstance;
+
+        const formulario =
+          componente['formulario'];
+
+        formulario.controls
+          .embarcacaoId
+          .setValue('embarcacao-1');
+
+        formulario.controls.tipo
+          .setValue('RETORNO_PARA_VAGA');
+
+        componente['salvar']();
+
+        expect(
+          movimentacaoServiceMock.criar
+        ).not.toHaveBeenCalled();
+      }
+    );
+
+    it(
+      'deve manter UsuarioOperador exportado',
+      () => {
+        const operador: UsuarioOperador = {
+          id: 'usuario-1',
+          nome: 'Operador',
+          email: 'operador@caisora.com.br',
+          perfil: 'OPERADOR',
+          ativo: true,
+          organizacaoId: 'organizacao-1',
+          organizacaoNome: 'Marina',
+          criadoEm: '2026-07-01T10:00:00.000Z',
+          atualizadoEm: '2026-07-01T10:00:00.000Z'
+        };
+
+        expect(operador.nome).toBe('Operador');
+      }
+    );
+
+    it(
       'deve criar movimentação válida',
       () => {
         const componente =
@@ -393,7 +528,9 @@ describe(
       };
     }
 
-    function criarPosicao():
+    function criarPosicao(
+      alteracoes: Partial<PosicaoEmbarcacao> = {}
+    ):
       PosicaoEmbarcacao {
       return {
         id: 'posicao-1',
@@ -413,7 +550,8 @@ describe(
         criadaEm:
           '2026-06-30T10:00:00.000Z',
         atualizadaEm:
-          '2026-06-30T10:00:00.000Z'
+          '2026-06-30T10:00:00.000Z',
+        ...alteracoes
       };
     }
 

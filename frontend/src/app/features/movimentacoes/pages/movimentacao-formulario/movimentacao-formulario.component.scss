@@ -152,6 +152,18 @@ mat-form-field,
   width: 100%;
 }
 
+.opcao-tipo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+
+  small {
+    color: var(--caisora-texto-secundario);
+    font-size: 0.74rem;
+  }
+}
+
 .posicao-carregando,
 .resumo-posicao,
 .explicacao-tipo {

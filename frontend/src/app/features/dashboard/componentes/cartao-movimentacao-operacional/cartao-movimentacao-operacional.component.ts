@@ -98,6 +98,7 @@ export class CartaoMovimentacaoOperacionalComponent {
     > = {
       LANCAMENTO: 'Descer para a água',
       RETIRADA: 'Subir para a vaga',
+      RETORNO_PARA_VAGA: 'Retornar para a vaga',
       TRANSFERENCIA: 'Transferir de vaga',
       DESLOCAMENTO_INTERNO:
         'Deslocamento interno'
@@ -113,6 +114,7 @@ export class CartaoMovimentacaoOperacionalComponent {
     > = {
       LANCAMENTO: 'south',
       RETIRADA: 'north',
+      RETORNO_PARA_VAGA: 'keyboard_return',
       TRANSFERENCIA: 'swap_horiz',
       DESLOCAMENTO_INTERNO: 'move_up'
     };

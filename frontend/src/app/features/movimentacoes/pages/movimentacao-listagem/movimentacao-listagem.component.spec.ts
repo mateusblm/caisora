@@ -375,6 +375,36 @@ describe(
       }
     );
 
+    it(
+      'deve manter botao nova movimentacao e acoes principais',
+      () => {
+        criarComponente();
+
+        const texto =
+          fixture.nativeElement.textContent;
+
+        expect(texto).toContain('Nova movimentação');
+        expect(texto).toContain('Editar');
+        expect(texto).toContain('Iniciar');
+        expect(texto).toContain('Cancelar');
+
+        fixture.componentInstance[
+          'movimentacoes'
+        ].set([
+          criarMovimentacao({
+            status: 'EM_EXECUCAO',
+            iniciadaEm:
+              '2026-07-01T13:00:00.000Z'
+          })
+        ]);
+        fixture.detectChanges();
+
+        expect(
+          fixture.nativeElement.textContent
+        ).toContain('Concluir');
+      }
+    );
+
     function criarComponente(): void {
       fixture = TestBed.createComponent(
         MovimentacaoListagemComponent

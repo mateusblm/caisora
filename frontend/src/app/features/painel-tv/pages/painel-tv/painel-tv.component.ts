@@ -274,6 +274,7 @@ implements OnInit {
     > = {
       DESCER_PARA_AGUA: 'Descer',
       RETIRAR_DA_AGUA: 'Retirar da água',
+      RETORNAR_PARA_VAGA: 'Retornar',
       TRANSFERIR_DE_VAGA: 'Transferir',
       DESLOCAR_INTERNAMENTE: 'Deslocar'
     };

@@ -1,6 +1,7 @@
 export type TipoMovimentacao =
   | 'LANCAMENTO'
   | 'RETIRADA'
+  | 'RETORNO_PARA_VAGA'
   | 'TRANSFERENCIA'
   | 'DESLOCAMENTO_INTERNO';
 

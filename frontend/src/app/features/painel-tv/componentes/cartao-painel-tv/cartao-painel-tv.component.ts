@@ -49,6 +49,7 @@ export class CartaoPainelTvComponent {
     > = {
       DESCER_PARA_AGUA: 'south',
       RETIRAR_DA_AGUA: 'north',
+      RETORNAR_PARA_VAGA: 'keyboard_return',
       TRANSFERIR_DE_VAGA: 'swap_horiz',
       DESLOCAR_INTERNAMENTE: 'move_up'
     };
@@ -65,6 +66,7 @@ export class CartaoPainelTvComponent {
     > = {
       DESCER_PARA_AGUA: 'Descer para a água',
       RETIRAR_DA_AGUA: 'Retirar da água',
+      RETORNAR_PARA_VAGA: 'Retornar para a vaga',
       TRANSFERIR_DE_VAGA: 'Transferir de vaga',
       DESLOCAR_INTERNAMENTE:
         'Deslocar internamente'

@@ -414,6 +414,9 @@ implements OnInit {
       case 'RETIRADA':
         return 'Subida para a vaga';
 
+      case 'RETORNO_PARA_VAGA':
+        return 'Retorno para a vaga';
+
       case 'TRANSFERENCIA':
         return 'Transferência de vaga';
 

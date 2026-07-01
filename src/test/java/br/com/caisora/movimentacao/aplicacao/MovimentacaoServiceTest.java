@@ -331,6 +331,175 @@ class MovimentacaoServiceTest {
     }
 
     @Test
+    void deveCriarRetornoParaVagaDaAreaDeServicoComOcupacaoAtiva() {
+        Instant agendadaPara = Instant.now().plusSeconds(3600);
+        CriarMovimentacaoRequest request = new CriarMovimentacaoRequest(
+                embarcacaoId,
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaOrigem.getId(),
+                null,
+                agendadaPara,
+                null,
+                null);
+
+        PosicaoEmbarcacao posicao = new PosicaoEmbarcacao(
+                organizacao,
+                embarcacao,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao");
+        Ocupacao ocupacao = org.mockito.Mockito.mock(Ocupacao.class);
+        when(ocupacao.getVaga()).thenReturn(vagaOrigem);
+
+        prepararAutenticacao();
+        when(embarcacaoRepository.findByIdAndOrganizacaoId(embarcacaoId, organizacaoId))
+                .thenReturn(Optional.of(embarcacao));
+        when(movimentacaoRepository.existsByOrganizacaoIdAndEmbarcacaoIdAndStatusIn(
+                eq(organizacaoId),
+                eq(embarcacaoId),
+                any()))
+                .thenReturn(false);
+        when(posicaoService.obterOuCriarPosicao(embarcacao, organizacaoId)).thenReturn(posicao);
+        when(vagaRepository.findByIdAndOrganizacaoId(vagaOrigem.getId(), organizacaoId))
+                .thenReturn(Optional.of(vagaOrigem));
+        when(ocupacaoRepository.findByOrganizacaoIdAndEmbarcacaoIdAndStatus(organizacaoId, embarcacaoId, StatusOcupacao.ATIVA))
+                .thenReturn(Optional.of(ocupacao));
+        when(movimentacaoRepository.save(any(Movimentacao.class)))
+                .thenAnswer(invocacao -> invocacao.getArgument(0));
+
+        service.criar(request);
+
+        ArgumentCaptor<Movimentacao> movimentacaoCaptor = ArgumentCaptor.forClass(Movimentacao.class);
+        verify(movimentacaoRepository).save(movimentacaoCaptor.capture());
+
+        Movimentacao criada = movimentacaoCaptor.getValue();
+        assertThat(criada.getTipo()).isEqualTo(TipoMovimentacao.RETORNO_PARA_VAGA);
+        assertThat(criada.getTipoPosicaoOrigem()).isEqualTo(TipoPosicaoEmbarcacao.AREA_SERVICO);
+        assertThat(criada.getTipoPosicaoDestino()).isEqualTo(TipoPosicaoEmbarcacao.VAGA);
+        assertThat(criada.getVagaDestino()).isSameAs(vagaOrigem);
+    }
+
+    @Test
+    void naoDeveCriarRetornoParaVagaComDestinoDiferenteDaOcupacaoAtiva() {
+        CriarMovimentacaoRequest request = new CriarMovimentacaoRequest(
+                embarcacaoId,
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaDestino.getId(),
+                null,
+                Instant.now().plusSeconds(3600),
+                null,
+                null);
+
+        PosicaoEmbarcacao posicao = new PosicaoEmbarcacao(
+                organizacao,
+                embarcacao,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao");
+        Ocupacao ocupacao = org.mockito.Mockito.mock(Ocupacao.class);
+        when(ocupacao.getVaga()).thenReturn(vagaOrigem);
+
+        prepararAutenticacao();
+        when(embarcacaoRepository.findByIdAndOrganizacaoId(embarcacaoId, organizacaoId))
+                .thenReturn(Optional.of(embarcacao));
+        when(movimentacaoRepository.existsByOrganizacaoIdAndEmbarcacaoIdAndStatusIn(
+                eq(organizacaoId),
+                eq(embarcacaoId),
+                any()))
+                .thenReturn(false);
+        when(posicaoService.obterOuCriarPosicao(embarcacao, organizacaoId)).thenReturn(posicao);
+        when(vagaRepository.findByIdAndOrganizacaoId(vagaDestino.getId(), organizacaoId))
+                .thenReturn(Optional.of(vagaDestino));
+        when(ocupacaoRepository.findByOrganizacaoIdAndEmbarcacaoIdAndStatus(organizacaoId, embarcacaoId, StatusOcupacao.ATIVA))
+                .thenReturn(Optional.of(ocupacao));
+
+        assertThatThrownBy(() -> service.criar(request))
+                .isInstanceOf(DadosInvalidosException.class);
+
+        verify(movimentacaoRepository, never()).save(any(Movimentacao.class));
+    }
+
+    @Test
+    void naoDeveCriarRetornoParaVagaSemOcupacaoAtiva() {
+        CriarMovimentacaoRequest request = new CriarMovimentacaoRequest(
+                embarcacaoId,
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaOrigem.getId(),
+                null,
+                Instant.now().plusSeconds(3600),
+                null,
+                null);
+        PosicaoEmbarcacao posicao = new PosicaoEmbarcacao(
+                organizacao,
+                embarcacao,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao");
+
+        prepararAutenticacao();
+        when(embarcacaoRepository.findByIdAndOrganizacaoId(embarcacaoId, organizacaoId))
+                .thenReturn(Optional.of(embarcacao));
+        when(movimentacaoRepository.existsByOrganizacaoIdAndEmbarcacaoIdAndStatusIn(
+                eq(organizacaoId),
+                eq(embarcacaoId),
+                any()))
+                .thenReturn(false);
+        when(posicaoService.obterOuCriarPosicao(embarcacao, organizacaoId)).thenReturn(posicao);
+        when(vagaRepository.findByIdAndOrganizacaoId(vagaOrigem.getId(), organizacaoId))
+                .thenReturn(Optional.of(vagaOrigem));
+        when(ocupacaoRepository.findByOrganizacaoIdAndEmbarcacaoIdAndStatus(organizacaoId, embarcacaoId, StatusOcupacao.ATIVA))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.criar(request))
+                .isInstanceOf(ConflitoDadosException.class);
+
+        verify(movimentacaoRepository, never()).save(any(Movimentacao.class));
+    }
+
+    @Test
+    void deveConcluirRetornoParaVagaAtualizandoPosicaoSemAlterarOcupacao() {
+        Movimentacao movimentacao = criarMovimentacaoRetornoParaVaga();
+        movimentacao.iniciar(usuario, movimentacao.getCriadaEm());
+        PosicaoEmbarcacao posicao = new PosicaoEmbarcacao(
+                organizacao,
+                embarcacao,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao");
+        Ocupacao ocupacao = org.mockito.Mockito.mock(Ocupacao.class);
+        Instant concluidaEm = movimentacao.getIniciadaEm().plusSeconds(30);
+
+        when(ocupacao.getVaga()).thenReturn(vagaOrigem);
+
+        prepararAutenticacao();
+        when(movimentacaoRepository.findByIdAndOrganizacaoId(movimentacaoId, organizacaoId))
+                .thenReturn(Optional.of(movimentacao));
+        when(posicaoRepository.findByOrganizacaoIdAndEmbarcacaoId(organizacaoId, embarcacaoId))
+                .thenReturn(Optional.of(posicao));
+        when(ocupacaoRepository.findByOrganizacaoIdAndEmbarcacaoIdAndStatus(organizacaoId, embarcacaoId, StatusOcupacao.ATIVA))
+                .thenReturn(Optional.of(ocupacao));
+        when(movimentacaoRepository.save(movimentacao)).thenReturn(movimentacao);
+        when(posicaoRepository.save(posicao)).thenReturn(posicao);
+
+        service.concluir(
+                movimentacaoId,
+                new ConcluirMovimentacaoRequest(concluidaEm, "Retorno concluido"));
+
+        assertThat(posicao.getTipo()).isEqualTo(TipoPosicaoEmbarcacao.VAGA);
+        assertThat(posicao.getVaga()).isSameAs(vagaOrigem);
+        assertThat(posicao.getMovimentacaoOrigem()).isSameAs(movimentacao);
+        verify(ocupacao, never()).encerrar(any());
+        verify(ocupacaoRepository, never()).save(any(Ocupacao.class));
+        verify(posicaoRepository).save(posicao);
+    }
+
+    @Test
     void naoDeveCombinarMaisDeUmFiltroPrincipalNaListagem() {
         assertThatThrownBy(() -> service.listar(
                 StatusMovimentacao.AGENDADA,
@@ -397,6 +566,26 @@ class MovimentacaoServiceTest {
                 usuario,
                 null,
                 "Mudança definitiva de vaga");
+        definirId(movimentacao, movimentacaoId);
+        return movimentacao;
+    }
+
+    private Movimentacao criarMovimentacaoRetornoParaVaga() {
+        Movimentacao movimentacao = new Movimentacao(
+                organizacao,
+                embarcacao,
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao",
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaOrigem,
+                null,
+                Instant.now().plusSeconds(3600),
+                usuario,
+                null,
+                null);
         definirId(movimentacao, movimentacaoId);
         return movimentacao;
     }

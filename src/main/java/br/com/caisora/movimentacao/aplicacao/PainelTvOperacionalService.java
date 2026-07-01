@@ -157,12 +157,18 @@ public class PainelTvOperacionalService {
 
             List<Movimentacao>
                 deslocamentosInternos =
-                    filtrarPorTipo(
-                        agendadas,
-                        TipoMovimentacao
-                            .DESLOCAMENTO_INTERNO,
-                        ordemAgendadas
-                    );
+                    agendadas.stream()
+                        .filter(
+                            movimentacao ->
+                                movimentacao.getTipo()
+                                    == TipoMovimentacao
+                                        .DESLOCAMENTO_INTERNO
+                                || movimentacao.getTipo()
+                                    == TipoMovimentacao
+                                        .RETORNO_PARA_VAGA
+                        )
+                        .sorted(ordemAgendadas)
+                        .toList();
 
             List<Movimentacao> alertas =
                 agendadas.stream()
@@ -407,6 +413,9 @@ public class PainelTvOperacionalService {
             case RETIRADA ->
                 AcaoOperacionalPainelTv
                     .RETIRAR_DA_AGUA;
+            case RETORNO_PARA_VAGA ->
+                AcaoOperacionalPainelTv
+                    .RETORNAR_PARA_VAGA;
             case TRANSFERENCIA ->
                 AcaoOperacionalPainelTv
                     .TRANSFERIR_DE_VAGA;

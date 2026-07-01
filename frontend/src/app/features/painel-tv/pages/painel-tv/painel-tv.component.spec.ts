@@ -84,6 +84,37 @@ describe('PainelTvComponent', () => {
       .toHaveBeenCalledTimes(1);
   });
 
+  it('deve tratar retorno para vaga sem erro', () => {
+    const painel = criarPainel();
+
+    serviceMock.buscar.mockReturnValue(
+      of({
+        ...painel,
+        deslocamentosInternos: [
+          criarMovimentacao({
+            tipo: 'RETORNO_PARA_VAGA',
+            acaoOperacional:
+              'RETORNAR_PARA_VAGA'
+          })
+        ],
+        resumo: {
+          ...painel.resumo,
+          deslocamentosInternos: 1
+        }
+      })
+    );
+
+    fixture.componentInstance[
+      'atualizarAgora'
+    ]();
+
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.textContent
+    ).toContain('Retornar para a vaga');
+  });
+
   function criarPainel():
     PainelTvOperacional {
     const movimentacao =
@@ -113,7 +144,9 @@ describe('PainelTvComponent', () => {
     };
   }
 
-  function criarMovimentacao():
+  function criarMovimentacao(
+    alteracoes: Partial<MovimentacaoPainelTv> = {}
+  ):
     MovimentacaoPainelTv {
     return {
       id: 'movimentacao-1',
@@ -150,7 +183,8 @@ describe('PainelTvComponent', () => {
         'ATRASADA',
         'URGENTE',
         'SEM_OPERADOR'
-      ]
+      ],
+      ...alteracoes
     };
   }
 });

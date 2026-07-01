@@ -205,6 +205,22 @@ describe('DashboardComponent', () => {
     }
   );
 
+  it(
+    'deve tratar retorno para vaga sem erro',
+    () => {
+      const movimentacao =
+        criarMovimentacao({
+          tipo: 'RETORNO_PARA_VAGA'
+        });
+
+      expect(
+        fixture.componentInstance[
+          'rotuloOperacao'
+        ](movimentacao)
+      ).toBe('Retorno para a vaga');
+    }
+  );
+
   function criarPainel():
     PainelOperacional {
     const movimentacao =

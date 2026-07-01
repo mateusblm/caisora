@@ -139,6 +139,17 @@ class PainelTvOperacionalServiceTest {
                 true
             );
 
+        Movimentacao retornoParaVaga =
+            movimentacao(
+                "30000000-0000-0000-0000-000000000006",
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                StatusMovimentacao.AGENDADA,
+                PrioridadeMovimentacao.NORMAL,
+                agora.plusSeconds(45 * 60),
+                null,
+                true
+            );
+
         Movimentacao emExecucao =
             movimentacao(
                 "30000000-0000-0000-0000-000000000005",
@@ -163,6 +174,7 @@ class PainelTvOperacionalServiceTest {
                 retirada,
                 transferencia,
                 deslocamento,
+                retornoParaVaga,
                 emExecucao
             )
         );
@@ -223,7 +235,17 @@ class PainelTvOperacionalServiceTest {
 
         assertThat(
             painel.deslocamentosInternos()
-        ).hasSize(1);
+        ).hasSize(2);
+
+        assertThat(
+            painel.deslocamentosInternos()
+        ).anySatisfy(item ->
+            assertThat(item.acaoOperacional())
+                .isEqualTo(
+                    AcaoOperacionalPainelTv
+                        .RETORNAR_PARA_VAGA
+                )
+        );
 
         assertThat(painel.emExecucao())
             .singleElement()
@@ -391,13 +413,18 @@ class PainelTvOperacionalServiceTest {
         TipoPosicaoEmbarcacao origem =
             tipo == TipoMovimentacao.RETIRADA
                 ? TipoPosicaoEmbarcacao.AGUA
-                : TipoPosicaoEmbarcacao.VAGA;
+                : tipo == TipoMovimentacao
+                    .RETORNO_PARA_VAGA
+                    ? TipoPosicaoEmbarcacao
+                        .AREA_SERVICO
+                    : TipoPosicaoEmbarcacao.VAGA;
 
         TipoPosicaoEmbarcacao destino =
             switch (tipo) {
                 case LANCAMENTO ->
                     TipoPosicaoEmbarcacao.AGUA;
                 case RETIRADA,
+                     RETORNO_PARA_VAGA,
                      TRANSFERENCIA ->
                     TipoPosicaoEmbarcacao.VAGA;
                 case DESLOCAMENTO_INTERNO ->

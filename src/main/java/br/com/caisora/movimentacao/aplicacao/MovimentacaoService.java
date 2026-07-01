@@ -660,7 +660,10 @@ public class MovimentacaoService {
                 });
         }
 
-        if (movimentacao.getTipo() == TipoMovimentacao.RETIRADA) {
+        if (
+            movimentacao.getTipo() == TipoMovimentacao.RETIRADA
+                || movimentacao.getTipo() == TipoMovimentacao.RETORNO_PARA_VAGA
+        ) {
             Ocupacao ocupacaoAtiva = buscarOcupacaoAtivaDaEmbarcacao(
                 organizacaoId,
                 movimentacao.getEmbarcacao().getId()
@@ -755,7 +758,10 @@ public class MovimentacaoService {
             movimentacaoIdIgnorada
         );
 
-        if (tipo == TipoMovimentacao.RETIRADA) {
+        if (
+            tipo == TipoMovimentacao.RETIRADA
+                || tipo == TipoMovimentacao.RETORNO_PARA_VAGA
+        ) {
             Ocupacao ocupacao = buscarOcupacaoAtivaDaEmbarcacao(
                 organizacaoId,
                 embarcacao.getId()
@@ -766,8 +772,8 @@ public class MovimentacaoService {
                 vaga.getId()
             )) {
                 throw new DadosInvalidosException(
-                    "DESTINO_RETIRADA_INVALIDO",
-                    "A retirada deve terminar na vaga da ocupacao ativa"
+                    "DESTINO_OCUPACAO_ATIVA_INVALIDO",
+                    "A movimentacao deve terminar na vaga da ocupacao ativa"
                 );
             }
         }
@@ -827,6 +833,16 @@ public class MovimentacaoService {
             throw new DadosInvalidosException(
                 "DESTINO_RETIRADA_INVALIDO",
                 "A retirada precisa terminar em uma vaga"
+            );
+        }
+
+        if (
+            tipo == TipoMovimentacao.RETORNO_PARA_VAGA
+                && destino.vaga() == null
+        ) {
+            throw new DadosInvalidosException(
+                "DESTINO_RETORNO_PARA_VAGA_INVALIDO",
+                "O retorno para a vaga precisa terminar em uma vaga"
             );
         }
 

@@ -71,6 +71,8 @@ interface OpcaoTipo {
   valor: TipoMovimentacao;
   rotulo: string;
   descricao: string;
+  disponivel?: boolean;
+  motivoIndisponibilidade?: string | null;
 }
 
 interface OpcaoDestino {
@@ -349,6 +351,18 @@ implements OnInit {
         });
       }
 
+      if (
+        (
+          posicao.tipo === 'AREA_SERVICO'
+          || posicao.tipo === 'EXTERNA'
+        )
+        && ocupacao
+      ) {
+        opcoes.push(
+          this.opcaoTipo('RETORNO_PARA_VAGA')
+        );
+      }
+
       opcoes.push({
         valor: 'DESLOCAMENTO_INTERNO',
         rotulo: 'Deslocamento interno',
@@ -370,7 +384,34 @@ implements OnInit {
         );
       }
 
-      return opcoes;
+      return this.todosTipos().map(
+        (opcao) => {
+          const disponivel =
+            opcoes.find(
+              (item) =>
+                item.valor === opcao.valor
+            );
+
+          if (disponivel) {
+            return {
+              ...disponivel,
+              disponivel: true,
+              motivoIndisponibilidade: null
+            };
+          }
+
+          return {
+            ...opcao,
+            disponivel: false,
+            motivoIndisponibilidade:
+              this.motivoIndisponibilidadeTipo(
+                opcao.valor,
+                posicao,
+                ocupacao
+              )
+          };
+        }
+      );
     });
 
   protected readonly destinosDisponiveis =
@@ -393,7 +434,10 @@ implements OnInit {
         return [];
       }
 
-      if (tipo === 'RETIRADA') {
+      if (
+        tipo === 'RETIRADA'
+        || tipo === 'RETORNO_PARA_VAGA'
+      ) {
         if (!ocupacao) {
           return [];
         }
@@ -587,6 +631,15 @@ implements OnInit {
 
     if (!tipo || !destino) {
       this.formulario.markAllAsTouched();
+      return;
+    }
+
+    if (this.tipoIndisponivel(tipo)) {
+      this.formulario.markAllAsTouched();
+      this.mensagemErro.set(
+        'O tipo de movimentacao selecionado '
+        + 'nao esta disponivel para a posicao atual.'
+      );
       return;
     }
 
@@ -1218,7 +1271,10 @@ implements OnInit {
       Validators.required
     ]);
 
-    if (tipo === 'RETIRADA') {
+    if (
+      tipo === 'RETIRADA'
+      || tipo === 'RETORNO_PARA_VAGA'
+    ) {
       const vagaId =
         this.ocupacaoAtivaSelecionada()
           ?.vagaId
@@ -1273,6 +1329,7 @@ implements OnInit {
         ];
 
       case 'RETIRADA':
+      case 'RETORNO_PARA_VAGA':
       case 'TRANSFERENCIA':
         return [
           {
@@ -1327,6 +1384,13 @@ implements OnInit {
           'Retorna a embarcação para '
           + 'a vaga da ocupação ativa.'
       },
+      RETORNO_PARA_VAGA: {
+        valor: 'RETORNO_PARA_VAGA',
+        rotulo: 'Retorno para a vaga',
+        descricao:
+          'Leva a embarcacao da area de servico '
+          + 'ou area externa para a vaga da ocupacao ativa.'
+      },
       TRANSFERENCIA: {
         valor: 'TRANSFERENCIA',
         rotulo: 'Transferência',
@@ -1343,6 +1407,82 @@ implements OnInit {
     };
 
     return opcoes[tipo];
+  }
+
+  private todosTipos(): OpcaoTipo[] {
+    return [
+      this.opcaoTipo('LANCAMENTO'),
+      this.opcaoTipo('RETIRADA'),
+      this.opcaoTipo('RETORNO_PARA_VAGA'),
+      this.opcaoTipo('TRANSFERENCIA'),
+      this.opcaoTipo('DESLOCAMENTO_INTERNO')
+    ];
+  }
+
+  private tipoIndisponivel(
+    tipo: TipoMovimentacao | ''
+  ): boolean {
+    if (!tipo) {
+      return false;
+    }
+
+    return this.tiposDisponiveis()
+      .some(
+        (opcao) =>
+          opcao.valor === tipo
+          && opcao.disponivel === false
+      );
+  }
+
+  private motivoIndisponibilidadeTipo(
+    tipo: TipoMovimentacao,
+    posicao: PosicaoEmbarcacao,
+    ocupacao: Ocupacao | null
+  ): string {
+    const posicaoCorrespondeOcupacao =
+      posicao.tipo === 'VAGA'
+      && ocupacao !== null
+      && ocupacao.vagaId === posicao.vagaId;
+
+    switch (tipo) {
+      case 'LANCAMENTO':
+        return posicaoCorrespondeOcupacao
+          ? ''
+          : 'a embarcacao precisa estar em uma vaga com ocupacao ativa.';
+
+      case 'TRANSFERENCIA':
+        return posicaoCorrespondeOcupacao
+          ? ''
+          : 'a embarcacao precisa estar na vaga da ocupacao ativa.';
+
+      case 'RETIRADA':
+        if (!ocupacao) {
+          return 'a embarcacao nao possui ocupacao ativa.';
+        }
+
+        return (
+          posicao.tipo === 'AGUA'
+          || posicao.tipo === 'PIER_ESPERA'
+          || posicao.tipo === 'EXTERNA'
+        )
+          ? ''
+          : 'a embarcacao nao esta na agua, no pier de espera ou em area externa.';
+
+      case 'RETORNO_PARA_VAGA':
+        if (!ocupacao) {
+          return 'a embarcacao nao possui ocupacao ativa.';
+        }
+
+        return (
+          posicao.tipo === 'AREA_SERVICO'
+          || posicao.tipo === 'EXTERNA'
+        )
+          ? ''
+          : 'a embarcacao precisa estar na area de servico ou em area externa.';
+
+      case 'DESLOCAMENTO_INTERNO':
+        return '';
+    }
   }
 
   private montarCriacao(

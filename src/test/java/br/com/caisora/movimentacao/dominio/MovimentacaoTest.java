@@ -148,6 +148,51 @@ class MovimentacaoTest {
     }
 
     @Test
+    void deveCriarRetornoParaVagaSaindoDaAreaDeServico() {
+        Movimentacao movimentacao = new Movimentacao(
+                organizacao,
+                embarcacao,
+                TipoMovimentacao.RETORNO_PARA_VAGA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao",
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaDestino,
+                null,
+                Instant.now().plusSeconds(3600),
+                solicitante,
+                operador,
+                null);
+
+        assertThat(movimentacao.getTipo()).isEqualTo(TipoMovimentacao.RETORNO_PARA_VAGA);
+        assertThat(movimentacao.getTipoPosicaoOrigem()).isEqualTo(TipoPosicaoEmbarcacao.AREA_SERVICO);
+        assertThat(movimentacao.getTipoPosicaoDestino()).isEqualTo(TipoPosicaoEmbarcacao.VAGA);
+        assertThat(movimentacao.getVagaDestino()).isSameAs(vagaDestino);
+    }
+
+    @Test
+    void naoDeveCriarRetiradaSaindoDaAreaDeServico() {
+        assertThatThrownBy(() -> new Movimentacao(
+                organizacao,
+                embarcacao,
+                TipoMovimentacao.RETIRADA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.AREA_SERVICO,
+                null,
+                "Box de manutencao",
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaDestino,
+                null,
+                Instant.now().plusSeconds(3600),
+                solicitante,
+                operador,
+                null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Retirada");
+    }
+
+    @Test
     void naoDeveAtualizarMovimentacaoConcluida() {
         Movimentacao movimentacao = criarLancamento();
         movimentacao.iniciar(operador, movimentacao.getCriadaEm());
