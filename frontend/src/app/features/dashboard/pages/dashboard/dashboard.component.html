@@ -1,70 +1,637 @@
-<section class="cabecalho-pagina">
-  <div>
-    <span class="sobrelinha">
-      Visão geral
+<section class="painel-operacional">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">
+        Central de operações
+      </span>
+
+      <h1>Painel operacional</h1>
+
+      <p>
+        {{ formatarDataPainel() }}.
+        Veja o que precisa subir, descer
+        ou mudar de posição.
+      </p>
+    </div>
+
+    <div class="acoes-cabecalho">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="atualizando()"
+        (click)="atualizarAgora()"
+      >
+        @if (atualizando()) {
+          <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+          <mat-icon>refresh</mat-icon>
+        }
+
+        Atualizar
+      </button>
+
+      <a
+        mat-flat-button
+        routerLink="/movimentacoes/nova"
+        class="botao-nova"
+      >
+        <mat-icon>add</mat-icon>
+        Nova movimentação
+      </a>
+    </div>
+  </header>
+
+  <div class="estado-sincronizacao">
+    <span class="indicador-online"></span>
+
+    <span>
+      Atualização automática a cada 30 segundos
     </span>
 
-    <h1>Dashboard</h1>
+    <span class="separador">•</span>
 
-    <p>
-      Acompanhe as principais informações da marina.
-    </p>
+    <span>
+      Última atualização:
+      {{ formatarAtualizacao() }}
+    </span>
   </div>
-</section>
 
-<section class="metricas">
-  <article class="card-metrica">
-    <div class="card-metrica__icone">
-      <mat-icon>groups</mat-icon>
-    </div>
+  @if (carregandoInicial()) {
+    <section class="estado-pagina">
+      <mat-spinner diameter="44"></mat-spinner>
+      <h2>Preparando o painel</h2>
+      <p>
+        Buscando a agenda operacional da marina.
+      </p>
+    </section>
+  } @else if (!painel()) {
+    <section class="estado-pagina estado-pagina--erro">
+      <mat-icon>cloud_off</mat-icon>
+      <h2>Painel indisponível</h2>
+      <p>
+        {{
+          mensagemErro()
+          || 'Não foi possível carregar os dados.'
+        }}
+      </p>
 
-    <div>
-      <span>Clientes ativos</span>
-      <strong>—</strong>
-    </div>
-  </article>
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="atualizarAgora()"
+      >
+        <mat-icon>refresh</mat-icon>
+        Tentar novamente
+      </button>
+    </section>
+  } @else {
+    @if (mensagemErro()) {
+      <div
+        class="aviso-atualizacao"
+        role="alert"
+      >
+        <mat-icon>warning_amber</mat-icon>
+        <span>{{ mensagemErro() }}</span>
 
-  <article class="card-metrica">
-    <div class="card-metrica__icone">
-      <mat-icon>directions_boat</mat-icon>
-    </div>
+        <button
+          mat-button
+          type="button"
+          (click)="atualizarAgora()"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    }
 
-    <div>
-      <span>Embarcações</span>
-      <strong>—</strong>
-    </div>
-  </article>
+    @if (
+      painel()!.indicadores.atrasadas > 0
+    ) {
+      <section class="faixa-situacao faixa-situacao--alerta">
+        <div class="faixa-situacao__icone">
+          <mat-icon>notification_important</mat-icon>
+        </div>
 
-  <article class="card-metrica">
-    <div class="card-metrica__icone">
-      <mat-icon>anchor</mat-icon>
-    </div>
+        <div>
+          <strong>
+            {{
+              painel()!.indicadores.atrasadas
+            }}
+            {{
+              painel()!.indicadores.atrasadas
+                === 1
+                ? 'movimentação atrasada'
+                : 'movimentações atrasadas'
+            }}
+          </strong>
 
-    <div>
-      <span>Vagas ocupadas</span>
-      <strong>—</strong>
-    </div>
-  </article>
+          <span>
+            A equipe precisa iniciar essas
+            operações antes das próximas.
+          </span>
+        </div>
 
-  <article class="card-metrica">
-    <div class="card-metrica__icone">
-      <mat-icon>payments</mat-icon>
-    </div>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="rolarPara('atrasadas')"
+        >
+          Ver atrasadas
+        </button>
+      </section>
+    } @else if (
+      painel()!.indicadores.emExecucao > 0
+    ) {
+      <section class="faixa-situacao faixa-situacao--execucao">
+        <div class="faixa-situacao__icone">
+          <mat-icon>precision_manufacturing</mat-icon>
+        </div>
 
-    <div>
-      <span>Receita mensal</span>
-      <strong>—</strong>
-    </div>
-  </article>
-</section>
+        <div>
+          <strong>
+            Operação em andamento
+          </strong>
 
-<section class="painel-vazio">
-  <mat-icon>water</mat-icon>
+          <span>
+            Há
+            {{ painel()!.indicadores.emExecucao }}
+            {{
+              painel()!.indicadores.emExecucao
+                === 1
+                ? 'movimentação em execução'
+                : 'movimentações em execução'
+            }}.
+          </span>
+        </div>
 
-  <h2>Bem-vindo ao Caisora</h2>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="rolarPara('em-execucao')"
+        >
+          Acompanhar
+        </button>
+      </section>
+    } @else {
+      <section class="faixa-situacao faixa-situacao--normal">
+        <div class="faixa-situacao__icone">
+          <mat-icon>check_circle</mat-icon>
+        </div>
 
-  <p>
-    Os indicadores serão preenchidos conforme os módulos
-    forem conectados à API.
-  </p>
+        <div>
+          <strong>Operação em dia</strong>
+          <span>
+            Nenhuma movimentação está atrasada
+            ou em execução neste momento.
+          </span>
+        </div>
+      </section>
+    }
+
+    <section
+      class="indicadores"
+      aria-label="Indicadores operacionais"
+    >
+      <button
+        type="button"
+        class="indicador indicador--execucao"
+        (click)="rolarPara('em-execucao')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>precision_manufacturing</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{ painel()!.indicadores.emExecucao }}
+          </strong>
+          <span>Em execução</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="indicador indicador--atraso"
+        (click)="rolarPara('atrasadas')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>schedule</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{ painel()!.indicadores.atrasadas }}
+          </strong>
+          <span>Atrasadas</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="indicador indicador--proxima"
+        (click)="rolarPara('proximas')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>upcoming</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{ painel()!.indicadores.proximaHora }}
+          </strong>
+          <span>Próxima hora</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="indicador indicador--urgente"
+        (click)="rolarPara('proximas')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>priority_high</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{ painel()!.indicadores.urgentes }}
+          </strong>
+          <span>Urgentes abertas</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="indicador indicador--operador"
+        (click)="rolarPara('proximas')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>person_off</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{ painel()!.indicadores.semOperador }}
+          </strong>
+          <span>Sem operador</span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="indicador indicador--concluida"
+        (click)="rolarPara('concluidas')"
+      >
+        <span class="indicador__icone">
+          <mat-icon>task_alt</mat-icon>
+        </span>
+
+        <span class="indicador__conteudo">
+          <strong>
+            {{
+              painel()!.indicadores
+                .concluidasHoje
+            }}
+          </strong>
+          <span>Concluídas hoje</span>
+        </span>
+      </button>
+    </section>
+
+    <section class="grade-acoes-imediatas">
+      <section
+        id="atrasadas"
+        class="bloco-operacional bloco-operacional--atrasadas"
+      >
+        <header class="cabecalho-bloco">
+          <div>
+            <span class="cabecalho-bloco__icone">
+              <mat-icon>alarm</mat-icon>
+            </span>
+
+            <div>
+              <h2>Atrasadas</h2>
+              <p>Prioridade máxima da equipe.</p>
+            </div>
+          </div>
+
+          <span class="contador-bloco">
+            {{ painel()!.atrasadas.length }}
+          </span>
+        </header>
+
+        <div class="lista-operacoes">
+          @for (
+            movimentacao of painel()!.atrasadas;
+            track movimentacao.id
+          ) {
+            <app-cartao-movimentacao-operacional
+              [movimentacao]="movimentacao"
+              contexto="ATRASADA"
+              [agora]="agora()"
+              [processando]="
+                operacaoId() === movimentacao.id
+              "
+              [bloqueado]="operacaoId() !== null"
+              (iniciar)="solicitarInicio($event)"
+            />
+          } @empty {
+            <div class="estado-bloco">
+              <mat-icon>check_circle</mat-icon>
+              <strong>Nenhum atraso</strong>
+              <span>
+                Todas as operações estão no horário.
+              </span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section
+        id="em-execucao"
+        class="bloco-operacional bloco-operacional--execucao"
+      >
+        <header class="cabecalho-bloco">
+          <div>
+            <span class="cabecalho-bloco__icone">
+              <mat-icon>precision_manufacturing</mat-icon>
+            </span>
+
+            <div>
+              <h2>Em execução</h2>
+              <p>Operações acontecendo agora.</p>
+            </div>
+          </div>
+
+          <span class="contador-bloco">
+            {{ painel()!.emExecucao.length }}
+          </span>
+        </header>
+
+        <div class="lista-operacoes">
+          @for (
+            movimentacao of painel()!.emExecucao;
+            track movimentacao.id
+          ) {
+            <app-cartao-movimentacao-operacional
+              [movimentacao]="movimentacao"
+              contexto="EM_EXECUCAO"
+              [agora]="agora()"
+              [processando]="
+                operacaoId() === movimentacao.id
+              "
+              [bloqueado]="operacaoId() !== null"
+              (concluir)="solicitarConclusao($event)"
+            />
+          } @empty {
+            <div class="estado-bloco">
+              <mat-icon>pause_circle</mat-icon>
+              <strong>Nenhuma em execução</strong>
+              <span>
+                As próximas operações ainda
+                não foram iniciadas.
+              </span>
+            </div>
+          }
+        </div>
+      </section>
+    </section>
+
+    <section
+      id="proximas"
+      class="secao-agenda"
+    >
+      <header class="cabecalho-secao">
+        <div>
+          <span class="sobrelinha">
+            Preparação da equipe
+          </span>
+
+          <h2>Próximas movimentações</h2>
+
+          <p>
+            Organizadas por janela de tempo para
+            facilitar o preparo de rampa, carreta,
+            vaga e operador.
+          </p>
+        </div>
+
+        <a
+          mat-stroked-button
+          routerLink="/movimentacoes"
+        >
+          Ver agenda completa
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </header>
+
+      <div class="grade-agenda">
+        <section class="coluna-agenda coluna-agenda--imediata">
+          <header>
+            <div>
+              <strong>Próximos 30 minutos</strong>
+              <span>Preparar agora</span>
+            </div>
+
+            <span>
+              {{
+                painel()!.proximosTrintaMinutos
+                  .length
+              }}
+            </span>
+          </header>
+
+          <div class="lista-operacoes">
+            @for (
+              movimentacao of
+                painel()!.proximosTrintaMinutos;
+              track movimentacao.id
+            ) {
+              <app-cartao-movimentacao-operacional
+                [movimentacao]="movimentacao"
+                contexto="PROXIMA"
+                [agora]="agora()"
+                [processando]="
+                  operacaoId() === movimentacao.id
+                "
+                [bloqueado]="operacaoId() !== null"
+                (iniciar)="solicitarInicio($event)"
+              />
+            } @empty {
+              <div class="estado-coluna">
+                Nenhuma operação nesta janela.
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="coluna-agenda">
+          <header>
+            <div>
+              <strong>Próximas 2 horas</strong>
+              <span>Organizar recursos</span>
+            </div>
+
+            <span>
+              {{
+                painel()!.proximasDuasHoras.length
+              }}
+            </span>
+          </header>
+
+          <div class="lista-operacoes">
+            @for (
+              movimentacao of
+                painel()!.proximasDuasHoras;
+              track movimentacao.id
+            ) {
+              <app-cartao-movimentacao-operacional
+                [movimentacao]="movimentacao"
+                contexto="PROXIMA"
+                [agora]="agora()"
+                [processando]="
+                  operacaoId() === movimentacao.id
+                "
+                [bloqueado]="operacaoId() !== null"
+                (iniciar)="solicitarInicio($event)"
+              />
+            } @empty {
+              <div class="estado-coluna">
+                Nenhuma operação nesta janela.
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="coluna-agenda">
+          <header>
+            <div>
+              <strong>Restante do dia</strong>
+              <span>Planejamento posterior</span>
+            </div>
+
+            <span>
+              {{ painel()!.restanteDia.length }}
+            </span>
+          </header>
+
+          <div class="lista-operacoes">
+            @for (
+              movimentacao of
+                painel()!.restanteDia;
+              track movimentacao.id
+            ) {
+              <app-cartao-movimentacao-operacional
+                [movimentacao]="movimentacao"
+                contexto="PROXIMA"
+                [agora]="agora()"
+                [processando]="
+                  operacaoId() === movimentacao.id
+                "
+                [bloqueado]="operacaoId() !== null"
+                (iniciar)="solicitarInicio($event)"
+              />
+            } @empty {
+              <div class="estado-coluna">
+                Nenhuma outra operação hoje.
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+    </section>
+
+    @if (semOperacoesHoje()) {
+      <section class="agenda-vazia">
+        <mat-icon>sailing</mat-icon>
+
+        <div>
+          <h2>Dia sem movimentações pendentes</h2>
+
+          <p>
+            A agenda operacional está livre.
+            Cadastre uma movimentação quando houver
+            solicitação para subir ou descer
+            uma embarcação.
+          </p>
+        </div>
+
+        <a
+          mat-flat-button
+          routerLink="/movimentacoes/nova"
+        >
+          <mat-icon>add</mat-icon>
+          Agendar movimentação
+        </a>
+      </section>
+    }
+
+    <section
+      id="concluidas"
+      class="secao-concluidas"
+    >
+      <header class="cabecalho-secao">
+        <div>
+          <span class="sobrelinha">
+            Operações finalizadas
+          </span>
+
+          <h2>Concluídas recentemente</h2>
+        </div>
+      </header>
+
+      @if (
+        painel()!.concluidasRecentemente
+          .length > 0
+      ) {
+        <div class="lista-concluidas">
+          @for (
+            movimentacao of
+              painel()!.concluidasRecentemente;
+            track movimentacao.id
+          ) {
+            <article class="item-concluido">
+              <span class="item-concluido__icone">
+                <mat-icon>check</mat-icon>
+              </span>
+
+              <div class="item-concluido__identidade">
+                <strong>
+                  {{ movimentacao.embarcacaoNome }}
+                </strong>
+                <span>
+                  {{ rotuloOperacao(movimentacao) }}
+                </span>
+              </div>
+
+              <div class="item-concluido__hora">
+                <span>Concluída</span>
+                <strong>
+                  {{
+                    formatarHora(
+                      movimentacao.concluidaEm
+                    )
+                  }}
+                </strong>
+              </div>
+
+              <div class="item-concluido__operador">
+                <span>Operador</span>
+                <strong>
+                  {{
+                    movimentacao
+                      .operadorResponsavelNome
+                    || 'Não atribuído'
+                  }}
+                </strong>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="estado-concluidas">
+          Nenhuma movimentação foi concluída hoje.
+        </div>
+      }
+    </section>
+  }
 </section>

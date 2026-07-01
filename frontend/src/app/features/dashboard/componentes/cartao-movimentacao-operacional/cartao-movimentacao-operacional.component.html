@@ -1,0 +1,161 @@
+<article
+  class="cartao-operacao"
+  [ngClass]="classesCartao()"
+>
+  <header class="cartao-operacao__topo">
+    <div class="contexto-operacao">
+      <span class="contexto-operacao__rotulo">
+        {{ rotuloContexto() }}
+      </span>
+
+      <strong class="contexto-operacao__tempo">
+        {{ rotuloTempo() }}
+      </strong>
+    </div>
+
+    <span
+      class="prioridade"
+      [class.prioridade--alta]="
+        movimentacao.prioridade === 'ALTA'
+      "
+      [class.prioridade--urgente]="
+        movimentacao.prioridade === 'URGENTE'
+      "
+    >
+      {{ rotuloPrioridade() }}
+    </span>
+  </header>
+
+  <div class="identidade-embarcacao">
+    <div class="icone-operacao">
+      <mat-icon>
+        {{ iconeOperacao() }}
+      </mat-icon>
+    </div>
+
+    <div>
+      <h3>{{ movimentacao.embarcacaoNome }}</h3>
+
+      <p>{{ descricaoEmbarcacao() }}</p>
+    </div>
+  </div>
+
+  <h4 class="titulo-operacao">
+    {{ rotuloOperacao() }}
+  </h4>
+
+  <div class="rota-operacao">
+    <div>
+      <span>Origem</span>
+      <strong>{{ descricaoOrigem() }}</strong>
+    </div>
+
+    <mat-icon>arrow_forward</mat-icon>
+
+    <div>
+      <span>Destino</span>
+      <strong>{{ descricaoDestino() }}</strong>
+    </div>
+  </div>
+
+  <dl class="detalhes-operacao">
+    <div>
+      <dt>Horário</dt>
+      <dd>
+        {{
+          formatarHora(
+            movimentacao.agendadaPara
+          )
+        }}
+      </dd>
+    </div>
+
+    <div>
+      <dt>Operador</dt>
+      <dd>
+        {{
+          movimentacao
+            .operadorResponsavelNome
+          || 'Não atribuído'
+        }}
+      </dd>
+    </div>
+  </dl>
+
+  @if (movimentacao.observacoes) {
+    <p class="observacoes">
+      <mat-icon>notes</mat-icon>
+      <span>{{ movimentacao.observacoes }}</span>
+    </p>
+  }
+
+  @if (
+    movimentacao.status === 'AGENDADA'
+    || movimentacao.status === 'EM_EXECUCAO'
+  ) {
+    <footer class="acoes-operacao">
+      @if (
+        movimentacao.status === 'AGENDADA'
+      ) {
+        <a
+          mat-stroked-button
+          [routerLink]="[
+            '/movimentacoes',
+            movimentacao.id,
+            'editar'
+          ]"
+          [class.acao-desabilitada]="
+            bloqueado || processando
+          "
+          [attr.aria-disabled]="
+            bloqueado || processando
+          "
+          [tabIndex]="
+            bloqueado || processando
+              ? -1
+              : 0
+          "
+        >
+          <mat-icon>edit</mat-icon>
+          Editar
+        </a>
+
+        <button
+          mat-flat-button
+          type="button"
+          class="acao-principal acao-iniciar"
+          [disabled]="bloqueado || processando"
+          (click)="solicitarInicio()"
+        >
+          @if (processando) {
+            <mat-spinner diameter="19"></mat-spinner>
+            Processando
+          } @else {
+            <mat-icon>play_arrow</mat-icon>
+            Iniciar agora
+          }
+        </button>
+      }
+
+      @if (
+        movimentacao.status === 'EM_EXECUCAO'
+      ) {
+        <button
+          mat-flat-button
+          type="button"
+          class="acao-principal acao-concluir"
+          [disabled]="bloqueado || processando"
+          (click)="solicitarConclusao()"
+        >
+          @if (processando) {
+            <mat-spinner diameter="19"></mat-spinner>
+            Processando
+          } @else {
+            <mat-icon>check_circle</mat-icon>
+            Concluir movimentação
+          }
+        </button>
+      }
+    </footer>
+  }
+</article>
