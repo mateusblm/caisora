@@ -18,13 +18,8 @@ import {
   RouterOutlet
 } from '@angular/router';
 import { map } from 'rxjs';
-
-import {
-  PerfilUsuario
-} from '../../autenticacao/autenticacao.model';
-import {
-  AutenticacaoService
-} from '../../autenticacao/autenticacao.service';
+import { PerfilUsuario } from '../../autenticacao/autenticacao.model';
+import { AutenticacaoService } from '../../autenticacao/autenticacao.service';
 
 interface ItemMenu {
   rotulo: string;
@@ -48,15 +43,9 @@ interface ItemMenu {
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent implements OnInit {
-
-  private readonly breakpointObserver =
-    inject(BreakpointObserver);
-
-  private readonly autenticacaoService =
-    inject(AutenticacaoService);
-
-  private readonly router =
-    inject(Router);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly autenticacaoService = inject(AutenticacaoService);
+  private readonly router = inject(Router);
 
   protected readonly usuario =
     this.autenticacaoService.usuarioAtual;
@@ -64,37 +53,25 @@ export class LayoutComponent implements OnInit {
   protected readonly telaPequena = toSignal(
     this.breakpointObserver
       .observe('(max-width: 900px)')
-      .pipe(
-        map((resultado) => resultado.matches)
-      ),
-    {
-      initialValue: false
-    }
+      .pipe(map((resultado) => resultado.matches)),
+    { initialValue: false }
   );
 
   protected readonly iniciaisUsuario = computed(() => {
     const nome = this.usuario()?.nome.trim();
-
     if (!nome) {
       return 'U';
     }
-
     const partes = nome.split(/\s+/);
     const primeiraInicial = partes[0].charAt(0);
-    const ultimaInicial =
-      partes.length > 1
-        ? partes[partes.length - 1].charAt(0)
-        : '';
-
-    return (
-      primeiraInicial + ultimaInicial
-    ).toUpperCase();
+    const ultimaInicial = partes.length > 1
+      ? partes[partes.length - 1].charAt(0)
+      : '';
+    return (primeiraInicial + ultimaInicial).toUpperCase();
   });
 
   protected readonly perfilUsuario = computed(
-    () => this.formatarPerfil(
-      this.usuario()?.perfil
-    )
+    () => this.formatarPerfil(this.usuario()?.perfil)
   );
 
   protected readonly itensMenu: ItemMenu[] = [
@@ -102,11 +79,6 @@ export class LayoutComponent implements OnInit {
       rotulo: 'Dashboard',
       icone: 'dashboard',
       rota: '/dashboard'
-    },
-    {
-      rotulo: 'Painel TV',
-      icone: 'tv',
-      rota: '/painel-tv'
     },
     {
       rotulo: 'Clientes',
@@ -132,6 +104,11 @@ export class LayoutComponent implements OnInit {
       rotulo: 'Movimentações',
       icone: 'swap_horiz',
       rota: '/movimentacoes'
+    },
+    {
+      rotulo: 'Contratos',
+      icone: 'description',
+      rota: '/contratos'
     }
   ];
 
@@ -156,19 +133,14 @@ export class LayoutComponent implements OnInit {
     switch (perfil) {
       case 'ADMINISTRADOR_PLATAFORMA':
         return 'Administrador da plataforma';
-
       case 'ADMINISTRADOR_MARINA':
         return 'Administrador da marina';
-
       case 'GERENTE':
         return 'Gerente';
-
       case 'ATENDENTE':
         return 'Atendente';
-
       case 'FINANCEIRO':
         return 'Financeiro';
-
       default:
         return 'Usuário';
     }

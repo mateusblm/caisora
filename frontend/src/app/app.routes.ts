@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-
 import {
   autenticacaoFilhosGuard,
   autenticacaoGuard
@@ -11,39 +10,26 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'Entrar | Caisora',
-    canActivate: [
-      naoAutenticadoGuard
-    ],
+    canActivate: [naoAutenticadoGuard],
     loadComponent: () =>
       import(
         './features/autenticacao/pages/login/login.component'
-      ).then(
-        (componente) => componente.LoginComponent
-      )
+      ).then((componente) => componente.LoginComponent)
   },
   {
     path: 'painel-tv',
     title: 'Painel operacional TV | Caisora',
-    canActivate: [
-      autenticacaoGuard
-    ],
+    canActivate: [autenticacaoGuard],
     loadComponent: () =>
       import(
         './features/painel-tv/pages/painel-tv/painel-tv.component'
-      ).then(
-        (componente) =>
-          componente.PainelTvComponent
-      )
+      ).then((componente) => componente.PainelTvComponent)
   },
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [
-      autenticacaoGuard
-    ],
-    canActivateChild: [
-      autenticacaoFilhosGuard
-    ],
+    canActivate: [autenticacaoGuard],
+    canActivateChild: [autenticacaoFilhosGuard],
     children: [
       {
         path: '',
@@ -57,8 +43,7 @@ export const routes: Routes = [
           import(
             './features/dashboard/pages/dashboard/dashboard.component'
           ).then(
-            (componente) =>
-              componente.DashboardComponent
+            (componente) => componente.DashboardComponent
           )
       },
       {
@@ -134,8 +119,7 @@ export const routes: Routes = [
           import(
             './features/vagas/pages/vaga-listagem/vaga-listagem.component'
           ).then(
-            (componente) =>
-              componente.VagaListagemComponent
+            (componente) => componente.VagaListagemComponent
           )
       },
       {
@@ -145,8 +129,7 @@ export const routes: Routes = [
           import(
             './features/vagas/pages/vaga-formulario/vaga-formulario.component'
           ).then(
-            (componente) =>
-              componente.VagaFormularioComponent
+            (componente) => componente.VagaFormularioComponent
           )
       },
       {
@@ -156,8 +139,7 @@ export const routes: Routes = [
           import(
             './features/vagas/pages/vaga-formulario/vaga-formulario.component'
           ).then(
-            (componente) =>
-              componente.VagaFormularioComponent
+            (componente) => componente.VagaFormularioComponent
           )
       },
       {
@@ -224,6 +206,50 @@ export const routes: Routes = [
           ).then(
             (componente) =>
               componente.MovimentacaoListagemComponent
+          )
+      },
+      {
+        path: 'contratos/novo',
+        title: 'Novo contrato | Caisora',
+        loadComponent: () =>
+          import(
+            './features/contratos/pages/contrato-formulario/contrato-formulario.component'
+          ).then(
+            (componente) =>
+              componente.ContratoFormularioComponent
+          )
+      },
+      {
+        path: 'contratos/:id/editar',
+        title: 'Editar contrato | Caisora',
+        loadComponent: () =>
+          import(
+            './features/contratos/pages/contrato-formulario/contrato-formulario.component'
+          ).then(
+            (componente) =>
+              componente.ContratoFormularioComponent
+          )
+      },
+      {
+        path: 'contratos/:id',
+        title: 'Detalhes do contrato | Caisora',
+        loadComponent: () =>
+          import(
+            './features/contratos/pages/contrato-detalhe/contrato-detalhe.component'
+          ).then(
+            (componente) =>
+              componente.ContratoDetalheComponent
+          )
+      },
+      {
+        path: 'contratos',
+        title: 'Contratos | Caisora',
+        loadComponent: () =>
+          import(
+            './features/contratos/pages/contrato-listagem/contrato-listagem.component'
+          ).then(
+            (componente) =>
+              componente.ContratoListagemComponent
           )
       }
     ]

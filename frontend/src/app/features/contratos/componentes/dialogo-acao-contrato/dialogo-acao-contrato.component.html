@@ -1,0 +1,76 @@
+<div
+  class="dialogo-acao"
+  [class.dialogo-acao--sucesso]="dados.tom === 'sucesso'"
+  [class.dialogo-acao--perigo]="dados.tom === 'perigo'"
+>
+  <div class="dialogo-acao__cabecalho">
+    <span class="dialogo-acao__icone">
+      <mat-icon>{{ dados.icone }}</mat-icon>
+    </span>
+
+    <div>
+      <h2 mat-dialog-title>{{ dados.titulo }}</h2>
+      <p>{{ dados.mensagem }}</p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    @if (dados.detalhe) {
+      <p class="dialogo-acao__detalhe">
+        {{ dados.detalhe }}
+      </p>
+    }
+
+    <form class="dialogo-acao__formulario" [formGroup]="formulario">
+      @if (dados.solicitarData) {
+        <mat-form-field appearance="outline">
+          <mat-label>
+            {{ dados.rotuloData || "Data" }}
+          </mat-label>
+
+          <input matInput type="date" formControlName="data" />
+
+          @if (formulario.controls.data.hasError("required")) {
+            <mat-error>Informe a data.</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      @if (dados.solicitarDescricao) {
+        <mat-form-field appearance="outline">
+          <mat-label>
+            {{ dados.rotuloDescricao || "Observação" }}
+          </mat-label>
+
+          <textarea
+            matInput
+            rows="4"
+            maxlength="1000"
+            formControlName="descricao"
+          ></textarea>
+
+          <mat-hint align="end">
+            {{ formulario.controls.descricao.value?.length || 0 }}/1000
+          </mat-hint>
+
+          @if (formulario.controls.descricao.hasError("required")) {
+            <mat-error>Informe o motivo.</mat-error>
+          }
+        </mat-form-field>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="botao-confirmar"
+      (click)="confirmar()"
+    >
+      {{ dados.textoConfirmacao }}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,379 @@
+<section class="pagina-detalhe">
+  <a class="voltar" routerLink="/contratos">
+    <mat-icon>arrow_back</mat-icon>
+    Contratos
+  </a>
+
+  @if (carregando()) {
+    <div class="estado-pagina">
+      <mat-spinner diameter="44" />
+      <p>Carregando contrato...</p>
+    </div>
+  } @else if (mensagemErro() || !contrato()) {
+    <div class="estado-pagina estado-pagina--erro">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Não foi possível carregar</h2>
+      <p>{{ mensagemErro() || "Contrato não encontrado." }}</p>
+      <button mat-stroked-button type="button" (click)="ngOnInit()">
+        Tentar novamente
+      </button>
+    </div>
+  } @else {
+    <header class="cabecalho-pagina">
+      <div>
+        <span class="sobrelinha">Comercial</span>
+        <div class="titulo-status">
+          <h1>{{ contrato()!.numero }}</h1>
+          <span [class]="classeStatus(contrato()!.status)">
+            {{ formatarStatus(contrato()!.status) }}
+          </span>
+        </div>
+        <p>
+          {{ contrato()!.clienteNome }} ·
+          {{ contrato()!.embarcacaoNome }}
+        </p>
+      </div>
+
+      @if (podeEditar()) {
+        <a
+          mat-stroked-button
+          [routerLink]="['/contratos', contratoId, 'editar']"
+        >
+          <mat-icon>edit</mat-icon>
+          Editar rascunho
+        </a>
+      }
+    </header>
+
+    <section class="acoes-contrato">
+      @if (podeEnviarParaAssinatura()) {
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarEnvioParaAssinatura()"
+        >
+          <mat-icon>draw</mat-icon>
+          Enviar para assinatura
+        </button>
+      }
+
+      @if (podeAtivar()) {
+        <button
+          mat-flat-button
+          type="button"
+          class="acao--sucesso"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarAtivacao()"
+        >
+          <mat-icon>task_alt</mat-icon>
+          Ativar
+        </button>
+      }
+
+      @if (podeSuspender()) {
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarSuspensao()"
+        >
+          <mat-icon>pause_circle</mat-icon>
+          Suspender
+        </button>
+      }
+
+      @if (podeReativar()) {
+        <button
+          mat-flat-button
+          type="button"
+          class="acao--sucesso"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarReativacao()"
+        >
+          <mat-icon>play_circle</mat-icon>
+          Reativar
+        </button>
+      }
+
+      @if (podeSolicitarEncerramento()) {
+        <button
+          mat-stroked-button
+          type="button"
+          class="acao--perigo"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarInicioEncerramento()"
+        >
+          <mat-icon>pending_actions</mat-icon>
+          Solicitar encerramento
+        </button>
+      }
+
+      @if (podeEncerrar()) {
+        <button
+          mat-flat-button
+          type="button"
+          class="acao--perigo-preenchida"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarConclusaoEncerramento()"
+        >
+          <mat-icon>event_busy</mat-icon>
+          Encerrar contrato
+        </button>
+      }
+
+      @if (podeCancelar()) {
+        <button
+          mat-stroked-button
+          type="button"
+          class="acao--perigo"
+          [disabled]="acaoEmAndamento() !== null"
+          (click)="solicitarCancelamento()"
+        >
+          <mat-icon>cancel</mat-icon>
+          Cancelar
+        </button>
+      }
+    </section>
+
+    <div class="grade-resumo">
+      <article class="cartao-resumo">
+        <span class="cartao-resumo__icone">
+          <mat-icon>person</mat-icon>
+        </span>
+        <div>
+          <span>Cliente</span>
+          <strong>{{ contrato()!.clienteNome }}</strong>
+        </div>
+      </article>
+
+      <article class="cartao-resumo">
+        <span class="cartao-resumo__icone">
+          <mat-icon>directions_boat</mat-icon>
+        </span>
+        <div>
+          <span>Embarcação</span>
+          <strong>{{ contrato()!.embarcacaoNome }}</strong>
+        </div>
+      </article>
+
+      <article class="cartao-resumo">
+        <span class="cartao-resumo__icone">
+          <mat-icon>payments</mat-icon>
+        </span>
+        <div>
+          <span>Valor base</span>
+          <strong>{{ formatarMoeda(contrato()!.valorBase) }}</strong>
+        </div>
+      </article>
+
+      <article class="cartao-resumo">
+        <span class="cartao-resumo__icone">
+          <mat-icon>event</mat-icon>
+        </span>
+        <div>
+          <span>Vencimento</span>
+          <strong>Dia {{ contrato()!.diaVencimento }}</strong>
+        </div>
+      </article>
+    </div>
+
+    <div class="grade-conteudo">
+      <section class="painel">
+        <header class="painel__cabecalho">
+          <span class="painel__icone"><mat-icon>description</mat-icon></span>
+          <div>
+            <h2>Dados do contrato</h2>
+            <p>Condições comerciais e período contratado.</p>
+          </div>
+        </header>
+
+        <dl class="lista-dados">
+          <div>
+            <dt>Acomodação</dt>
+            <dd>{{ formatarTipoVaga(contrato()!.tipoVagaContratada) }}</dd>
+          </div>
+          <div>
+            <dt>Periodicidade</dt>
+            <dd>{{ formatarPeriodicidade(contrato()!.periodicidade) }}</dd>
+          </div>
+          <div>
+            <dt>Início</dt>
+            <dd>{{ formatarData(contrato()!.dataInicio) }}</dd>
+          </div>
+          <div>
+            <dt>Término previsto</dt>
+            <dd>{{ formatarData(contrato()!.dataFim) }}</dd>
+          </div>
+          <div>
+            <dt>Renovação automática</dt>
+            <dd>{{ contrato()!.renovacaoAutomatica ? "Sim" : "Não" }}</dd>
+          </div>
+          <div>
+            <dt>Aviso prévio</dt>
+            <dd>
+              {{
+                contrato()!.diasAvisoPrevio !== null
+                  ? contrato()!.diasAvisoPrevio + " dias"
+                  : "Não definido"
+              }}
+            </dd>
+          </div>
+          <div>
+            <dt>Assinatura</dt>
+            <dd>{{ formatarData(contrato()!.dataAssinatura) }}</dd>
+          </div>
+          <div>
+            <dt>Ativação</dt>
+            <dd>{{ formatarData(contrato()!.dataAtivacao) }}</dd>
+          </div>
+          @if (contrato()!.dataEncerramento) {
+            <div>
+              <dt>Encerramento</dt>
+              <dd>{{ formatarData(contrato()!.dataEncerramento) }}</dd>
+            </div>
+          }
+        </dl>
+
+        @if (contrato()!.observacoes) {
+          <div class="observacoes">
+            <strong>Observações</strong>
+            <p>{{ contrato()!.observacoes }}</p>
+          </div>
+        }
+      </section>
+
+      <section class="painel">
+        <header class="painel__cabecalho">
+          <span class="painel__icone"><mat-icon>garage</mat-icon></span>
+          <div>
+            <h2>Ocupações vinculadas</h2>
+            <p>Histórico das vagas utilizadas pelo contrato.</p>
+          </div>
+        </header>
+
+        @if (podeGerenciarOcupacao() && !vinculoAberto()) {
+          <div class="vincular-ocupacao">
+            <mat-form-field appearance="outline">
+              <mat-label>Ocupação ativa da embarcação</mat-label>
+              <mat-select [formControl]="ocupacaoSelecionadaId">
+                @for (ocupacao of ocupacoesDisponiveis(); track ocupacao.id) {
+                  <mat-option [value]="ocupacao.id">
+                    {{ descricaoOcupacao(ocupacao) }}
+                  </mat-option>
+                }
+              </mat-select>
+              @if (ocupacoesDisponiveis().length === 0) {
+                <mat-hint>
+                  A embarcação não possui ocupação ativa disponível.
+                </mat-hint>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              type="button"
+              [disabled]="
+                !ocupacaoSelecionadaId.value || acaoEmAndamento() !== null
+              "
+              (click)="vincularOcupacao()"
+            >
+              <mat-icon>link</mat-icon>
+              Vincular
+            </button>
+          </div>
+        }
+
+        @if (vinculos().length === 0) {
+          <div class="estado-vazio">
+            <mat-icon>link_off</mat-icon>
+            <p>Nenhuma ocupação vinculada.</p>
+          </div>
+        } @else {
+          <div class="lista-vinculos">
+            @for (vinculo of vinculos(); track vinculo.id) {
+              <article class="vinculo" [class.vinculo--aberto]="vinculo.aberto">
+                <div>
+                  <strong>Vaga {{ vinculo.vagaCodigo }}</strong>
+                  <span> Desde {{ formatarDataHora(vinculo.inicioEm) }} </span>
+                  @if (vinculo.fimEm) {
+                    <span> Até {{ formatarDataHora(vinculo.fimEm) }} </span>
+                  }
+                  @if (vinculo.motivoFim) {
+                    <small>{{ vinculo.motivoFim }}</small>
+                  }
+                </div>
+
+                <span class="selo-vinculo">
+                  {{ vinculo.aberto ? "Atual" : "Finalizado" }}
+                </span>
+
+                @if (vinculo.aberto && podeGerenciarOcupacao()) {
+                  <button
+                    mat-icon-button
+                    type="button"
+                    [disabled]="acaoEmAndamento() !== null"
+                    (click)="solicitarDesvinculo(vinculo)"
+                    aria-label="Desvincular ocupação"
+                  >
+                    <mat-icon>link_off</mat-icon>
+                  </button>
+                }
+              </article>
+            }
+          </div>
+        }
+      </section>
+    </div>
+
+    <section class="painel painel--historico">
+      <header class="painel__cabecalho">
+        <span class="painel__icone"><mat-icon>history</mat-icon></span>
+        <div>
+          <h2>Histórico</h2>
+          <p>Registro das principais alterações do contrato.</p>
+        </div>
+      </header>
+
+      @if (historico().length === 0) {
+        <div class="estado-vazio">
+          <mat-icon>history_toggle_off</mat-icon>
+          <p>Nenhum evento registrado.</p>
+        </div>
+      } @else {
+        <div class="linha-tempo">
+          @for (evento of historico(); track evento.id) {
+            <article class="evento-historico">
+              <span class="evento-historico__marcador"></span>
+              <div>
+                <strong>{{ formatarEvento(evento.tipoEvento) }}</strong>
+                <span>
+                  {{ formatarDataHora(evento.realizadoEm) }} ·
+                  {{ evento.realizadoPorNome }}
+                </span>
+                @if (evento.descricao) {
+                  <p>{{ evento.descricao }}</p>
+                }
+                @if (evento.statusAnterior !== evento.statusNovo) {
+                  <small>
+                    {{
+                      evento.statusAnterior
+                        ? formatarStatus(evento.statusAnterior)
+                        : "Sem status"
+                    }}
+                    →
+                    {{
+                      evento.statusNovo
+                        ? formatarStatus(evento.statusNovo)
+                        : "Sem status"
+                    }}
+                  </small>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
+</section>

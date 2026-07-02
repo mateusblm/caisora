@@ -1,0 +1,271 @@
+<section class="pagina-formulario">
+  <header class="cabecalho-pagina">
+    <div>
+      <a class="voltar" routerLink="/contratos">
+        <mat-icon>arrow_back</mat-icon>
+        Contratos
+      </a>
+      <span class="sobrelinha">Comercial</span>
+      <h1>
+        {{ modoEdicao ? "Editar contrato" : "Novo contrato" }}
+      </h1>
+      <p>
+        Defina o cliente, a embarcação, a modalidade de guarda e as condições
+        comerciais.
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <div class="estado-pagina">
+      <mat-spinner diameter="44" />
+      <p>Carregando dados do contrato...</p>
+    </div>
+  } @else {
+    @if (mensagemErro()) {
+      <div class="aviso" [class.aviso--erro]="edicaoBloqueada()">
+        <mat-icon>info</mat-icon>
+        <span>{{ mensagemErro() }}</span>
+      </div>
+    }
+
+    <form class="formulario" [formGroup]="formulario" (ngSubmit)="salvar()">
+      <section class="secao-formulario">
+        <header>
+          <span class="secao-formulario__icone">
+            <mat-icon>person</mat-icon>
+          </span>
+          <div>
+            <h2>Cliente e embarcação</h2>
+            <p>A embarcação precisa pertencer ao cliente selecionado.</p>
+          </div>
+        </header>
+
+        <div class="grade-campos grade-campos--dois">
+          <mat-form-field appearance="outline">
+            <mat-label>Cliente</mat-label>
+            <mat-select formControlName="clienteId">
+              @for (cliente of clientes(); track cliente.id) {
+                <mat-option [value]="cliente.id">
+                  {{ cliente.nome }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (formulario.controls.clienteId.hasError("required")) {
+              <mat-error>Selecione o cliente.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Embarcação</mat-label>
+            <mat-select formControlName="embarcacaoId">
+              @for (embarcacao of embarcacoesDoCliente(); track embarcacao.id) {
+                <mat-option [value]="embarcacao.id">
+                  {{ formatarNomeEmbarcacao(embarcacao) }}
+                </mat-option>
+              }
+            </mat-select>
+            <mat-hint> Selecione primeiro o proprietário. </mat-hint>
+            @if (formulario.controls.embarcacaoId.hasError("required")) {
+              <mat-error>Selecione a embarcação.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header>
+          <span class="secao-formulario__icone">
+            <mat-icon>anchor</mat-icon>
+          </span>
+          <div>
+            <h2>Modalidade e vigência</h2>
+            <p>
+              A acomodação contratada não fixa a posição física atual da
+              embarcação.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-campos grade-campos--dois">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de acomodação</mat-label>
+            <mat-select formControlName="tipoVagaContratada">
+              @for (tipo of tiposVaga; track tipo) {
+                <mat-option [value]="tipo">
+                  {{ formatarTipoVaga(tipo) }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (formulario.controls.tipoVagaContratada.hasError("required")) {
+              <mat-error>Selecione a acomodação.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Periodicidade</mat-label>
+            <mat-select formControlName="periodicidade">
+              @for (periodicidade of periodicidades; track periodicidade) {
+                <mat-option [value]="periodicidade">
+                  {{ formatarPeriodicidade(periodicidade) }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (formulario.controls.periodicidade.hasError("required")) {
+              <mat-error>Selecione a periodicidade.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data de início</mat-label>
+            <input matInput type="date" formControlName="dataInicio" />
+            @if (formulario.controls.dataInicio.hasError("required")) {
+              <mat-error>Informe a data de início.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data de término</mat-label>
+            <input matInput type="date" formControlName="dataFim" />
+            <mat-hint> Obrigatória para periodicidade personalizada. </mat-hint>
+            @if (
+              formulario.hasError("dataFimObrigatoria") &&
+              formulario.controls.dataFim.touched
+            ) {
+              <mat-error>Informe a data de término.</mat-error>
+            } @else if (
+              formulario.hasError("periodoInvalido") &&
+              formulario.controls.dataFim.touched
+            ) {
+              <mat-error>
+                A data final não pode ser anterior ao início.
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="secao-formulario">
+        <header>
+          <span class="secao-formulario__icone">
+            <mat-icon>payments</mat-icon>
+          </span>
+          <div>
+            <h2>Condições comerciais</h2>
+            <p>
+              Esses dados serão usados pelo módulo financeiro em uma etapa
+              futura.
+            </p>
+          </div>
+        </header>
+
+        <div class="grade-campos grade-campos--dois">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor base</mat-label>
+            <span matTextPrefix>R$&nbsp;</span>
+            <input
+              matInput
+              type="number"
+              min="0"
+              step="0.01"
+              formControlName="valorBase"
+            />
+            @if (formulario.controls.valorBase.hasError("required")) {
+              <mat-error>Informe o valor base.</mat-error>
+            } @else if (formulario.controls.valorBase.hasError("min")) {
+              <mat-error>O valor não pode ser negativo.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Dia do vencimento</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              max="31"
+              formControlName="diaVencimento"
+            />
+            @if (
+              formulario.controls.diaVencimento.invalid &&
+              formulario.controls.diaVencimento.touched
+            ) {
+              <mat-error>Informe um dia entre 1 e 31.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="renovacao">
+          <mat-checkbox formControlName="renovacaoAutomatica">
+            Renovação automática
+          </mat-checkbox>
+          <p>
+            O contrato poderá ser renovado sem a criação manual de um novo
+            vínculo comercial.
+          </p>
+        </div>
+
+        @if (formulario.controls.renovacaoAutomatica.value) {
+          <mat-form-field appearance="outline">
+            <mat-label>Dias de aviso prévio</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              formControlName="diasAvisoPrevio"
+            />
+            @if (
+              formulario.hasError("avisoPrevioObrigatorio") &&
+              formulario.controls.diasAvisoPrevio.touched
+            ) {
+              <mat-error>Informe o prazo de aviso prévio.</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <mat-form-field appearance="outline" class="campo-largo">
+          <mat-label>Observações</mat-label>
+          <textarea
+            matInput
+            rows="5"
+            maxlength="2000"
+            formControlName="observacoes"
+          ></textarea>
+          <mat-hint align="end">
+            {{ formulario.controls.observacoes.value.length }}/2000
+          </mat-hint>
+        </mat-form-field>
+      </section>
+
+      <footer class="acoes-formulario">
+        <a
+          mat-stroked-button
+          [routerLink]="
+            contratoId ? ['/contratos', contratoId] : ['/contratos']
+          "
+        >
+          Cancelar
+        </a>
+
+        <button
+          mat-flat-button
+          type="submit"
+          [disabled]="salvando() || edicaoBloqueada()"
+        >
+          @if (salvando()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            <mat-icon>save</mat-icon>
+          }
+          {{
+            salvando()
+              ? "Salvando..."
+              : modoEdicao
+                ? "Salvar alterações"
+                : "Criar contrato"
+          }}
+        </button>
+      </footer>
+    </form>
+  }
+</section>

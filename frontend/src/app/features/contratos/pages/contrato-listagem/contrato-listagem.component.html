@@ -1,0 +1,264 @@
+<section class="pagina-contratos">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobrelinha">Comercial</span>
+      <h1>Contratos</h1>
+      <p>
+        Gerencie os vínculos comerciais de guarda das embarcações da marina.
+      </p>
+    </div>
+
+    <a mat-flat-button class="botao-novo" routerLink="/contratos/novo">
+      <mat-icon>add</mat-icon>
+      Novo contrato
+    </a>
+  </header>
+
+  <section class="filtros">
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="filtroStatus">
+        <mat-option value="TODOS">Todos</mat-option>
+        @for (status of statusDisponiveis; track status) {
+          <mat-option [value]="status">
+            {{ formatarStatus(status) }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cliente</mat-label>
+      <mat-select [formControl]="filtroClienteId">
+        <mat-option value="">Todos</mat-option>
+        @for (cliente of clientes(); track cliente.id) {
+          <mat-option [value]="cliente.id">
+            {{ cliente.nome }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Embarcação</mat-label>
+      <mat-select [formControl]="filtroEmbarcacaoId">
+        <mat-option value="">Todas</mat-option>
+        @for (embarcacao of embarcacoesFiltradas(); track embarcacao.id) {
+          <mat-option [value]="embarcacao.id">
+            {{ embarcacao.nome || embarcacao.numeroInscricao || "Sem nome" }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filtros__acoes">
+      <button mat-stroked-button type="button" (click)="limparFiltros()">
+        <mat-icon>filter_alt_off</mat-icon>
+        Limpar
+      </button>
+
+      <button mat-flat-button type="button" (click)="aplicarFiltros()">
+        <mat-icon>search</mat-icon>
+        Filtrar
+      </button>
+    </div>
+  </section>
+
+  <p class="resumo-listagem">
+    {{ totalElementos() }}
+    {{
+      totalElementos() === 1 ? "contrato encontrado" : "contratos encontrados"
+    }}
+  </p>
+
+  @if (carregando()) {
+    <div class="estado-listagem">
+      <mat-spinner diameter="42" />
+      <p>Carregando contratos...</p>
+    </div>
+  } @else if (mensagemErro()) {
+    <div class="estado-listagem estado-erro">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Não foi possível carregar</h2>
+      <p>{{ mensagemErro() }}</p>
+      <button mat-stroked-button type="button" (click)="aplicarFiltros()">
+        Tentar novamente
+      </button>
+    </div>
+  } @else if (contratos().length === 0) {
+    <div class="estado-listagem">
+      <mat-icon>description</mat-icon>
+      <h2>Nenhum contrato encontrado</h2>
+      <p>Altere os filtros ou cadastre o primeiro contrato.</p>
+    </div>
+  } @else if (telaDesktop()) {
+    <div class="tabela-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Contrato</th>
+            <th>Cliente e embarcação</th>
+            <th>Plano</th>
+            <th>Vigência</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th class="coluna-acoes">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contrato of contratos(); track contrato.id) {
+            <tr>
+              <td>
+                <div class="contrato-principal">
+                  <strong>{{ contrato.numero }}</strong>
+                  <span> Vencimento dia {{ contrato.diaVencimento }} </span>
+                </div>
+              </td>
+              <td>
+                <div class="identidade">
+                  <strong>{{ contrato.clienteNome }}</strong>
+                  <span>{{ contrato.embarcacaoNome }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="identidade">
+                  <strong>
+                    {{ formatarTipoVaga(contrato.tipoVagaContratada) }}
+                  </strong>
+                  <span>
+                    {{ formatarPeriodicidade(contrato.periodicidade) }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                {{ formatarData(contrato.dataInicio) }}
+                <span class="texto-secundario">
+                  até {{ formatarData(contrato.dataFim) }}
+                </span>
+              </td>
+              <td>{{ formatarMoeda(contrato.valorBase) }}</td>
+              <td>
+                <span [class]="classeStatus(contrato.status)">
+                  {{ formatarStatus(contrato.status) }}
+                </span>
+              </td>
+              <td class="coluna-acoes">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [matMenuTriggerFor]="menuAcoes"
+                  [attr.aria-label]="'Ações do contrato ' + contrato.numero"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+
+                <mat-menu #menuAcoes="matMenu">
+                  <a mat-menu-item [routerLink]="['/contratos', contrato.id]">
+                    <mat-icon>visibility</mat-icon>
+                    <span>Ver detalhes</span>
+                  </a>
+
+                  @if (podeEditar(contrato)) {
+                    <a
+                      mat-menu-item
+                      [routerLink]="['/contratos', contrato.id, 'editar']"
+                    >
+                      <mat-icon>edit</mat-icon>
+                      <span>Editar</span>
+                    </a>
+                  }
+                </mat-menu>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="lista-cards">
+      @for (contrato of contratos(); track contrato.id) {
+        <article class="contrato-card">
+          <div class="contrato-card__topo">
+            <span class="contrato-card__icone">
+              <mat-icon>description</mat-icon>
+            </span>
+            <div class="contrato-card__identidade">
+              <strong>{{ contrato.numero }}</strong>
+              <span>{{ contrato.clienteNome }}</span>
+            </div>
+            <span [class]="classeStatus(contrato.status)">
+              {{ formatarStatus(contrato.status) }}
+            </span>
+          </div>
+
+          <dl class="contrato-card__dados">
+            <div>
+              <dt>Embarcação</dt>
+              <dd>{{ contrato.embarcacaoNome }}</dd>
+            </div>
+            <div>
+              <dt>Plano</dt>
+              <dd>
+                {{ formatarTipoVaga(contrato.tipoVagaContratada) }}
+                · {{ formatarPeriodicidade(contrato.periodicidade) }}
+              </dd>
+            </div>
+            <div>
+              <dt>Valor</dt>
+              <dd>{{ formatarMoeda(contrato.valorBase) }}</dd>
+            </div>
+            <div>
+              <dt>Início</dt>
+              <dd>{{ formatarData(contrato.dataInicio) }}</dd>
+            </div>
+          </dl>
+
+          <div class="contrato-card__acoes">
+            <a mat-stroked-button [routerLink]="['/contratos', contrato.id]">
+              <mat-icon>visibility</mat-icon>
+              Detalhes
+            </a>
+
+            @if (podeEditar(contrato)) {
+              <a
+                mat-flat-button
+                [routerLink]="['/contratos', contrato.id, 'editar']"
+              >
+                <mat-icon>edit</mat-icon>
+                Editar
+              </a>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (!carregando() && totalPaginas() > 1) {
+    <nav class="paginacao" aria-label="Paginação de contratos">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="paginaAtual() === 0"
+        (click)="paginaAnterior()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+        Anterior
+      </button>
+
+      <span class="paginacao__texto">
+        Página {{ paginaAtual() + 1 }} de {{ totalPaginas() }}
+      </span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="paginaAtual() + 1 >= totalPaginas()"
+        (click)="proximaPagina()"
+      >
+        Próxima
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </nav>
+  }
+</section>
