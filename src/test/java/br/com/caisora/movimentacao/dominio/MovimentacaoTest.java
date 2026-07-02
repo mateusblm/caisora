@@ -193,6 +193,48 @@ class MovimentacaoTest {
     }
 
     @Test
+    void naoDeveCriarRetiradaSaindoDeAreaExterna() {
+        assertThatThrownBy(() -> new Movimentacao(
+                organizacao,
+                embarcacao,
+                TipoMovimentacao.RETIRADA,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.EXTERNA,
+                null,
+                "Patio externo",
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaDestino,
+                null,
+                Instant.now().plusSeconds(3600),
+                solicitante,
+                operador,
+                null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Retirada");
+    }
+
+    @Test
+    void naoDeveCriarDeslocamentoInternoParaAgua() {
+        assertThatThrownBy(() -> new Movimentacao(
+                organizacao,
+                embarcacao,
+                TipoMovimentacao.DESLOCAMENTO_INTERNO,
+                PrioridadeMovimentacao.NORMAL,
+                TipoPosicaoEmbarcacao.VAGA,
+                vagaOrigem,
+                null,
+                TipoPosicaoEmbarcacao.AGUA,
+                null,
+                "Canal principal",
+                Instant.now().plusSeconds(3600),
+                solicitante,
+                operador,
+                null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Deslocamento interno");
+    }
+
+    @Test
     void naoDeveAtualizarMovimentacaoConcluida() {
         Movimentacao movimentacao = criarLancamento();
         movimentacao.iniciar(operador, movimentacao.getCriadaEm());

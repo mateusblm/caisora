@@ -338,7 +338,6 @@ implements OnInit {
         (
           posicao.tipo === 'AGUA'
           || posicao.tipo === 'PIER_ESPERA'
-          || posicao.tipo === 'EXTERNA'
         )
         && ocupacao
       ) {
@@ -367,8 +366,8 @@ implements OnInit {
         valor: 'DESLOCAMENTO_INTERNO',
         rotulo: 'Deslocamento interno',
         descricao:
-          'Move temporariamente para água, píer, '
-          + 'área de serviço ou área externa.'
+          'Move temporariamente para píer, área de '
+          + 'serviço ou área externa.'
       });
 
       const atual = this.movimentacaoAtual();
@@ -1349,10 +1348,6 @@ implements OnInit {
             rotulo: 'Píer de espera'
           },
           {
-            valor: 'AGUA',
-            rotulo: 'Água'
-          },
-          {
             valor: 'EXTERNA',
             rotulo: 'Área externa'
           }
@@ -1463,10 +1458,9 @@ implements OnInit {
         return (
           posicao.tipo === 'AGUA'
           || posicao.tipo === 'PIER_ESPERA'
-          || posicao.tipo === 'EXTERNA'
         )
           ? ''
-          : 'a embarcacao nao esta na agua, no pier de espera ou em area externa.';
+          : 'a embarcacao nao esta na agua ou no pier de espera.';
 
       case 'RETORNO_PARA_VAGA':
         if (!ocupacao) {

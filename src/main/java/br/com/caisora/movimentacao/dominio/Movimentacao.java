@@ -361,12 +361,11 @@ public class Movimentacao {
             case RETIRADA -> {
                 boolean origemValida =
                     origem == TipoPosicaoEmbarcacao.AGUA
-                    || origem == TipoPosicaoEmbarcacao.PIER_ESPERA
-                    || origem == TipoPosicaoEmbarcacao.EXTERNA;
+                    || origem == TipoPosicaoEmbarcacao.PIER_ESPERA;
 
                 if (!origemValida || destino != TipoPosicaoEmbarcacao.VAGA) {
                     throw new IllegalArgumentException(
-                        "Retirada deve sair da agua, do pier ou de area externa e terminar em uma vaga"
+                        "Retirada deve sair da agua ou do pier e terminar em uma vaga"
                     );
                 }
             }
@@ -398,10 +397,11 @@ public class Movimentacao {
             case DESLOCAMENTO_INTERNO -> {
                 if (
                     destino == TipoPosicaoEmbarcacao.VAGA
+                    || destino == TipoPosicaoEmbarcacao.AGUA
                     || destino == TipoPosicaoEmbarcacao.DESCONHECIDA
                 ) {
                     throw new IllegalArgumentException(
-                        "Deslocamento interno deve terminar no pier, area de servico, agua ou area externa"
+                        "Deslocamento interno deve terminar no pier, area de servico ou area externa"
                     );
                 }
             }

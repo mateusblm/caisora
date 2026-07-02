@@ -342,6 +342,83 @@ describe(
     );
 
     it(
+      'deve tratar area externa como retorno para vaga, nao retirada',
+      () => {
+        movimentacaoServiceMock
+          .buscarPosicaoEmbarcacao
+          .mockReturnValue(
+            of(
+              criarPosicao({
+                tipo: 'EXTERNA',
+                vagaId: null,
+                vagaCodigo: null
+              })
+            )
+          );
+
+        const formulario =
+          fixture.componentInstance[
+            'formulario'
+          ];
+
+        formulario.controls
+          .embarcacaoId
+          .setValue('embarcacao-1');
+
+        const tipos =
+          fixture.componentInstance[
+            'tiposDisponiveis'
+          ]();
+
+        expect(
+          tipos.find(
+            (opcao) =>
+              opcao.valor === 'RETIRADA'
+          )
+        ).toEqual(
+          expect.objectContaining({
+            disponivel: false,
+            motivoIndisponibilidade:
+              expect.stringContaining(
+                'agua ou no pier'
+              )
+          })
+        );
+
+        expect(
+          tipos.find(
+            (opcao) =>
+              opcao.valor === 'RETORNO_PARA_VAGA'
+          )
+        ).toEqual(
+          expect.objectContaining({
+            disponivel: true
+          })
+        );
+      }
+    );
+
+    it(
+      'nao deve oferecer agua como destino de deslocamento interno',
+      () => {
+        const destinos =
+          fixture.componentInstance[
+            'destinosPermitidos'
+          ]('DESLOCAMENTO_INTERNO');
+
+        expect(
+          destinos.map(
+            (destino) => destino.valor
+          )
+        ).toEqual([
+          'AREA_SERVICO',
+          'PIER_ESPERA',
+          'EXTERNA'
+        ]);
+      }
+    );
+
+    it(
       'nao deve enviar tipo indisponivel mesmo se o HTML for manipulado',
       () => {
         const componente =
