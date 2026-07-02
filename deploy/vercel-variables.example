@@ -1,0 +1,2 @@
+# URL pública do serviço Spring Boot no Railway, sem /api/v1.
+API_BASE_URL=https://SEU-BACKEND.up.railway.app

@@ -1,0 +1,17 @@
+# Variáveis do serviço da API no Railway.
+# Substitua "Postgres" caso o serviço de banco tenha outro nome.
+
+PORT=8080
+SERVER_PORT=8080
+SPRING_PROFILES_ACTIVE=prod
+
+DB_URL=jdbc:postgresql://${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}
+DB_USERNAME=${{Postgres.PGUSER}}
+DB_PASSWORD=${{Postgres.PGPASSWORD}}
+
+JWT_SECRET=GERAR_UM_SEGREDO_FORTE_EM_BASE64
+JWT_EXPIRATION_SECONDS=3600
+
+# Durante os primeiros testes, permite a URL de produção e previews da Vercel.
+# Depois, prefira restringir à URL definitiva do frontend.
+CAISORA_CORS_ORIGENS_PERMITIDAS=https://*.vercel.app,http://localhost:4200

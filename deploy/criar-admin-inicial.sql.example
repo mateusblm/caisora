@@ -1,0 +1,62 @@
+-- Execute uma única vez no PostgreSQL do ambiente de testes.
+-- Troque nome, e-mail, slug e senha antes de executar.
+-- Não faça commit de uma cópia contendo credenciais reais.
+
+begin;
+
+create extension if not exists pgcrypto;
+
+with nova_organizacao as (
+    insert into organizacoes (
+        id,
+        nome,
+        razao_social,
+        documento,
+        email,
+        telefone,
+        ativa,
+        criada_em,
+        atualizada_em,
+        slug
+    )
+    values (
+        gen_random_uuid(),
+        'Marina de Testes',
+        null,
+        null,
+        'admin@caisora.com.br',
+        null,
+        true,
+        now(),
+        now(),
+        'marina-testes'
+    )
+    returning id
+)
+insert into usuarios (
+    id,
+    organizacao_id,
+    nome,
+    email,
+    senha_hash,
+    perfil,
+    ativo,
+    criado_em,
+    atualizado_em
+)
+select
+    gen_random_uuid(),
+    id,
+    'Administrador da Marina',
+    'admin@caisora.com.br',
+    crypt(
+        'TROQUE_ESTA_SENHA_ANTES_DE_EXECUTAR',
+        gen_salt('bf', 12)
+    ),
+    'ADMINISTRADOR_MARINA',
+    true,
+    now(),
+    now()
+from nova_organizacao;
+
+commit;
