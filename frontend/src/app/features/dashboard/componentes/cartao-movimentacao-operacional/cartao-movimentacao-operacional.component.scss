@@ -253,6 +253,20 @@
     border-radius: 9px;
   }
 
+  a {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
+
   .acao-concluir {
     grid-column: 1 / -1;
   }
@@ -262,9 +276,25 @@
   background: var(--caisora-oceano-600);
   color: #ffffff;
 
+  &__conteudo {
+    display: inline-flex;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    line-height: 1;
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
+
   mat-spinner {
-    display: inline-block;
-    margin-right: 6px;
+    flex: 0 0 auto;
     --mdc-circular-progress-active-indicator-color:
       #ffffff;
   }

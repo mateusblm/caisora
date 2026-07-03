@@ -128,11 +128,15 @@
           (click)="solicitarInicio()"
         >
           @if (processando) {
-            <mat-spinner diameter="19"></mat-spinner>
-            Processando
+            <span class="acao-principal__conteudo">
+              <mat-spinner diameter="19"></mat-spinner>
+              <span>Processando</span>
+            </span>
           } @else {
-            <mat-icon>play_arrow</mat-icon>
-            Iniciar agora
+            <span class="acao-principal__conteudo">
+              <mat-icon>play_arrow</mat-icon>
+              <span>Iniciar agora</span>
+            </span>
           }
         </button>
       }
@@ -148,11 +152,15 @@
           (click)="solicitarConclusao()"
         >
           @if (processando) {
-            <mat-spinner diameter="19"></mat-spinner>
-            Processando
+            <span class="acao-principal__conteudo">
+              <mat-spinner diameter="19"></mat-spinner>
+              <span>Processando</span>
+            </span>
           } @else {
-            <mat-icon>check_circle</mat-icon>
-            Concluir movimentação
+            <span class="acao-principal__conteudo">
+              <mat-icon>check_circle</mat-icon>
+              <span>Concluir movimentação</span>
+            </span>
           }
         </button>
       }
