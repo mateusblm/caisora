@@ -1,7 +1,8 @@
 package br.com.caisora.contrato.infraestrutura;
 
 import br.com.caisora.contrato.dominio.SequenciaContratoRepository;
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -45,7 +46,8 @@ public class SequenciaContratoRepositoryPostgres
             Map.of(
                 "organizacaoId", organizacaoId,
                 "ano", ano,
-                "atualizadoEm", Instant.now()
+                "atualizadoEm",
+                OffsetDateTime.now(ZoneOffset.UTC)
             ),
             Long.class
         );
