@@ -43,6 +43,10 @@
     border-radius: 10px;
   }
 
+  > button {
+    order: 1;
+  }
+
   button mat-spinner {
     display: inline-block;
     margin-right: 7px;
@@ -50,12 +54,14 @@
 }
 
 .botao-painel-tv {
+  order: 3;
   grid-column: 1 / -1;
   border-color: rgb(20 121 156 / 32%);
   color: var(--caisora-oceano-600);
 }
 
 .botao-nova {
+  order: 2;
   background: var(--caisora-oceano-600);
   color: #ffffff;
 }
@@ -675,7 +681,16 @@
     }
 
     .botao-painel-tv {
+      order: initial;
       grid-column: auto;
+    }
+
+    .botao-nova {
+      order: initial;
+    }
+
+    > button {
+      order: initial;
     }
   }
 
