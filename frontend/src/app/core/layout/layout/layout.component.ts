@@ -18,13 +18,19 @@ import {
   RouterOutlet
 } from '@angular/router';
 import { map } from 'rxjs';
-import { PerfilUsuario } from '../../autenticacao/autenticacao.model';
+import {
+  AcaoSistema,
+  ModuloSistema,
+  PerfilUsuario
+} from '../../autenticacao/autenticacao.model';
 import { AutenticacaoService } from '../../autenticacao/autenticacao.service';
 
 interface ItemMenu {
   rotulo: string;
   icone: string;
   rota: string;
+  modulo: ModuloSistema;
+  acao: AcaoSistema;
 }
 
 @Component({
@@ -74,43 +80,77 @@ export class LayoutComponent implements OnInit {
     () => this.formatarPerfil(this.usuario()?.perfil)
   );
 
-  protected readonly itensMenu: ItemMenu[] = [
+  private readonly todosItensMenu: ItemMenu[] = [
     {
       rotulo: 'Dashboard',
       icone: 'dashboard',
-      rota: '/dashboard'
+      rota: '/dashboard',
+      modulo: 'DASHBOARD',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Clientes',
       icone: 'groups',
-      rota: '/clientes'
+      rota: '/clientes',
+      modulo: 'CLIENTES',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Embarcações',
       icone: 'directions_boat',
-      rota: '/embarcacoes'
+      rota: '/embarcacoes',
+      modulo: 'EMBARCACOES',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Vagas',
       icone: 'anchor',
-      rota: '/vagas'
+      rota: '/vagas',
+      modulo: 'VAGAS',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Ocupações',
       icone: 'garage',
-      rota: '/ocupacoes'
+      rota: '/ocupacoes',
+      modulo: 'OCUPACOES',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Movimentações',
       icone: 'swap_horiz',
-      rota: '/movimentacoes'
+      rota: '/movimentacoes',
+      modulo: 'MOVIMENTACOES',
+      acao: 'VISUALIZAR'
     },
     {
       rotulo: 'Contratos',
       icone: 'description',
-      rota: '/contratos'
+      rota: '/contratos',
+      modulo: 'CONTRATOS',
+      acao: 'VISUALIZAR'
+    },
+    {
+      rotulo: 'Checklist de saída',
+      icone: 'fact_check',
+      rota: '/checklist-saida',
+      modulo: 'CHECKLIST_SAIDA',
+      acao: 'VISUALIZAR'
+    },
+    {
+      rotulo: 'Configurações',
+      icone: 'tune',
+      rota: '/configuracoes/variabilidade',
+      modulo: 'CONFIGURACOES',
+      acao: 'CONFIGURAR'
     }
   ];
+
+  protected readonly itensMenu = computed(() =>
+    this.todosItensMenu.filter((item) =>
+      this.autenticacaoService.temPermissao(item.modulo, item.acao)
+    )
+  );
 
   ngOnInit(): void {
     this.autenticacaoService

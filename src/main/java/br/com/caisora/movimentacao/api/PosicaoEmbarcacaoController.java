@@ -3,6 +3,7 @@ package br.com.caisora.movimentacao.api;
 import br.com.caisora.movimentacao.aplicacao.PosicaoEmbarcacaoService;
 import br.com.caisora.movimentacao.dominio.TipoPosicaoEmbarcacao;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'VISUALIZAR')")
 public class PosicaoEmbarcacaoController {
 
     private final PosicaoEmbarcacaoService

@@ -2,6 +2,7 @@ package br.com.caisora.cliente.api;
 
 import br.com.caisora.cliente.aplicacao.ClienteService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
@@ -20,6 +21,7 @@ public class ClienteController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'CRIAR')")
     public ResponseEntity<ClienteResponse> criar(
         @Valid @RequestBody CriarClienteRequest request
     ) {
@@ -34,6 +36,7 @@ public class ClienteController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'VISUALIZAR')")
     public Page<ClienteResponse> listar(
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) Boolean ativo,
@@ -62,6 +65,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'VISUALIZAR')")
     public ClienteResponse buscarPorId(
         @PathVariable UUID id
     ) {
@@ -69,6 +73,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'EDITAR')")
     public ClienteResponse atualizar(
         @PathVariable UUID id,
         @Valid @RequestBody AtualizarClienteRequest request
@@ -77,6 +82,7 @@ public class ClienteController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'ALTERAR_STATUS')")
     public ClienteResponse alterarStatus(
         @PathVariable UUID id,
         @Valid

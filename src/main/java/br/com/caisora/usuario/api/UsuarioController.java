@@ -3,6 +3,7 @@ package br.com.caisora.usuario.api;
 import br.com.caisora.usuario.aplicacao.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,22 +28,26 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'USUARIOS', 'CRIAR')")
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse criar(@Valid @RequestBody CriarUsuarioRequest request) {
         return usuarioService.criar(request);
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'USUARIOS', 'VISUALIZAR')")
     public Page<UsuarioResponse> listar(Pageable paginacao) {
         return usuarioService.listar(paginacao);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'USUARIOS', 'VISUALIZAR')")
     public UsuarioResponse buscarPorId(@PathVariable UUID id) {
         return usuarioService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'USUARIOS', 'EDITAR')")
     public UsuarioResponse atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody AtualizarUsuarioRequest request
@@ -51,6 +56,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("@acesso.permitido(authentication, 'USUARIOS', 'ALTERAR_STATUS')")
     public UsuarioResponse alterarStatus(
             @PathVariable UUID id,
             @Valid @RequestBody AlterarStatusUsuarioRequest request

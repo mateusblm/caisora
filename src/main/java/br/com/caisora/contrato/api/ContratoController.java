@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,6 +33,7 @@ public class ContratoController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'CRIAR')")
     public ResponseEntity<ContratoResponse> criar(
         @Valid @RequestBody CriarContratoRequest request
     ) {
@@ -43,6 +45,7 @@ public class ContratoController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'VISUALIZAR')")
     public Page<ContratoResponse> listar(
         @RequestParam(required = false) StatusContrato status,
         @RequestParam(required = false) UUID clienteId,
@@ -62,11 +65,13 @@ public class ContratoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'VISUALIZAR')")
     public ContratoResponse buscarPorId(@PathVariable UUID id) {
         return contratoService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'EDITAR')")
     public ContratoResponse atualizar(
         @PathVariable UUID id,
         @Valid @RequestBody AtualizarContratoRequest request
@@ -75,6 +80,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/enviar-para-assinatura")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse enviarParaAssinatura(
         @PathVariable UUID id,
         @Valid @RequestBody(required = false) MotivoContratoRequest request
@@ -86,6 +92,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/ativar")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse ativar(
         @PathVariable UUID id,
         @Valid @RequestBody AtivarContratoRequest request
@@ -94,6 +101,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/suspender")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse suspender(
         @PathVariable UUID id,
         @Valid @RequestBody(required = false) MotivoContratoRequest request
@@ -105,6 +113,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/reativar")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse reativar(
         @PathVariable UUID id,
         @Valid @RequestBody(required = false) MotivoContratoRequest request
@@ -116,6 +125,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/solicitar-encerramento")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse solicitarEncerramento(
         @PathVariable UUID id,
         @Valid @RequestBody(required = false) MotivoContratoRequest request
@@ -127,6 +137,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/encerrar")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse encerrar(
         @PathVariable UUID id,
         @Valid @RequestBody EncerrarContratoRequest request
@@ -135,6 +146,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/cancelar")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'ALTERAR_STATUS')")
     public ContratoResponse cancelar(
         @PathVariable UUID id,
         @Valid @RequestBody(required = false) MotivoContratoRequest request
@@ -146,6 +158,7 @@ public class ContratoController {
     }
 
     @PostMapping("/{id}/ocupacoes")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'EDITAR')")
     public ResponseEntity<VinculoContratoOcupacaoResponse> vincularOcupacao(
         @PathVariable UUID id,
         @Valid @RequestBody VincularOcupacaoContratoRequest request
@@ -159,6 +172,7 @@ public class ContratoController {
     }
 
     @GetMapping("/{id}/ocupacoes")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'VISUALIZAR')")
     public List<VinculoContratoOcupacaoResponse> listarOcupacoes(
         @PathVariable UUID id
     ) {
@@ -166,6 +180,7 @@ public class ContratoController {
     }
 
     @DeleteMapping("/{id}/ocupacoes/{vinculoId}")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'EDITAR')")
     public VinculoContratoOcupacaoResponse desvincularOcupacao(
         @PathVariable UUID id,
         @PathVariable UUID vinculoId,
@@ -179,6 +194,7 @@ public class ContratoController {
     }
 
     @GetMapping("/{id}/historico")
+    @PreAuthorize("@acesso.permitido(authentication, 'CONTRATOS', 'VISUALIZAR')")
     public Page<HistoricoContratoResponse> listarHistorico(
         @PathVariable UUID id,
         @PageableDefault(

@@ -5,6 +5,29 @@ export type PerfilUsuario =
   | 'ATENDENTE'
   | 'FINANCEIRO';
 
+export type ModuloSistema =
+  | 'DASHBOARD'
+  | 'CLIENTES'
+  | 'EMBARCACOES'
+  | 'VAGAS'
+  | 'OCUPACOES'
+  | 'MOVIMENTACOES'
+  | 'CONTRATOS'
+  | 'PAINEL_TV'
+  | 'USUARIOS'
+  | 'CHECKLIST_SAIDA'
+  | 'CONFIGURACOES';
+
+export type AcaoSistema =
+  | 'VISUALIZAR'
+  | 'CRIAR'
+  | 'EDITAR'
+  | 'ALTERAR_STATUS'
+  | 'INICIAR'
+  | 'CONCLUIR'
+  | 'CANCELAR'
+  | 'CONFIGURAR';
+
 export interface SolicitacaoLogin {
   codigoOrganizacao: string;
   email: string;
@@ -18,6 +41,8 @@ export interface UsuarioAutenticado {
   perfil: PerfilUsuario;
   organizacaoId: string;
   organizacaoNome: string;
+  modulosAtivos: ModuloSistema[];
+  permissoes: string[];
 }
 
 export interface RespostaLogin {

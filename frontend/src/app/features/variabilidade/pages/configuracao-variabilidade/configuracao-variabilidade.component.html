@@ -1,0 +1,122 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <span class="sobrelinha">Linha de Produto de Software</span>
+      <h1>Variabilidade da marina</h1>
+      <p>
+        Ative módulos para esta organização e defina quais ações cada perfil pode executar.
+        O mesmo Caisora é reutilizado, mas cada marina recebe uma variante configurada.
+      </p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <div class="estado"><mat-spinner diameter="38" /></div>
+  } @else if (configuracao(); as cfg) {
+    @if (mensagem()) {
+      <div class="mensagem mensagem--sucesso">{{ mensagem() }}</div>
+    }
+    @if (erro()) {
+      <div class="mensagem mensagem--erro">{{ erro() }}</div>
+    }
+
+    <mat-card class="bloco">
+      <mat-card-header>
+        <mat-card-title>Módulos da organização</mat-card-title>
+        <mat-card-subtitle>
+          Ponto de variação no nível do cliente. Módulos desligados não aparecem no menu e a API bloqueia o acesso.
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="grade-modulos">
+        @for (modulo of cfg.modulos; track modulo.modulo) {
+          <div class="modulo">
+            <div>
+              <strong>{{ modulo.nome }}</strong>
+              <span>
+                {{ modulo.obrigatorio ? 'Núcleo comum obrigatório' : 'Módulo configurável' }}
+              </span>
+            </div>
+            <mat-slide-toggle
+              [checked]="modulo.ativo"
+              [disabled]="modulo.obrigatorio || salvando()"
+              (change)="alterarModulo(modulo.modulo, $event.checked)"
+            />
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="bloco">
+      <mat-card-header>
+        <mat-card-title>Permissões por perfil</mat-card-title>
+        <mat-card-subtitle>
+          Ponto de variação no nível do usuário. Ações diferentes podem ser liberadas para o mesmo módulo.
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="perfil-select">
+          <mat-label>Perfil</mat-label>
+          <mat-select
+            [ngModel]="perfilSelecionado()"
+            (ngModelChange)="selecionarPerfil($event)"
+          >
+            @for (perfil of cfg.perfis; track perfil.perfil) {
+              <mat-option [value]="perfil.perfil">
+                {{ nomePerfil(perfil.perfil) }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="tabela-permissoes">
+          @for (modulo of cfg.modulos; track modulo.modulo) {
+            <div class="linha-permissao">
+              <div class="modulo-permissao">
+                <strong>{{ modulo.nome }}</strong>
+                @if (!modulo.ativo) {
+                  <small>módulo desativado</small>
+                }
+              </div>
+
+              <div class="acoes">
+                @for (acaoCodigo of modulo.acoes; track acaoCodigo) {
+                  <mat-checkbox
+                    [checked]="possuiPermissao(modulo.modulo, acaoCodigo)"
+                    [disabled]="!modulo.ativo || salvando()"
+                    (change)="alternarPermissao(modulo.modulo, acaoCodigo, $event.checked)"
+                  >
+                    {{ rotuloAcao(acaoCodigo) }}
+                  </mat-checkbox>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="acoes-rodape">
+          <button
+            mat-flat-button
+            type="button"
+            [disabled]="salvando()"
+            (click)="salvarPermissoes()"
+          >
+            <mat-icon>save</mat-icon>
+            Salvar permissões
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="bloco bloco--destaque">
+      <mat-card-content>
+        <mat-icon>fact_check</mat-icon>
+        <div>
+          <strong>Exemplo de função específica</strong>
+          <p>
+            O módulo “Checklist de saída” fica desligado por padrão. Ele pode ser ativado apenas para uma marina que contratou esse processo, sem criar outro projeto ou fork do Caisora.
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,7 @@ public class EmbarcacaoController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'EMBARCACOES', 'CRIAR')")
     public ResponseEntity<EmbarcacaoResponse> criar(
             @Valid
             @RequestBody
@@ -54,6 +56,7 @@ public class EmbarcacaoController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'EMBARCACOES', 'VISUALIZAR')")
     public Page<EmbarcacaoResponse> listar(
             @RequestParam(required = false)
             String nome,
@@ -106,6 +109,7 @@ public class EmbarcacaoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'EMBARCACOES', 'VISUALIZAR')")
     public EmbarcacaoResponse buscarPorId(
             @PathVariable UUID id
     ) {
@@ -113,6 +117,7 @@ public class EmbarcacaoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'EMBARCACOES', 'EDITAR')")
     public EmbarcacaoResponse atualizar(
             @PathVariable UUID id,
             @Valid
@@ -126,6 +131,7 @@ public class EmbarcacaoController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("@acesso.permitido(authentication, 'EMBARCACOES', 'ALTERAR_STATUS')")
     public EmbarcacaoResponse alterarStatus(
             @PathVariable UUID id,
             @Valid

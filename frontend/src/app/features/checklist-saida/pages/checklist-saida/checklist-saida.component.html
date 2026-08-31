@@ -1,0 +1,44 @@
+<section class="pagina">
+  <header>
+    <span class="badge">Módulo opcional</span>
+    <h1>Checklist de saída</h1>
+    <p>
+      Função específica que pode ser habilitada apenas para marinas que exigem conferência formal antes da retirada de uma embarcação.
+    </p>
+  </header>
+
+  <mat-card class="cartao">
+    <mat-card-header>
+      <mat-card-title>Retirada #MOV-2026-0184</mat-card-title>
+      <mat-card-subtitle>Embarcação Maré Alta · saída para cliente</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="lista">
+      @for (item of itens(); track item.id) {
+        <mat-checkbox
+          [checked]="item.concluido"
+          (change)="alterarItem(item.id, $event.checked)"
+        >
+          {{ item.descricao }}
+        </mat-checkbox>
+      }
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button
+        mat-flat-button
+        type="button"
+        [disabled]="!podeConcluir()"
+        (click)="concluir()"
+      >
+        <mat-icon>task_alt</mat-icon>
+        Concluir checklist
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  @if (concluido()) {
+    <div class="confirmacao">
+      <mat-icon>verified</mat-icon>
+      Checklist concluído. A embarcação está liberada para saída.
+    </div>
+  }
+</section>

@@ -3,6 +3,7 @@ package br.com.caisora.ocupacao.api;
 import br.com.caisora.ocupacao.aplicacao.OcupacaoService;
 import br.com.caisora.ocupacao.dominio.StatusOcupacao;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,7 @@ public class OcupacaoController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'OCUPACOES', 'CRIAR')")
     public ResponseEntity<OcupacaoResponse> criar(
         @Valid
         @RequestBody
@@ -54,6 +56,7 @@ public class OcupacaoController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'OCUPACOES', 'VISUALIZAR')")
     public Page<OcupacaoResponse> listar(
         @RequestParam(required = false)
         UUID embarcacaoId,
@@ -101,6 +104,7 @@ public class OcupacaoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'OCUPACOES', 'VISUALIZAR')")
     public OcupacaoResponse buscarPorId(
         @PathVariable
         UUID id
@@ -111,6 +115,7 @@ public class OcupacaoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'OCUPACOES', 'EDITAR')")
     public OcupacaoResponse atualizar(
         @PathVariable
         UUID id,
@@ -126,6 +131,7 @@ public class OcupacaoController {
     }
 
     @PatchMapping("/{id}/encerramento")
+    @PreAuthorize("@acesso.permitido(authentication, 'OCUPACOES', 'CONCLUIR')")
     public OcupacaoResponse encerrar(
         @PathVariable
         UUID id,

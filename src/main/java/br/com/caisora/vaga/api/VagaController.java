@@ -3,6 +3,7 @@ package br.com.caisora.vaga.api;
 import br.com.caisora.vaga.aplicacao.VagaService;
 import br.com.caisora.vaga.dominio.TipoVaga;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,6 +35,7 @@ public class VagaController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'VAGAS', 'CRIAR')")
     public ResponseEntity<VagaResponse> criar(
         @Valid
         @RequestBody
@@ -52,6 +54,7 @@ public class VagaController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'VAGAS', 'VISUALIZAR')")
     public Page<VagaResponse> listar(
         @RequestParam(required = false)
         String codigo,
@@ -112,6 +115,7 @@ public class VagaController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'VAGAS', 'VISUALIZAR')")
     public VagaResponse buscarPorId(
         @PathVariable
         UUID id
@@ -120,6 +124,7 @@ public class VagaController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'VAGAS', 'EDITAR')")
     public VagaResponse atualizar(
         @PathVariable
         UUID id,
@@ -135,6 +140,7 @@ public class VagaController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("@acesso.permitido(authentication, 'VAGAS', 'ALTERAR_STATUS')")
     public VagaResponse alterarStatus(
         @PathVariable
         UUID id,

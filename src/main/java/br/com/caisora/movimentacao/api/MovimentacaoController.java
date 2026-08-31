@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +39,7 @@ public class MovimentacaoController {
     }
 
     @PostMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'CRIAR')")
     public ResponseEntity<MovimentacaoResponse>
     criar(
         @Valid
@@ -58,6 +60,7 @@ public class MovimentacaoController {
     }
 
     @GetMapping
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'VISUALIZAR')")
     public Page<MovimentacaoResponse> listar(
         @RequestParam(required = false)
         StatusMovimentacao status,
@@ -92,6 +95,7 @@ public class MovimentacaoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'VISUALIZAR')")
     public MovimentacaoResponse buscarPorId(
         @PathVariable UUID id
     ) {
@@ -100,6 +104,7 @@ public class MovimentacaoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'EDITAR')")
     public MovimentacaoResponse atualizar(
         @PathVariable UUID id,
 
@@ -114,6 +119,7 @@ public class MovimentacaoController {
     }
 
     @PatchMapping("/{id}/inicio")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'INICIAR')")
     public MovimentacaoResponse iniciar(
         @PathVariable UUID id,
 
@@ -128,6 +134,7 @@ public class MovimentacaoController {
     }
 
     @PatchMapping("/{id}/conclusao")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'CONCLUIR')")
     public MovimentacaoResponse concluir(
         @PathVariable UUID id,
 
@@ -142,6 +149,7 @@ public class MovimentacaoController {
     }
 
     @PatchMapping("/{id}/cancelamento")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'CANCELAR')")
     public MovimentacaoResponse cancelar(
         @PathVariable UUID id,
 
@@ -156,6 +164,7 @@ public class MovimentacaoController {
     }
 
     @GetMapping("/{id}/historico")
+    @PreAuthorize("@acesso.permitido(authentication, 'MOVIMENTACOES', 'VISUALIZAR')")
     public Page<HistoricoMovimentacaoResponse>
     listarHistorico(
         @PathVariable UUID id,

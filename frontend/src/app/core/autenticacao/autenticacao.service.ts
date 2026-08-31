@@ -16,6 +16,8 @@ import { environment } from
   '../../../environments/environment';
 
 import {
+  AcaoSistema,
+  ModuloSistema,
   RespostaLogin,
   SolicitacaoLogin,
   UsuarioAutenticado
@@ -107,6 +109,40 @@ export class AutenticacaoService {
 
   estaAutenticado(): boolean {
     return this.obterToken() !== null;
+  }
+
+  temModulo(modulo: ModuloSistema): boolean {
+    const usuario = this.usuarioSignal();
+    if (!usuario) {
+      return false;
+    }
+    if (!Array.isArray(usuario.modulosAtivos)) {
+      return true;
+    }
+    return usuario.modulosAtivos.includes(modulo);
+  }
+
+  temPermissao(
+    modulo: ModuloSistema,
+    acao: AcaoSistema
+  ): boolean {
+    const usuario = this.usuarioSignal();
+    if (!usuario) {
+      return false;
+    }
+
+    if (usuario.perfil === 'ADMINISTRADOR_PLATAFORMA') {
+      return true;
+    }
+
+    // Compatibilidade com sessões salvas antes da introdução da variabilidade.
+    // O backend continua sendo a autoridade e o /me atualiza a sessão em seguida.
+    if (!Array.isArray(usuario.modulosAtivos) || !Array.isArray(usuario.permissoes)) {
+      return true;
+    }
+
+    return usuario.modulosAtivos.includes(modulo)
+      && usuario.permissoes.includes(`${modulo}:${acao}`);
   }
 
   encerrarSessao(): void {

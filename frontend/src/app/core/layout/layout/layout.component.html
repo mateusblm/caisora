@@ -31,7 +31,7 @@
     </div>
 
     <mat-nav-list class="navegacao">
-      @for (item of itensMenu; track item.rota) {
+      @for (item of itensMenu(); track item.rota) {
         <a
           mat-list-item
           class="item-menu"
