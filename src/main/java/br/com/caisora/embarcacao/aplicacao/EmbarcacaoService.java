@@ -104,35 +104,29 @@ public class EmbarcacaoService {
                 numeroCasco
         );
 
-        Embarcacao embarcacao = new Embarcacao(
-                organizacao,
-                proprietario,
-                normalizarTextoOpcional(request.nome()),
-                request.tipo(),
-                normalizarTextoOpcional(request.fabricante()),
-                normalizarTextoOpcional(request.modelo()),
-                request.anoFabricacao(),
-                numeroInscricao,
-                numeroCasco,
-                normalizarTextoOpcional(
-                        request.portoInscricao()
-                ),
-                codigoPais,
-                request.comprimentoTotalMetros(),
-                request.bocaMetros(),
-                request.caladoMetros(),
-                request.pontalMetros(),
-                request.alturaTotalMetros(),
-                request.pesoKg(),
-                request.capacidadePessoas(),
-                request.tipoPropulsao(),
-                normalizarTextoOpcional(
-                        request.corPredominante()
-                ),
-                normalizarTextoOpcional(
-                        request.observacoes()
-                )
-        );
+        Embarcacao embarcacao = Embarcacao.builder()
+            .organizacao(organizacao)
+            .proprietario(proprietario)
+            .nome(normalizarTextoOpcional(request.nome()))
+            .tipo(request.tipo())
+            .fabricante(normalizarTextoOpcional(request.fabricante()))
+            .modelo(normalizarTextoOpcional(request.modelo()))
+            .anoFabricacao(request.anoFabricacao())
+            .numeroInscricao(numeroInscricao)
+            .numeroCasco(numeroCasco)
+            .portoInscricao(normalizarTextoOpcional(request.portoInscricao()))
+            .codigoPaisBandeira(codigoPais)
+            .comprimentoTotalMetros(request.comprimentoTotalMetros())
+            .bocaMetros(request.bocaMetros())
+            .caladoMetros(request.caladoMetros())
+            .pontalMetros(request.pontalMetros())
+            .alturaTotalMetros(request.alturaTotalMetros())
+            .pesoKg(request.pesoKg())
+            .capacidadePessoas(request.capacidadePessoas())
+            .tipoPropulsao(request.tipoPropulsao())
+            .corPredominante(normalizarTextoOpcional(request.corPredominante()))
+            .observacoes(normalizarTextoOpcional(request.observacoes()))
+            .construir();
 
         Embarcacao salva =
                 embarcacaoRepository.save(embarcacao);

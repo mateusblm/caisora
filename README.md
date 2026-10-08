@@ -1,5 +1,9 @@
 # Caisora
 
+## Documentação do projeto
+
+- [Fluxo atual do sistema](docs/fluxo-caisora.md)
+
 Backend do Caisora, um ERP web SaaS para gestao de marinas. Esta primeira entrega cria a fundacao tecnica do backend para desenvolvimento incremental do MVP.
 
 ## Tecnologias

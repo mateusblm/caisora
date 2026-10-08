@@ -1,5 +1,7 @@
 package br.com.caisora.contrato.dominio;
 
+import br.com.caisora.contrato.dominio.estado.EstadoContrato;
+import br.com.caisora.contrato.dominio.estado.EstadosContrato;
 import br.com.caisora.cliente.dominio.Cliente;
 import br.com.caisora.embarcacao.dominio.Embarcacao;
 import br.com.caisora.organizacao.dominio.Organizacao;
@@ -111,6 +113,11 @@ public class Contrato {
     @Column(nullable = false)
     private Long versao;
 
+    /** Inicia a montagem explícita de uma nova entidade (padrão Builder). */
+    public static ContratoBuilder builder() {
+        return new ContratoBuilder();
+    }
+
     protected Contrato() {
     }
 
@@ -189,7 +196,7 @@ public class Contrato {
         Integer diaVencimento,
         String observacoes
     ) {
-        exigirStatus(StatusContrato.RASCUNHO);
+        estadoAtual().editar();
         validarDadosComerciais(
             periodicidade,
             dataInicio,
@@ -223,13 +230,12 @@ public class Contrato {
     }
 
     public void enviarParaAssinatura() {
-        exigirStatus(StatusContrato.RASCUNHO);
-        this.status = StatusContrato.PENDENTE_ASSINATURA;
+        this.status = estadoAtual().enviarParaAssinatura();
         atualizarAuditoria();
     }
 
     public void ativar(LocalDate dataAssinatura) {
-        exigirStatus(StatusContrato.PENDENTE_ASSINATURA);
+        StatusContrato proximoStatus = estadoAtual().ativar();
         if (dataAssinatura == null) {
             throw new IllegalArgumentException("Data de assinatura obrigatoria");
         }
@@ -237,40 +243,29 @@ public class Contrato {
             throw new IllegalArgumentException("Data de assinatura nao pode estar no futuro");
         }
 
-        this.status = StatusContrato.ATIVO;
+        this.status = proximoStatus;
         this.dataAssinatura = dataAssinatura;
         this.dataAtivacao = LocalDate.now();
         atualizarAuditoria();
     }
 
     public void suspender() {
-        exigirStatus(StatusContrato.ATIVO);
-        this.status = StatusContrato.SUSPENSO;
+        this.status = estadoAtual().suspender();
         atualizarAuditoria();
     }
 
     public void reativar() {
-        exigirStatus(StatusContrato.SUSPENSO);
-        this.status = StatusContrato.ATIVO;
+        this.status = estadoAtual().reativar();
         atualizarAuditoria();
     }
 
     public void solicitarEncerramento() {
-        if (
-            status != StatusContrato.ATIVO
-                && status != StatusContrato.SUSPENSO
-        ) {
-            throw new IllegalStateException(
-                "Somente contrato ativo ou suspenso pode entrar em encerramento"
-            );
-        }
-
-        this.status = StatusContrato.EM_ENCERRAMENTO;
+        this.status = estadoAtual().solicitarEncerramento();
         atualizarAuditoria();
     }
 
     public void encerrar(LocalDate dataEncerramento) {
-        exigirStatus(StatusContrato.EM_ENCERRAMENTO);
+        StatusContrato proximoStatus = estadoAtual().encerrar();
         if (dataEncerramento == null) {
             throw new IllegalArgumentException("Data de encerramento obrigatoria");
         }
@@ -293,31 +288,22 @@ public class Contrato {
             );
         }
 
-        this.status = StatusContrato.ENCERRADO;
+        this.status = proximoStatus;
         this.dataEncerramento = dataEncerramento;
         atualizarAuditoria();
     }
 
     public void cancelar() {
-        if (
-            status != StatusContrato.RASCUNHO
-                && status != StatusContrato.PENDENTE_ASSINATURA
-        ) {
-            throw new IllegalStateException(
-                "Somente contrato em rascunho ou pendente de assinatura pode ser cancelado"
-            );
-        }
-
-        this.status = StatusContrato.CANCELADO;
+        this.status = estadoAtual().cancelar();
         atualizarAuditoria();
     }
 
     public boolean podeSerEditado() {
-        return status == StatusContrato.RASCUNHO;
+        return estadoAtual().podeSerEditado();
     }
 
     public boolean podeReceberOcupacao() {
-        return status == StatusContrato.ATIVO;
+        return estadoAtual().podeReceberOcupacao();
     }
 
     private void validarDadosComerciais(
@@ -368,12 +354,9 @@ public class Contrato {
         }
     }
 
-    private void exigirStatus(StatusContrato statusEsperado) {
-        if (status != statusEsperado) {
-            throw new IllegalStateException(
-                "Operacao invalida para contrato no status " + status
-            );
-        }
+    private EstadoContrato estadoAtual() {
+        // O enum guarda o dado no banco; o objeto State guarda o comportamento.
+        return EstadosContrato.para(status);
     }
 
     private void atualizarAuditoria() {

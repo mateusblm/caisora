@@ -1,5 +1,8 @@
 package br.com.caisora.movimentacao.dominio;
 
+import br.com.caisora.movimentacao.dominio.estado.EstadoMovimentacao;
+import br.com.caisora.movimentacao.dominio.estado.EstadosMovimentacao;
+import br.com.caisora.movimentacao.dominio.estrategia.RegrasMovimentacao;
 import br.com.caisora.embarcacao.dominio.Embarcacao;
 import br.com.caisora.organizacao.dominio.Organizacao;
 import br.com.caisora.usuario.dominio.Usuario;
@@ -176,7 +179,7 @@ public class Movimentacao {
         Usuario operadorResponsavel,
         String observacoes
     ) {
-        garantirAgendada();
+        estadoAtual().editar();
 
         Objects.requireNonNull(prioridade, "Prioridade obrigatoria");
         Objects.requireNonNull(
@@ -205,7 +208,7 @@ public class Movimentacao {
     }
 
     public void iniciar(Usuario operadorResponsavel, Instant iniciadaEm) {
-        garantirAgendada();
+        StatusMovimentacao proximoStatus = estadoAtual().iniciar();
 
         this.operadorResponsavel = Objects.requireNonNull(
             operadorResponsavel,
@@ -215,12 +218,12 @@ public class Movimentacao {
             iniciadaEm,
             "Data de inicio obrigatoria"
         );
-        this.status = StatusMovimentacao.EM_EXECUCAO;
+        this.status = proximoStatus;
         this.atualizadaEm = Instant.now();
     }
 
     public void concluir(Usuario operadorResponsavel, Instant concluidaEm) {
-        garantirEmExecucao();
+        StatusMovimentacao proximoStatus = estadoAtual().concluir();
 
         Instant dataConclusao = Objects.requireNonNull(
             concluidaEm,
@@ -238,12 +241,12 @@ public class Movimentacao {
         }
 
         this.concluidaEm = dataConclusao;
-        this.status = StatusMovimentacao.CONCLUIDA;
+        this.status = proximoStatus;
         this.atualizadaEm = Instant.now();
     }
 
     public void cancelar(Instant canceladaEm, String motivoCancelamento) {
-        garantirAgendada();
+        StatusMovimentacao proximoStatus = estadoAtual().cancelar();
 
         String motivo = normalizarTexto(motivoCancelamento);
         if (motivo == null) {
@@ -255,7 +258,7 @@ public class Movimentacao {
             "Data de cancelamento obrigatoria"
         );
         this.motivoCancelamento = motivo;
-        this.status = StatusMovimentacao.CANCELADA;
+        this.status = proximoStatus;
         this.atualizadaEm = Instant.now();
     }
 
@@ -279,16 +282,9 @@ public class Movimentacao {
         return estaAgendada() || estaEmExecucao();
     }
 
-    private void garantirAgendada() {
-        if (!estaAgendada()) {
-            throw new IllegalStateException("A movimentacao precisa estar agendada");
-        }
-    }
-
-    private void garantirEmExecucao() {
-        if (!estaEmExecucao()) {
-            throw new IllegalStateException("A movimentacao precisa estar em execucao");
-        }
+    private EstadoMovimentacao estadoAtual() {
+        // JPA persiste o enum; a entidade delega as decisões ao estado correspondente.
+        return EstadosMovimentacao.para(status);
     }
 
     private static void validarDadosObrigatorios(
@@ -344,68 +340,8 @@ public class Movimentacao {
         TipoPosicaoEmbarcacao destino,
         Vaga vagaDestino
     ) {
-        switch (tipo) {
-            case LANCAMENTO -> {
-                if (
-                    origem != TipoPosicaoEmbarcacao.VAGA
-                    || (
-                        destino != TipoPosicaoEmbarcacao.AGUA
-                        && destino != TipoPosicaoEmbarcacao.PIER_ESPERA
-                    )
-                ) {
-                    throw new IllegalArgumentException(
-                        "Lancamento deve sair de uma vaga e terminar na agua ou no pier de espera"
-                    );
-                }
-            }
-            case RETIRADA -> {
-                boolean origemValida =
-                    origem == TipoPosicaoEmbarcacao.AGUA
-                    || origem == TipoPosicaoEmbarcacao.PIER_ESPERA;
-
-                if (!origemValida || destino != TipoPosicaoEmbarcacao.VAGA) {
-                    throw new IllegalArgumentException(
-                        "Retirada deve sair da agua ou do pier e terminar em uma vaga"
-                    );
-                }
-            }
-            case RETORNO_PARA_VAGA -> {
-                boolean origemValida =
-                    origem == TipoPosicaoEmbarcacao.AREA_SERVICO
-                    || origem == TipoPosicaoEmbarcacao.EXTERNA;
-
-                if (!origemValida || destino != TipoPosicaoEmbarcacao.VAGA) {
-                    throw new IllegalArgumentException(
-                        "Retorno para a vaga deve sair da area de servico "
-                            + "ou de area externa e terminar na vaga da ocupacao ativa"
-                    );
-                }
-            }
-            case TRANSFERENCIA -> {
-                if (
-                    origem != TipoPosicaoEmbarcacao.VAGA
-                    || destino != TipoPosicaoEmbarcacao.VAGA
-                    || vagaOrigem == null
-                    || vagaDestino == null
-                    || Objects.equals(vagaOrigem.getId(), vagaDestino.getId())
-                ) {
-                    throw new IllegalArgumentException(
-                        "Transferencia exige vagas de origem e destino diferentes"
-                    );
-                }
-            }
-            case DESLOCAMENTO_INTERNO -> {
-                if (
-                    destino == TipoPosicaoEmbarcacao.VAGA
-                    || destino == TipoPosicaoEmbarcacao.AGUA
-                    || destino == TipoPosicaoEmbarcacao.DESCONHECIDA
-                ) {
-                    throw new IllegalArgumentException(
-                        "Deslocamento interno deve terminar no pier, area de servico ou area externa"
-                    );
-                }
-            }
-        }
+        // O mesmo contrato permite trocar a regra sem alterar o fluxo da entidade.
+        RegrasMovimentacao.para(tipo).validar(origem, vagaOrigem, destino, vagaDestino);
     }
 
     private static String normalizarTexto(String texto) {

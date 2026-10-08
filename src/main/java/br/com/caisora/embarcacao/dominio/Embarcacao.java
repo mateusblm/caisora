@@ -159,6 +159,11 @@ public class Embarcacao {
     @Column(name = "atualizada_em", nullable = false)
     private Instant atualizadaEm;
 
+    /** Inicia a montagem explícita de uma nova entidade (padrão Builder). */
+    public static EmbarcacaoBuilder builder() {
+        return new EmbarcacaoBuilder();
+    }
+
     protected Embarcacao() {
     }
 

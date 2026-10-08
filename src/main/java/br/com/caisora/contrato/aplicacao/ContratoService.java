@@ -119,22 +119,22 @@ public class ContratoService {
             request.dataInicio().getYear()
         );
 
-        Contrato contrato = new Contrato(
-            contexto.organizacao(),
-            numero,
-            cliente,
-            embarcacao,
-            request.tipoVagaContratada(),
-            request.periodicidade(),
-            request.dataInicio(),
-            request.dataFim(),
-            request.renovacaoAutomatica(),
-            request.diasAvisoPrevio(),
-            request.valorBase(),
-            request.diaVencimento(),
-            normalizarTextoOpcional(request.observacoes()),
-            contexto.usuario()
-        );
+        Contrato contrato = Contrato.builder()
+            .organizacao(contexto.organizacao())
+            .numero(numero)
+            .cliente(cliente)
+            .embarcacao(embarcacao)
+            .tipoVagaContratada(request.tipoVagaContratada())
+            .periodicidade(request.periodicidade())
+            .dataInicio(request.dataInicio())
+            .dataFim(request.dataFim())
+            .renovacaoAutomatica(request.renovacaoAutomatica())
+            .diasAvisoPrevio(request.diasAvisoPrevio())
+            .valorBase(request.valorBase())
+            .diaVencimento(request.diaVencimento())
+            .observacoes(normalizarTextoOpcional(request.observacoes()))
+            .criadoPor(contexto.usuario())
+            .construir();
 
         Contrato salvo = contratoRepository.save(contrato);
         registrarHistorico(

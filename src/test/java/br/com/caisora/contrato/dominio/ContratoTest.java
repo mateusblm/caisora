@@ -97,6 +97,19 @@ class ContratoTest {
             .hasMessageContaining("Data de fim obrigatoria");
     }
 
+    @Test
+    void assinaturaInvalidaNaoDeveAlterarEstadoOuDatas() {
+        Contrato contrato = criarContrato();
+        contrato.enviarParaAssinatura();
+
+        assertThatThrownBy(() -> contrato.ativar(LocalDate.now().plusDays(1)))
+            .isInstanceOf(IllegalArgumentException.class);
+
+        assertThat(contrato.getStatus()).isEqualTo(StatusContrato.PENDENTE_ASSINATURA);
+        assertThat(contrato.getDataAssinatura()).isNull();
+        assertThat(contrato.getDataAtivacao()).isNull();
+    }
+
     private Contrato criarContrato() {
         return new Contrato(
             mock(Organizacao.class),
