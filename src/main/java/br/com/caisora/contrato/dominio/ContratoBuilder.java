@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Builder: monta contrato passo a passo, com nomes no lugar de uma lista longa de argumentos.
+ * Monta o contrato passo a passo, com nomes no lugar de uma lista longa de argumentos.
  * construir() cria um objeto novo e reutiliza as regras do construtor da entidade.
- * O builder não persiste dados nem substitui as validações do serviço.
+ * Esta classe não persiste dados nem substitui as validações do serviço.
  */
 public class ContratoBuilder {
     private Organizacao organizacao;

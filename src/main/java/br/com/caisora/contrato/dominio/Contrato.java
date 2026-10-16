@@ -113,7 +113,7 @@ public class Contrato {
     @Column(nullable = false)
     private Long versao;
 
-    /** Inicia a montagem explícita de uma nova entidade (padrão Builder). */
+    /** Inicia a montagem de um novo contrato campo a campo. */
     public static ContratoBuilder builder() {
         return new ContratoBuilder();
     }
@@ -357,7 +357,7 @@ public class Contrato {
     }
 
     private EstadoContrato estadoAtual() {
-        // O enum guarda o dado no banco; o objeto State guarda o comportamento.
+        // O enum guarda o dado no banco; a classe de estado guarda o comportamento.
         // Recriado a cada chamada a partir do status, entao sempre bate com o que esta salvo.
         return EstadosContrato.para(status);
     }

@@ -285,7 +285,7 @@ public class Movimentacao {
     }
 
     private EstadoMovimentacao estadoAtual() {
-        // State: no banco fica so o enum status. O objeto de estado e recriado a partir dele
+        // No banco fica so o enum status. O objeto de estado e recriado a partir dele
         // toda vez, entao nunca fica dessincronizado do que foi salvo.
         return EstadosMovimentacao.para(status);
     }
@@ -343,7 +343,7 @@ public class Movimentacao {
         TipoPosicaoEmbarcacao destino,
         Vaga vagaDestino
     ) {
-        // Strategy: aqui a entidade nao sabe qual regra esta rodando, so chama validar().
+        // Aqui a entidade nao sabe qual regra esta rodando, so chama validar().
         // E chamado na criacao e na edicao; na edicao a origem vem do proprio objeto, porque ela nao muda.
         RegrasMovimentacao.para(tipo).validar(origem, vagaOrigem, destino, vagaDestino);
     }

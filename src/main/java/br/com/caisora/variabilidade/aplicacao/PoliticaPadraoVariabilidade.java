@@ -23,7 +23,7 @@ public class PoliticaPadraoVariabilidade {
         return politicaPara(perfil).permitido(modulo, acao);
     }
 
-    // Strategy: o chamador usa sempre a mesma interface.
+    // O chamador usa sempre a mesma interface.
     // Os dois administradores caem na mesma politica; o que diferencia o da plataforma
     // e um atalho no VariabilidadeService, antes de chegar aqui.
     private PoliticaPermissao politicaPara(PerfilUsuario perfil) {

@@ -3,7 +3,7 @@ package br.com.caisora.contrato.dominio.estado;
 import br.com.caisora.contrato.dominio.StatusContrato;
 
 /**
- * State: a entidade delega ao estado atual quais operações pode executar.
+ * A entidade delega ao estado atual quais operações pode executar.
  * Cada método de transição devolve o próximo status; datas e auditoria ficam na entidade.
  */
 public interface EstadoContrato {

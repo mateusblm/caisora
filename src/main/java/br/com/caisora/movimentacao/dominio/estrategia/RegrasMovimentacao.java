@@ -2,7 +2,7 @@ package br.com.caisora.movimentacao.dominio.estrategia;
 
 import br.com.caisora.movimentacao.dominio.TipoMovimentacao;
 
-/** Seleciona a Strategy; a validação fica nas classes concretas, não neste seletor. */
+/** Escolhe a regra pelo tipo; a validação fica nas classes concretas, não neste seletor. */
 public final class RegrasMovimentacao {
     private RegrasMovimentacao() { }
 

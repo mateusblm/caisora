@@ -2,7 +2,7 @@ package br.com.caisora.movimentacao.dominio.estado;
 
 import br.com.caisora.movimentacao.dominio.StatusMovimentacao;
 
-/** Seleciona o objeto State correspondente ao status salvo no banco. */
+/** Seleciona a classe de estado correspondente ao status salvo no banco. */
 public final class EstadosMovimentacao {
     private EstadosMovimentacao() { }
 
