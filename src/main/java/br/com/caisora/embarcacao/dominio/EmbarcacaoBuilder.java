@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 /**
  * Monta a embarcacao passo a passo, com nomes no lugar de uma lista longa de argumentos.
- * construir() cria um objeto novo e reutiliza as regras do construtor da entidade.
+ * construir() so repassa os valores pro construtor; as validacoes ficam no request e no service.
  * Esta classe não persiste dados nem substitui as validações do serviço.
  */
 public class EmbarcacaoBuilder {
@@ -139,7 +139,8 @@ public class EmbarcacaoBuilder {
 
     // Sao 21 parametros no construtor, varios BigDecimal em sequencia (boca, calado, pontal, altura...).
     // Aqui cada medida vai pelo nome, sem risco de gravar o calado no lugar da boca.
-    // Campo nao informado fica null; quem decide se e obrigatorio e o construtor da Embarcacao.
+    // Campo nao informado fica null. O construtor da Embarcacao nao valida nada: os obrigatorios
+    // sao barrados antes, pelo @NotNull do CriarEmbarcacaoRequest, e no fim pelo not null do banco.
     public Embarcacao construir() {
         return new Embarcacao(
             organizacao,
