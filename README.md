@@ -61,7 +61,7 @@ As variaveis locais podem ser copiadas a partir de `.env.example`.
 
 ## Fluxo seguro de migrations
 
-No desenvolvimento local use o profile `local`. Ele mantem o Flyway ativo, mas exclui `db/migration` do restart automatico do DevTools para evitar que uma migration seja aplicada enquanto ainda esta sendo escrita.
+O profile `local` e o padrao quando nenhum profile e informado, entao a aplicacao sobe sem configuracao extra apos o clone. Em producao, `SPRING_PROFILES_ACTIVE` deve estar definido (ex.: `prod`) para nao usar o segredo JWT local. O profile `local` mantem o Flyway ativo, mas exclui `db/migration` do restart automatico do DevTools para evitar que uma migration seja aplicada enquanto ainda esta sendo escrita.
 
 Fluxo recomendado:
 
