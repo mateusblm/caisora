@@ -2,7 +2,7 @@ package br.com.caisora.contrato.dominio.estado;
 
 import br.com.caisora.contrato.dominio.StatusContrato;
 
-/** Estado concreto: permite apenas as operações declaradas abaixo. */
+/** Contrato em vigor. E o unico estado em que a embarcacao pode ocupar uma vaga. */
 public class ContratoAtivo implements EstadoContrato {
     @Override
     public StatusContrato status() { return StatusContrato.ATIVO; }

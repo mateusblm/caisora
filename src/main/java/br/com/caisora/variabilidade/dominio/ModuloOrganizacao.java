@@ -10,6 +10,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 
+// Uma linha = um modulo que a marina ligou ou desligou fora do padrao.
+// A unique (organizacao_id, modulo) garante no maximo uma configuracao por modulo.
 @Entity
 @Table(
         name = "organizacao_modulos",

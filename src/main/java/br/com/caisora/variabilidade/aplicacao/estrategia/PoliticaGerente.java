@@ -15,6 +15,8 @@ public class PoliticaGerente implements PoliticaPermissao {
         if (modulo == ModuloSistema.CHECKLIST_SAIDA) {
             return Set.of(AcaoSistema.VISUALIZAR, AcaoSistema.EDITAR, AcaoSistema.CONCLUIR).contains(acao);
         }
+        // No resto o gerente faz tudo. Nao precisa checar se a acao existe no modulo,
+        // o service ja descartou combinacoes invalidas antes.
         return acoesOperacionais().contains(acao) || acao == AcaoSistema.ALTERAR_STATUS;
     }
 

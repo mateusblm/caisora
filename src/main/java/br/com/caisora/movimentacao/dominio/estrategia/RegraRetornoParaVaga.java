@@ -3,7 +3,7 @@ package br.com.caisora.movimentacao.dominio.estrategia;
 import br.com.caisora.movimentacao.dominio.TipoPosicaoEmbarcacao;
 import br.com.caisora.vaga.dominio.Vaga;
 
-/** Regra específica reutilizada tanto na criação quanto na edição da ordem. */
+/** Retorno: barco que estava na area de servico ou fora da marina volta pra vaga. */
 public class RegraRetornoParaVaga implements RegraMovimentacao {
     @Override
     public void validar(TipoPosicaoEmbarcacao origem, Vaga vagaOrigem, TipoPosicaoEmbarcacao destino, Vaga vagaDestino) {

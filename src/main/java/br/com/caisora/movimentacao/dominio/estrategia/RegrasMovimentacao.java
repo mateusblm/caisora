@@ -7,6 +7,8 @@ public final class RegrasMovimentacao {
     private RegrasMovimentacao() { }
 
     public static RegraMovimentacao para(TipoMovimentacao tipo) {
+        // As regras nao guardam estado, entao criar uma nova a cada chamada nao tem custo.
+        // O switch nao tem default: um TipoMovimentacao novo nao compila ate ganhar sua regra.
         return switch (tipo) {
             case LANCAMENTO -> new RegraLancamento();
             case RETIRADA -> new RegraRetirada();

@@ -1,5 +1,5 @@
 package br.com.caisora.movimentacao.dominio.estado;
 
-/** Estado concreto: operações não sobrescritas são recusadas pela interface. */
+/** Estado final. Classe vazia de proposito: tudo que vier cai no default da interface e e recusado. */
 public class MovimentacaoConcluida implements EstadoMovimentacao {
 }

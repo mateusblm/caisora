@@ -16,6 +16,7 @@ public class PoliticaFinanceiro implements PoliticaPermissao {
                     AcaoSistema.EDITAR,
                     AcaoSistema.ALTERAR_STATUS
             ).contains(acao);
+            // Vagas, movimentacoes, painel, usuarios etc. ficam de fora: o foco do financeiro e contrato.
             default -> false;
         };
     }

@@ -7,6 +7,7 @@ public final class EstadosMovimentacao {
     private EstadosMovimentacao() { }
 
     public static EstadoMovimentacao para(StatusMovimentacao status) {
+        // Ponte entre o enum (o que o banco guarda) e a classe (o comportamento).
         return switch (status) {
             case AGENDADA -> new MovimentacaoAgendada();
             case EM_EXECUCAO -> new MovimentacaoEmExecucao();

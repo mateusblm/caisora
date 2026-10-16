@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.UUID;
 
+// Uma linha = uma acao que a marina liberou ou bloqueou para um perfil, diferente do padrao.
+// O campo permitido pode ser false: e assim que se tira algo que a politica padrao daria.
 @Entity
 @Table(
         name = "perfil_permissoes",

@@ -12,10 +12,6 @@ public class AutenticacaoMapper {
 
     private final VariabilidadeService variabilidadeService;
 
-    public AutenticacaoMapper() {
-        this.variabilidadeService = null;
-    }
-
     public AutenticacaoMapper(VariabilidadeService variabilidadeService) {
         this.variabilidadeService = variabilidadeService;
     }

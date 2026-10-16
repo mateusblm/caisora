@@ -52,7 +52,7 @@ class AutenticacaoServiceTest {
                 passwordEncoder,
                 geradorTokenJwt,
                 leitorTokenJwt,
-                new AutenticacaoMapper());
+                new AutenticacaoMapper(null));
     }
 
     @Test

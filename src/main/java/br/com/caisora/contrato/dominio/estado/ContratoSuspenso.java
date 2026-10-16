@@ -2,7 +2,7 @@ package br.com.caisora.contrato.dominio.estado;
 
 import br.com.caisora.contrato.dominio.StatusContrato;
 
-/** Estado concreto: permite apenas as operações declaradas abaixo. */
+/** Contrato pausado. Pode voltar a ser ativo ou ja ir pro encerramento. */
 public class ContratoSuspenso implements EstadoContrato {
     @Override
     public StatusContrato status() { return StatusContrato.SUSPENSO; }

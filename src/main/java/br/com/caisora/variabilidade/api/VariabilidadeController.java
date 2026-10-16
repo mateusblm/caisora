@@ -29,6 +29,8 @@ public class VariabilidadeController {
         this.leitorTokenJwt = leitorTokenJwt;
     }
 
+    // Sem @PreAuthorize: qualquer usuario logado consulta o proprio acesso.
+    // Os outros endpoints mexem na marina inteira e ficam so com os administradores.
     @GetMapping("/minha-configuracao")
     public MinhaConfiguracaoResponse minhaConfiguracao() {
         return variabilidadeService.obterMinhaConfiguracao(leitorTokenJwt.obterUsuarioAutenticado());
@@ -47,6 +49,7 @@ public class VariabilidadeController {
             @PathVariable ModuloSistema modulo,
             @Valid @RequestBody AtualizarModuloRequest request
     ) {
+        // A organizacao vem do token, nunca da URL: um admin nao consegue mexer em outra marina.
         UsuarioAutenticado usuario = leitorTokenJwt.obterUsuarioAutenticado();
         return variabilidadeService.atualizarModulo(
                 usuario.organizacaoId(),

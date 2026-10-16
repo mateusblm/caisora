@@ -9,6 +9,7 @@ import br.com.caisora.contrato.dominio.StatusContrato;
 public interface EstadoContrato {
     StatusContrato status();
 
+    // Tudo comeca proibido; cada estado concreto libera so as transicoes dele.
     default void editar() { throw operacaoInvalida(); }
     default StatusContrato enviarParaAssinatura() { throw operacaoInvalida(); }
     default StatusContrato ativar() { throw operacaoInvalida(); }
@@ -18,6 +19,8 @@ public interface EstadoContrato {
     default boolean podeSerEditado() { return false; }
     default boolean podeReceberOcupacao() { return false; }
 
+    // Esses dois sao liberados em mais de um estado (ativo/suspenso e rascunho/pendente),
+    // entao a mensagem ja diz de onde a operacao e permitida, em vez da generica.
     default StatusContrato solicitarEncerramento() {
         throw new IllegalStateException("Somente contrato ativo ou suspenso pode entrar em encerramento");
     }

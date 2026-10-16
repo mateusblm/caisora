@@ -2,7 +2,7 @@ package br.com.caisora.movimentacao.dominio.estado;
 
 import br.com.caisora.movimentacao.dominio.StatusMovimentacao;
 
-/** Estado concreto: operações não sobrescritas são recusadas pela interface. */
+/** Ordem criada e ainda nao comecou: pode editar, iniciar ou cancelar. Concluir direto nao pode. */
 public class MovimentacaoAgendada implements EstadoMovimentacao {
     @Override
     public void editar() { /* Ordens agendadas permitem edição. */ }

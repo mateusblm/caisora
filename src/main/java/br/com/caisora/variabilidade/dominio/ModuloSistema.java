@@ -3,6 +3,8 @@ package br.com.caisora.variabilidade.dominio;
 import java.util.EnumSet;
 import java.util.Set;
 
+// Cada modulo declara se e obrigatorio (nao pode ser desligado) e quais acoes existem nele.
+// Essa lista de acoes e o que impede salvar algo sem sentido, como PAINEL_TV:CRIAR.
 public enum ModuloSistema {
     DASHBOARD("Dashboard", true, AcaoSistema.VISUALIZAR),
     CLIENTES("Clientes", false,
@@ -32,6 +34,7 @@ public enum ModuloSistema {
     ModuloSistema(String nomeExibicao, boolean obrigatorio, AcaoSistema... acoesSuportadas) {
         this.nomeExibicao = nomeExibicao;
         this.obrigatorio = obrigatorio;
+        // EnumSet.copyOf quebra com colecao vazia, por isso o noneOf.
         this.acoesSuportadas = acoesSuportadas.length == 0
                 ? EnumSet.noneOf(AcaoSistema.class)
                 : EnumSet.copyOf(Set.of(acoesSuportadas));

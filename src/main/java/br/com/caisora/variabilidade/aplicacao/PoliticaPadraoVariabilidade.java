@@ -10,8 +10,11 @@ import br.com.caisora.variabilidade.aplicacao.estrategia.PoliticaFinanceiro;
 import br.com.caisora.variabilidade.aplicacao.estrategia.PoliticaAdministrador;
 import org.springframework.stereotype.Component;
 
+// Comportamento "de fabrica" de toda marina. So e consultado quando a marina
+// nao tem configuracao propria salva para aquele modulo ou permissao.
 @Component
 public class PoliticaPadraoVariabilidade {
+    // Checklist de saida e opcional: vem desligado e a marina liga se quiser usar.
     public boolean moduloAtivo(ModuloSistema modulo) {
         return modulo != ModuloSistema.CHECKLIST_SAIDA;
     }
@@ -21,6 +24,8 @@ public class PoliticaPadraoVariabilidade {
     }
 
     // Strategy: o chamador usa sempre a mesma interface.
+    // Os dois administradores caem na mesma politica; o que diferencia o da plataforma
+    // e um atalho no VariabilidadeService, antes de chegar aqui.
     private PoliticaPermissao politicaPara(PerfilUsuario perfil) {
         return switch (perfil) {
             case GERENTE -> new PoliticaGerente();

@@ -99,6 +99,10 @@ public class ContratoBuilder {
         return this;
     }
 
+    // Cada metodo acima devolve this, por isso da pra encadear .cliente(...).valorBase(...) no service.
+    // A vantagem aparece em campos do mesmo tipo: dataInicio/dataFim e diasAvisoPrevio/diaVencimento
+    // no construtor sao faceis de trocar de posicao sem o compilador perceber.
+    // construir() so repassa pro construtor do Contrato, onde continuam as validacoes.
     public Contrato construir() {
         return new Contrato(
             organizacao,

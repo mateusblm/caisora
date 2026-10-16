@@ -8,6 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+// O nome do bean ("acesso") e o que os controllers chamam no SpEL:
+// @PreAuthorize("@acesso.permitido(authentication, 'CLIENTES', 'CRIAR')")
+// E aqui que a variabilidade realmente barra a requisicao no backend.
 @Component("acesso")
 public class ControleAcesso {
 
@@ -22,6 +25,7 @@ public class ControleAcesso {
             return false;
         }
 
+        // Perfil e organizacao vem das claims do JWT, sem ir no banco buscar o usuario.
         try {
             PerfilUsuario perfil = PerfilUsuario.valueOf(jwt.getClaimAsString("perfil"));
             if (perfil == PerfilUsuario.ADMINISTRADOR_PLATAFORMA) {
@@ -36,6 +40,7 @@ public class ControleAcesso {
                     AcaoSistema.valueOf(acao)
             );
         } catch (RuntimeException exception) {
+            // Claim faltando, UUID quebrado ou nome de modulo errado no @PreAuthorize: nega (vira 403).
             return false;
         }
     }

@@ -3,7 +3,7 @@ package br.com.caisora.movimentacao.dominio.estrategia;
 import br.com.caisora.movimentacao.dominio.TipoPosicaoEmbarcacao;
 import br.com.caisora.vaga.dominio.Vaga;
 
-/** Regra específica reutilizada tanto na criação quanto na edição da ordem. */
+/** Retirada: o caminho inverso do lancamento, da agua ou do pier de volta pra uma vaga. */
 public class RegraRetirada implements RegraMovimentacao {
     @Override
     public void validar(TipoPosicaoEmbarcacao origem, Vaga vagaOrigem, TipoPosicaoEmbarcacao destino, Vaga vagaDestino) {

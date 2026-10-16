@@ -235,6 +235,8 @@ public class Contrato {
     }
 
     public void ativar(LocalDate dataAssinatura) {
+        // O estado valida a transicao antes (falha logo se nao estiver pendente de assinatura),
+        // mas o status so e gravado depois das validacoes de data. Se alguma falhar, o contrato fica como estava.
         StatusContrato proximoStatus = estadoAtual().ativar();
         if (dataAssinatura == null) {
             throw new IllegalArgumentException("Data de assinatura obrigatoria");
@@ -356,6 +358,7 @@ public class Contrato {
 
     private EstadoContrato estadoAtual() {
         // O enum guarda o dado no banco; o objeto State guarda o comportamento.
+        // Recriado a cada chamada a partir do status, entao sempre bate com o que esta salvo.
         return EstadosContrato.para(status);
     }
 

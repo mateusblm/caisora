@@ -208,6 +208,8 @@ public class Movimentacao {
     }
 
     public void iniciar(Usuario operadorResponsavel, Instant iniciadaEm) {
+        // Pergunta ao estado primeiro: se nao estiver agendada, estoura aqui antes de mexer em qualquer campo.
+        // O estado so devolve o proximo status; a troca de fato e na penultima linha.
         StatusMovimentacao proximoStatus = estadoAtual().iniciar();
 
         this.operadorResponsavel = Objects.requireNonNull(
@@ -283,7 +285,8 @@ public class Movimentacao {
     }
 
     private EstadoMovimentacao estadoAtual() {
-        // JPA persiste o enum; a entidade delega as decisões ao estado correspondente.
+        // State: no banco fica so o enum status. O objeto de estado e recriado a partir dele
+        // toda vez, entao nunca fica dessincronizado do que foi salvo.
         return EstadosMovimentacao.para(status);
     }
 
@@ -340,7 +343,8 @@ public class Movimentacao {
         TipoPosicaoEmbarcacao destino,
         Vaga vagaDestino
     ) {
-        // O mesmo contrato permite trocar a regra sem alterar o fluxo da entidade.
+        // Strategy: aqui a entidade nao sabe qual regra esta rodando, so chama validar().
+        // E chamado na criacao e na edicao; na edicao a origem vem do proprio objeto, porque ela nao muda.
         RegrasMovimentacao.para(tipo).validar(origem, vagaOrigem, destino, vagaDestino);
     }
 

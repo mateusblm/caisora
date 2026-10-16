@@ -137,6 +137,9 @@ public class EmbarcacaoBuilder {
         return this;
     }
 
+    // Sao 21 parametros no construtor, varios BigDecimal em sequencia (boca, calado, pontal, altura...).
+    // Pelo builder cada medida vai pelo nome, sem risco de gravar o calado no lugar da boca.
+    // Campo nao informado fica null; quem decide se e obrigatorio e o construtor da Embarcacao.
     public Embarcacao construir() {
         return new Embarcacao(
             organizacao,
