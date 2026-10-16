@@ -184,6 +184,9 @@ public class VariabilidadeService {
         List<PermissaoPerfilOrganizacao> existentes =
                 permissaoRepository.findAllByOrganizacaoIdAndPerfil(organizacaoId, perfil);
         permissaoRepository.deleteAll(existentes);
+        // O Hibernate roda os inserts antes dos deletes no flush. Sem forcar o delete aqui,
+        // regravar a mesma chave estoura a unique uk_perfil_permissao.
+        permissaoRepository.flush();
 
         for (ModuloSistema modulo : ModuloSistema.values()) {
             for (AcaoSistema acao : modulo.getAcoesSuportadas()) {
