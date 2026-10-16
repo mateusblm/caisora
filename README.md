@@ -1,12 +1,26 @@
 # Caisora
 
+ERP web SaaS para gestao de marinas. O repositorio tem o backend (Spring Boot, na raiz) e o frontend (Angular, em `frontend/`).
+
 ## Documentação do projeto
 
 - [Fluxo atual do sistema](docs/fluxo-caisora.md)
+- [Variabilidade (modulos e permissoes por perfil)](docs/variabilidade-lps.md)
 
-Backend do Caisora, um ERP web SaaS para gestao de marinas. Esta primeira entrega cria a fundacao tecnica do backend para desenvolvimento incremental do MVP.
+## Estrutura do repositorio
+
+```text
+caisora
+|-- src/            backend Spring Boot
+|-- frontend/       frontend Angular
+|-- scripts/        scripts do Flyway (PowerShell)
+|-- docs/           documentacao
+`-- docker-compose.yml  PostgreSQL local
+```
 
 ## Tecnologias
+
+### Backend
 
 - Java 21
 - Spring Boot
@@ -21,11 +35,19 @@ Backend do Caisora, um ERP web SaaS para gestao de marinas. Esta primeira entreg
 - JUnit 5
 - Testcontainers
 
-## Arquitetura
+### Frontend
 
-O backend sera um monolito modular organizado por dominio. O pacote `compartilhado` concentra apenas recursos transversais usados por mais de um modulo, como configuracao, auditoria, excecoes, seguranca, contexto de organizacao e utilidades pequenas.
+- Angular 22 (componentes standalone)
+- Angular Material
+- RxJS
+- TypeScript
+- Vitest
 
-Estrutura inicial:
+## Arquitetura do backend
+
+O backend e um monolito modular organizado por dominio. O pacote `compartilhado` concentra apenas recursos transversais usados por mais de um modulo, como configuracao, auditoria, excecoes, seguranca, contexto de organizacao e utilidades pequenas.
+
+Estrutura:
 
 ```text
 src/main/java/br/com/caisora
@@ -45,9 +67,37 @@ src/main/java/br/com/caisora
 |-- marina
 |-- vaga
 |-- ocupacao
+|-- movimentacao
 |-- contrato
+|-- variabilidade
 `-- financeiro
 ```
+
+Os pacotes `marina` e `financeiro` ainda estao vazios, reservados para entregas futuras.
+
+## Arquitetura do frontend
+
+```text
+frontend/src/app
+|-- core
+|   |-- autenticacao   login, sessao, interceptor do token e guards de rota
+|   `-- layout         casca da aplicacao com menu lateral
+|-- features           uma pasta por modulo (pages, services, models, componentes)
+|   |-- autenticacao
+|   |-- dashboard
+|   |-- clientes
+|   |-- embarcacoes
+|   |-- vagas
+|   |-- ocupacoes
+|   |-- movimentacoes
+|   |-- contratos
+|   |-- painel-tv
+|   |-- checklist-saida
+|   `-- variabilidade
+`-- shared             componentes e modelos reaproveitados
+```
+
+O menu e as rotas sao filtrados pelos modulos ativos e pelas permissoes que o backend devolve no login e no `/me`. Isso so melhora a experiencia: quem bloqueia de fato e o `@PreAuthorize` do backend.
 
 ## Banco local
 
@@ -58,6 +108,13 @@ docker compose up -d
 ```
 
 As variaveis locais podem ser copiadas a partir de `.env.example`.
+
+No profile `local`, a migration repetivel `db/seed-local/R__criar_admin_local.sql` cria um acesso de desenvolvimento:
+
+- codigo da marina: `marina`
+- e-mail: `admin@marina.com`
+- senha: `teste123`
+- perfil: `ADMINISTRADOR_MARINA`
 
 ## Fluxo seguro de migrations
 
@@ -84,6 +141,8 @@ Os scripts usam `DB_URL`, `DB_USERNAME` e `DB_PASSWORD`. Se `DB_URL` ou `DB_USER
 
 ## Execucao
 
+### Backend
+
 ```bash
 ./mvnw spring-boot:run
 ```
@@ -94,7 +153,32 @@ No Windows:
 ./mvnw.cmd spring-boot:run
 ```
 
+A API sobe em `http://localhost:8080`. O Maven Wrapper usa o Java do `JAVA_HOME`, que precisa ser 21.
+
+### Frontend
+
+Requer Node.js e npm.
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+A aplicacao abre em `http://localhost:4200`. O `npm start` usa o `proxy.conf.json`, que encaminha `/api` para o backend em `localhost:8080`, entao os dois precisam estar rodando.
+
+Build de producao:
+
+```bash
+cd frontend
+npm run build
+```
+
+Os arquivos saem em `frontend/dist/caisora-web/browser`.
+
 ## Testes
+
+Backend:
 
 ```bash
 ./mvnw test
@@ -103,6 +187,17 @@ No Windows:
 ```bash
 ./mvnw clean verify
 ```
+
+Frontend:
+
+```bash
+cd frontend
+npm test
+```
+
+## Deploy do frontend
+
+O frontend esta configurado para a Vercel (`frontend/vercel.json`). No build, o script `frontend/scripts/gerar-environment.mjs` gera o `environment.ts` a partir da variavel `API_BASE_URL`, que deve ter a URL publica do backend com HTTPS. O sufixo `/api/v1` e adicionado se faltar. O backend precisa liberar o dominio do frontend no CORS pela propriedade `caisora.cors.origens-permitidas` (separada por virgula; o padrao e `http://localhost:4200`).
 
 ## Health
 
@@ -168,6 +263,6 @@ O modelo planejado usa banco unico, schema unico e isolamento por coluna `organi
 
 ## Limitacoes atuais
 
-- Modulos de cliente, embarcacao, vagas, ocupacao, contrato e financeiro ainda nao possuem endpoints.
-- OpenAPI sera configurado junto com os primeiros controllers.
-- O usuario inicial local sera criado em uma entrega futura.
+- O modulo financeiro ainda nao possui endpoints.
+- OpenAPI ainda nao foi configurado.
+- O perfil do usuario vai dentro do JWT, entao mudar o perfil ou desativar um usuario so vale depois que o token atual expirar.
