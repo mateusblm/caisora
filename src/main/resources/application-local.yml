@@ -6,9 +6,12 @@ spring:
   jpa:
     show-sql: true
 
+  flyway:
+    locations: classpath:db/migration,classpath:db/seed-local
+
   devtools:
     restart:
-      additional-exclude: db/migration/**,db/migration/*.sql,db/migration/*.tmp
+      additional-exclude: db/migration/**,db/migration/*.sql,db/migration/*.tmp,db/seed-local/**
 
 caisora:
   seguranca:
