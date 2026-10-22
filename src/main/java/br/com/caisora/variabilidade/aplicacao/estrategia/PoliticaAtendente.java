@@ -24,7 +24,7 @@ public class PoliticaAtendente implements PoliticaPermissao {
             case CONTRATOS -> acao == AcaoSistema.VISUALIZAR;
             case CHECKLIST_SAIDA -> Set.of(AcaoSistema.VISUALIZAR, AcaoSistema.EDITAR).contains(acao);
             case USUARIOS, CONFIGURACOES, RELATORIOS -> false;
-            case AMBIENTE -> acao == AcaoSistema.VISUALIZAR;
+            case AMBIENTE, REFERENCIAS -> acao == AcaoSistema.VISUALIZAR;
             // Sem default de proposito: se alguem criar um modulo novo, o switch para de compilar
             // e obriga a decidir o acesso do atendente.
         };

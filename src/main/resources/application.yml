@@ -26,6 +26,15 @@ server:
   port: ${SERVER_PORT:8080}
 
 caisora:
+  referencias:
+    connect-timeout-ms: 3000
+    read-timeout-ms: 10000
+    ibge-url: ${IBGE_URL:https://servicodados.ibge.gov.br}
+    brasilapi-url: ${BRASILAPI_URL:https://brasilapi.com.br}
+    worldtides-url: ${WORLDTIDES_URL:https://www.worldtides.info}
+    worldtides-key: ${WORLDTIDES_API_KEY:}
+    worldtides-habilitado: ${WORLDTIDES_ENABLED:false}
+    worldtides-uso-autorizado: ${WORLDTIDES_USE_AUTHORIZED:false}
   open-meteo:
     habilitado: ${OPEN_METEO_ENABLED:false}
     weather-url: ${OPEN_METEO_WEATHER_URL:https://api.open-meteo.com}

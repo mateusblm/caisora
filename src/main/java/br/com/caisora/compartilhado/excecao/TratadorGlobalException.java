@@ -192,7 +192,8 @@ public class TratadorGlobalException {
         ));
     }
 
-    @ExceptionHandler(br.com.caisora.ambiente.aplicacao.ProvedorIndisponivelException.class)
+    @ExceptionHandler({br.com.caisora.ambiente.aplicacao.ProvedorIndisponivelException.class,
+            br.com.caisora.referencia.aplicacao.ReferenciaIndisponivelException.class})
     public ResponseEntity<ErroResponse> tratarProvedor(RuntimeException exception, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(criarErro(
             HttpStatus.SERVICE_UNAVAILABLE, "PROVEDOR_INDISPONIVEL", exception.getMessage(), request.getRequestURI(), List.of()));

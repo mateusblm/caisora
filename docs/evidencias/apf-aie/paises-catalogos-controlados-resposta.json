@@ -1,0 +1,18 @@
+{
+  "modo": "catalogos-controlados",
+  "grupo": "paises",
+  "resposta": {
+    "origem": "IBGE — Países",
+    "fonte": "https://servicodados.ibge.gov.br/api/docs/paises",
+    "consultadoEm": "2026-10-22T14:40:31.193932571Z",
+    "incompleta": false,
+    "registros": [
+      {
+        "codigoM49": 76,
+        "codigoIso2": "BR",
+        "codigoIso3": "BRA",
+        "nome": "Brasil"
+      }
+    ]
+  }
+}

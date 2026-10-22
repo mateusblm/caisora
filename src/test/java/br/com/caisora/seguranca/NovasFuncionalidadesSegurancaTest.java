@@ -93,6 +93,21 @@ class NovasFuncionalidadesSegurancaTest {
   autenticar("ATENDENTE");
   assertThatThrownBy(()->context.getBean(RelatorioController.class).permanenciaVagas(dia,dia,null,null)).isInstanceOf(AccessDeniedException.class);
  }
+ @Test void referenciasExigemLiberacaoComercialEPreservamTenantNasMares(){
+  autenticar("ATENDENTE");var c=context.getBean(br.com.caisora.referencia.api.ReferenciasController.class);
+  assertThatThrownBy(()->c.paises(null)).isInstanceOf(AccessDeniedException.class);
+  liberar(ModuloSistema.REFERENCIAS);c.paises("BR");
+  var service=context.getBean(br.com.caisora.referencia.aplicacao.ReferenciasService.class);
+  verify(service).paises("BR");var hoje=LocalDate.now();c.mares(hoje,1);verify(service).mares(org,hoje,1);
+ }
+ @Test void permissaoInternaNegadaBloqueiaReferenciaMesmoComModuloLiberado(){
+  autenticar("ATENDENTE");liberar(ModuloSistema.REFERENCIAS);
+  when(context.getBean(PermissaoPerfilOrganizacaoRepositoryJpa.class).findByOrganizacaoIdAndPerfilAndModuloAndAcao(
+    org,br.com.caisora.usuario.dominio.PerfilUsuario.ATENDENTE,ModuloSistema.REFERENCIAS,AcaoSistema.VISUALIZAR))
+    .thenReturn(Optional.of(PermissaoPerfilOrganizacao.criar(org,br.com.caisora.usuario.dominio.PerfilUsuario.ATENDENTE,ModuloSistema.REFERENCIAS,AcaoSistema.VISUALIZAR,false)));
+  assertThatThrownBy(()->context.getBean(br.com.caisora.referencia.api.ReferenciasController.class).feriados(2026,null)).isInstanceOf(AccessDeniedException.class);
+  verifyNoInteractions(context.getBean(br.com.caisora.referencia.aplicacao.ReferenciasService.class));
+ }
  private void liberar(ModuloSistema modulo){when(context.getBean(ModuloOrganizacaoRepositoryJpa.class).findByOrganizacaoIdAndModulo(org,modulo)).thenReturn(Optional.of(ModuloOrganizacao.criar(org,modulo,true)));}
  private void autenticar(String perfil){var jwt=Jwt.withTokenValue("teste").header("alg","HS256").subject(UUID.randomUUID().toString())
  .claim("perfil",perfil).claim("organizacaoId",org.toString()).build();
@@ -105,6 +120,8 @@ class NovasFuncionalidadesSegurancaTest {
   @Bean LeitorTokenJwt leitor(){return new LeitorTokenJwt();}
   @Bean OrganizacaoService organizacoes(){return mock(OrganizacaoService.class);}
   @Bean RelatorioService relatorios(){return mock(RelatorioService.class);}
+  @Bean br.com.caisora.referencia.aplicacao.ReferenciasService referencias(){return mock(br.com.caisora.referencia.aplicacao.ReferenciasService.class);}
+  @Bean br.com.caisora.referencia.api.ReferenciasController referenciasController(br.com.caisora.referencia.aplicacao.ReferenciasService s,LeitorTokenJwt l){return new br.com.caisora.referencia.api.ReferenciasController(s,l);}
   @Bean AmbienteService ambiente(){return mock(AmbienteService.class);}
   @Bean VariabilidadeController variabilidadeController(VariabilidadeService s,LeitorTokenJwt l){return new VariabilidadeController(s,l);}
   @Bean ModulosOrganizacaoController modulosController(VariabilidadeService s,OrganizacaoService o){return new ModulosOrganizacaoController(s,o);}

@@ -1,0 +1,35 @@
+{
+  "registradoEm": "2026-10-22T14:43:52.334481+00:00",
+  "backend": {
+    "casos": 470,
+    "aprovados": 469,
+    "falhas": 0,
+    "erros": 0,
+    "ignorados": 1,
+    "ignorado": "ReferenciasReaisTest: opt-in externo, evidência anterior e falha posterior registradas separadamente"
+  },
+  "frontend": {
+    "aprovados": 147,
+    "arquivos": 32
+  },
+  "build": {
+    "resultado": "aprovado",
+    "bundleInicialKb": 687.11,
+    "avisos": "Orçamentos de aviso do bundle inicial e do estilo existente do dashboard; nenhum limite de erro excedido"
+  },
+  "chromium": {
+    "capturas": 46,
+    "modos": [
+      "catalogos-controlados",
+      "mares-controladas"
+    ],
+    "viewports": [
+      "1440x1100",
+      "390x844, touch emulado"
+    ],
+    "observacao": "Painéis completos ampliam apenas a altura do viewport"
+  },
+  "consultasReais": "consultas-reais.json",
+  "sondagemPosterior": "sondagem-real-posterior.json",
+  "worldTides": "Nenhuma consulta real; sem credenciais ou autorização, produção permanece desabilitada"
+}

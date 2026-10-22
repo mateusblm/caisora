@@ -67,3 +67,7 @@ docker compose -f docker-compose.test.yml run --rm frontend-tests
 A disponibilidade comercial é alterada somente pelo `ADMINISTRADOR_PLATAFORMA`, em `GET/PUT /api/v1/organizacoes/{organizacaoId}/modulos` (PUT acrescenta `/{modulo}`). A tela usa a organização carregada como alvo. O `ADMINISTRADOR_MARINA` consulta a disponibilidade e gerencia permissões internas na própria organização, sem habilitar módulos. O PUT antigo de módulos também exige perfil da plataforma.
 
 `AMBIENTE` e `RELATORIOS` começam desabilitados e precisam ser liberados pela plataforma. Relatórios também verificam os módulos de negócio envolvidos. A integração ambiental exige configuração/licenciamento separados; consulte o [inventário técnico de APF](inventario-apf.md).
+
+## Referências externas
+
+`REFERENCIAS` começa desligado e é liberado somente pela plataforma. A ação VISUALIZAR é usada nas quatro rotas `/referencias/paises`, `/referencias/municipios`, `/referencias/feriados` e `/referencias/mares`. As políticas padrão permitem leitura pelos perfis da marina após liberação, sujeita às permissões personalizadas. A disponibilidade comercial desse módulo não habilita a API paga WorldTides: credenciais, flags técnicos e autorização de uso são configurações separadas do servidor.

@@ -4,7 +4,7 @@ Revisão: 22/10/2026. Este documento descreve comportamento implementado, dados 
 
 ## Arquitetura e segurança
 
-O backend mantém módulos por domínio com camadas `api`, `aplicacao`, `dominio` e `infraestrutura`. O módulo `ambiente` tem o cliente do provedor em `infraestrutura/openmeteo`; `relatorio` utiliza a porta `DadosRelatorio` e sua implementação JPA. Relatórios usam transações de leitura e não persistem indicadores. Não há novas dependências de produção.
+O backend mantém módulos por domínio com camadas `api`, `aplicacao`, `dominio` e `infraestrutura`. O módulo `referencia` organiza os quatro novos grupos por provedor, sem persistência dos catálogos. O módulo `ambiente` tem o cliente do provedor em `infraestrutura/openmeteo`; `relatorio` utiliza a porta `DadosRelatorio` e sua implementação JPA. Relatórios usam transações de leitura e não persistem indicadores. Não há novas dependências de produção.
 
 O JWT validado fornece a organização. Os endpoints de consultas ambientais, relatórios e coordenadas da própria marina não recebem um identificador de organização. Todos os filtros JPA incluem `organizacao.id`. O gerenciamento global de módulos aceita uma organização explícita e exige o perfil de administrador da plataforma. A autorização é aplicada no backend; menu e guardas Angular utilizam as permissões resolvidas pelo mesmo mecanismo de variabilidade.
 
@@ -173,6 +173,145 @@ A projeção não carrega embarcação, cliente, contrato ou histórico de movim
 
 **AIEs e contagem:** esta implementação não adiciona AIE nem integração externa. Os dois conjuntos externos já documentados permanecem os mesmos. A eventual reutilização por integrante não deve ser apresentada como quatro novos conjuntos ou somada em duplicidade no total do projeto; a interpretação do requisito “2 por membro” permanece pendente de confirmação com o professor.
 
+## Extensão AIE03–AIE06 — quatro novos grupos de referência externa
+
+Os identificadores abaixo são as referências fornecidas pela equipe para organizar a evidência. São quatro conjuntos com finalidades distintas dos dados Weather/Marine existentes. Não se multiplica o mesmo conjunto pelo número de integrantes. Nenhuma classificação, complexidade, quantidade de RET/DET ou pontuação de PF é atribuída automaticamente; a aplicação das matrizes dos slides cabe ao professor/equipe. O grupo AIE06 está implementado com acesso bloqueado até credenciais e autorização; sua chamada real ainda não foi demonstrada.
+
+### Arquitetura e regras comuns
+
+Módulo backend `referencia`: DTOs e endpoints em `api`, orquestração/validação em `aplicacao`, clientes por provedor em `infraestrutura/ibge`, `infraestrutura/brasilapi` e `infraestrutura/worldtides`. `TransporteJsonExterno` concentra HTTP, limites de resposta e gzip. O módulo não possui entidades JPA, repositories de catálogo, tabelas ou migrations. Não há nova dependência de produção.
+
+O novo módulo de variabilidade `REFERENCIAS` oferece somente `VISUALIZAR`, começa **desabilitado** e só pode ser liberado pela plataforma. Após liberação, as políticas padrão de administradores, gerente, atendente e financeiro permitem a consulta, sujeita às permissões internas da marina. Todos os endpoints abaixo exigem autenticação e `REFERENCIAS:VISUALIZAR`. As rotas/menu Angular usam essa mesma permissão. A marina não consegue habilitar o módulo comercial por atribuir permissões a si própria.
+
+Não há parâmetro de organização nos formulários. Os três catálogos públicos são comuns às organizações, sem dados de tenant no pedido externo. Marés usam exclusivamente as coordenadas da organização obtida do JWT, consultadas pelo `OrganizacaoService` existente. Não existe endpoint para enviar coordenadas arbitrárias ou chaves pelo navegador.
+
+As consultas públicas respondem com `ReferenciasResponse.Consulta<T>`: `origem`, `fonte` (documentação), `consultadoEm` (obtenção da resposta, não atualização do cadastro externo), `incompleta` e `registros[]`. Esses campos de envelope são metadados da integração, não novos itens mantidos pelo provedor. Horários de consulta/eventos são apresentados em UTC; datas civis de feriados não são deslocadas por fuso.
+
+Conexão: 3 s; leitura: 10 s; limite de resposta de 8 MiB, inclusive após descompressão. Não há polling, crawling, retries automáticos ou cópia de segurança funcional dos catálogos. A consulta é disparada pelo botão do usuário. HTTP de erro, timeout, JSON inválido ou estrutura inesperada retornam 503 `PROVEDOR_INDISPONIVEL`, sem expor URL de erro, chave ou corpo bruto. Filtros inválidos retornam 400. Campos não informados permanecem nulos, sinalizados como resposta incompleta quando essenciais, e aparecem como “—”. Lista vazia gera estado vazio explícito, sem simulação de registros.
+
+### AIE03 — Cadastro de países — criado
+
+- **Finalidade:** consulta de identificação de países e códigos de referência para bandeiras das embarcações. Não altera `Embarcacao.codigoPaisBandeira` nem qualquer registro da marina.
+- **Responsável externo:** IBGE, API de Países. [Documentação oficial](https://servicodados.ibge.gov.br/api/docs/paises).
+- **Endpoint do provedor:** `GET https://servicodados.ibge.gov.br/api/v1/paises/-` (listagem de perfis). O Caisora usa apenas os campos abaixo; área, história, moedas, idiomas e indicadores não participam da funcionalidade.
+- **Endpoint Caisora:** `GET /api/v1/referencias/paises?busca=Brasil`.
+- **Rota/tela Angular:** `/referencias/paises`, “Países e bandeiras”, em `ReferenciasComponent`.
+- **Entrada:** `busca` opcional, até 100 caracteres; pesquisa parcial por nome, M49, ISO alpha-2 ou alpha-3, sem distinguir caixa, com espaços externos removidos. A filtragem ocorre em memória durante a requisição, sem persistir o catálogo. Busca ausente lista os países retornados pelo IBGE.
+
+| Item externo efetivamente utilizado | Campo apresentado no DTO `Pais` |
+|---|---|
+| `id.M49` | `codigoM49` |
+| `id.ISO-3166-1-ALPHA-2` | `codigoIso2` |
+| `id.ISO-3166-1-ALPHA-3` | `codigoIso3` |
+| `nome.abreviado` | `nome` |
+
+**Tipos de registros lógicos para identificação da equipe:** país/perfil de país. O objeto `id` é o agrupamento de identificadores do mesmo país; os três códigos não são três cadastros ou três grupos externos. Não são criadas imagens de bandeiras, pois esse recurso não é fornecido por esse contrato.
+
+**Evidências:** `IbgeClient`, `ReferenciasService.paises`, `ReferenciasController`; `ClientesReferenciaTest` (mapeamento/gzip), `ReferenciasServiceTest` (pesquisa/campos ausentes), testes de autorização e de tela. Consulta real Java em `consultas-reais.json`: a listagem retornou 193 países e confirmou Brasil/BR/BRA/M49 76. A inspeção visual usa a API Caisora real com um servidor IBGE controlado de teste, separada das chamadas reais registradas.
+
+### AIE04 — Cadastro de municípios — criado
+
+- **Finalidade:** referência geográfica e administrativa de municípios brasileiros e sua UF.
+- **Responsável externo:** IBGE, API de Localidades. [Documentação oficial](https://servicodados.ibge.gov.br/api/docs/localidades).
+- **Endpoint do provedor:** `GET https://servicodados.ibge.gov.br/api/v1/localidades/estados/{UF}/municipios`.
+- **Endpoint Caisora:** `GET /api/v1/referencias/municipios?uf=SC&busca=Florianópolis`.
+- **Rota/tela:** `/referencias/municipios`, “Municípios brasileiros”.
+- **Entrada:** `uf` obrigatória, sigla brasileira validada e normalizada para maiúsculas; `busca` opcional até 100 caracteres, parcial por nome/código do município. UF limita o volume solicitado ao provedor; não se varre automaticamente o país.
+
+| Item externo efetivamente utilizado | Campo no DTO `Municipio` |
+|---|---|
+| `id` | `codigoIbge` |
+| `nome` | `nome` |
+| `microrregiao.mesorregiao.UF.id` | `codigoUf` |
+| `microrregiao.mesorregiao.UF.sigla` | `siglaUf` |
+| `microrregiao.mesorregiao.UF.nome` | `nomeUf` |
+
+Se `microrregiao` não estiver disponível, os três campos UF são lidos de `regiao-imediata.regiao-intermediaria.UF` (`id`, `sigla`, `nome`), estrutura também retornada pelo IBGE. O restante da hierarquia regional não é apresentado nem mantido. O parâmetro solicitado não é usado para fabricar uma UF que esteja ausente da resposta.
+
+**Tipos de registros lógicos para identificação:** município, com informação de UF aninhada no mesmo retorno. A sigla/nome da UF serve ao contexto do município; não há um quinto catálogo de estados ou cadastro interno de municípios. A definição de RET para a matriz será conferida pela equipe.
+
+**Evidências:** `IbgeClient.municipios`, validação/pesquisa em `ReferenciasService`; testes com as duas estruturas de UF e dados incompletos. A consulta real a SC retornou 295 municípios e confirmou Florianópolis, código 4205407 e UF SC/42/Santa Catarina. Capturas da API/tela com servidor externo controlado acompanham a evidência.
+
+### AIE05 — Calendário de feriados — criado
+
+- **Finalidade:** referência de datas para planejamento operacional, sem alterar movimentações, contratos, agendamentos ou pagamentos.
+- **Responsável externo:** BrasilAPI, que mantém o serviço e suas regras de calendário. [Documentação](https://brasilapi.com.br/docs#tag/Feriados-Nacionais); [implementação oficial do serviço](https://github.com/BrasilAPI/BrasilAPI/blob/main/services/holidays/index.js).
+- **Endpoint do provedor:** `GET https://brasilapi.com.br/api/feriados/v1/{ano}?uf={UF}`. O suporte atual à UF foi conferido no código do projeto e em consulta real; não é uma lista estadual criada pelo Caisora.
+- **Endpoint Caisora:** `GET /api/v1/referencias/feriados?ano=2026&uf=SC`.
+- **Rota/tela:** `/referencias/feriados`, “Calendário de feriados”.
+- **Entrada:** ano obrigatório entre 1900 e 2199; UF opcional validada. Sem UF, pede a lista nacional; com UF, apresenta os itens nacionais e estaduais que o provedor devolver. Não promete cobertura estadual/municipal completa.
+
+| Item externo utilizado | Campo no DTO `Feriado` |
+|---|---|
+| `date` | `data` (data civil ISO) |
+| `name` | `nome` |
+| `type` | `tipo` |
+| `state`, quando presente | `uf` |
+| `weekday`, quando presente | `diaSemana` |
+
+**Tipos de registros lógicos para identificação:** evento do calendário com variante nacional (`type=national`) ou estadual (`type=state`, incluindo `state`). São variantes do mesmo calendário, não dois novos AIEs. Tipos futuros/desconhecidos são preservados, sem convertê-los automaticamente em nacionais. Dia da semana ausente não é calculado pelo Caisora.
+
+**Semântica:** o tipo é a classificação do provedor, não uma conclusão jurídica do Caisora. O serviço pode rotular como `national` datas que dependem de regras locais ou que são comemorativas/pontos facultativos. A interface preserva o tipo e informa que deve ser conferido o calendário oficial aplicável. Não renomeia nem corrige silenciosamente os registros externos.
+
+**Evidências:** `BrasilApiClient`, `ReferenciasService.feriados`; testes de ano/UF, repasse do filtro, preservação dos tipos e campos ausentes. Na consulta real de 2026/SC foram retornados 15 itens, incluindo `national` e “Dia do Estado de Santa Catarina” como `state`, com `state=SC`; o serviço não retornou `weekday` nesse registro estadual, e ele permanece nulo na tela/DTO.
+
+### AIE06 — Previsões de marés — criada, desabilitada até autorização
+
+- **Finalidade:** consulta informativa de eventos previstos de maré alta/baixa nas coordenadas da marina; conjunto distinto de altura/direção/período de ondas da integração Marine existente.
+- **Responsável externo:** WorldTides/Brainware LLC. [API v3](https://www.worldtides.info/apidocs), [termos](https://www.worldtides.info/terms), [atribuição](https://www.worldtides.info/copyright).
+- **Endpoint do provedor:** `GET https://www.worldtides.info/api/v3?extremes&date={inicio}&days={dias}&lat={latitude}&lon={longitude}&datum=MSL&key={chave}`. Pede somente `extremes`, sem alturas periódicas, plot, estações ou outros produtos que acrescentariam consumo desnecessário.
+- **Endpoints Caisora:** `GET /api/v1/referencias/mares/disponibilidade` (configuração local, sem chamada externa ou créditos); `GET /api/v1/referencias/mares?inicio=AAAA-MM-DD&dias=1`.
+- **Rota/tela:** `/referencias/mares`, “Previsões de marés”. A tela bloqueia consulta quando desabilitada e explica a necessidade de credenciais/autorização. Quando autorizada, informa o consumo de créditos antes da consulta.
+- **Entradas do usuário:** `inicio` obrigatório, `dias` de 1 a 7 (padrão 1). A aplicação permite somente as próximas sete datas a partir de hoje UTC, incluindo todos os dias solicitados. Essa é uma restrição conservadora do Caisora para limitar consultas/créditos, não uma afirmação do horizonte máximo do provedor. `date`/`days` são dias no horário local da previsão conforme a API; eventos são exibidos em UTC.
+- **Entradas internas:** latitude/longitude da organização autenticada; chave somente no servidor; `datum=MSL`. Coordenadas ausentes impedem consulta; não há escolha de outra marina no formulário.
+
+| Item externo efetivamente usado | Campo/uso no Caisora |
+|---|---|
+| `status` | Verifica sucesso lógico da resposta, inclusive quando o HTTP é 200 |
+| `extremes[].dt` | `registros[].dataHora`, epoch em segundos convertido a Instant UTC |
+| `extremes[].date` | Alternativa de `dataHora` quando não há epoch, aceitando offset com/sem dois-pontos |
+| `extremes[].type` | `registros[].tipo`, High/Low, exibido como Alta/Baixa; desconhecidos preservados |
+| `extremes[].height` | `registros[].altura`, sem converter ausência em zero; alturas negativas são válidas |
+| `requestDatum`, `responseDatum` | `datumSolicitado`, `datumResposta`, referências verticais informadas |
+| `responseLat`, `responseLon` | `latitudeResposta`, `longitudeResposta`, ponto efetivo retornado |
+| `copyright` | Atribuição obrigatória, reproduzida como texto na interface |
+
+A saída `ReferenciasResponse.Mares` inclui ainda `origem`, `fonte`, `consultadoEm`, `incompleta` e `registros[].unidade=m`. **A unidade não é um campo inventado de medição:** a API documenta `height` em metros; `m` é metadado fixo desse contrato, não um item JSON retornado pelo provedor. O referencial efetivo é o `responseDatum` e não se presume que o solicitado foi aceito. Respostas sem atribuição obrigatória são recusadas.
+
+**Tipos de registros lógicos para identificação:** evento de extremo de maré, com tipo High/Low no mesmo esquema; cabeçalho de procedência/referencial acompanha a coleção. High/Low não são tratados automaticamente como dois grupos externos ou dois RETs; a matriz será conferida posteriormente.
+
+**Segurança, créditos e licença:** `WORLDTIDES_ENABLED=false` e `WORLDTIDES_USE_AUTHORIZED=false`, com chave vazia por padrão. A consulta exige os dois flags e chave não vazia. Tanto serviço quanto cliente possuem bloqueio; verificar disponibilidade, abrir a tela e iniciar a aplicação não consomem créditos. Não foram adquiridas credenciais nem autorizadas chamadas pagas. A chave nunca aparece em DTO, navegador, evidência real ou mensagem de exceção. Não há cache compartilhado ou base local de previsões. Os termos exigem atribuição e restringem uso em navegação/segurança; a tela explicita que estimativas não substituem referências oficiais e não devem apoiar essas decisões.
+
+**Evidências:** testes do bloqueio por flags/chave, HTTP/status de erro, parsing de epoch/offset, datum/copyright, parcial/vazio, alturas positivas/negativas e uso das coordenadas do JWT. `MaresControladasVisualTest` usa um **servidor HTTP local de teste**, chave fictícia exclusiva do teste e copyright que identifica a resposta controlada. Verifica também que um usuário da marina B encaminha as coordenadas da B. Capturas de alta/baixa são evidências de contrato/UI controladas, **não uma consulta real à WorldTides**. As capturas de “desabilitada” mostram o estado padrão de produção. A validação real fica pendente das credenciais e autorização exigidas pelo próprio requisito.
+
+### Evidências de manutenção externa, testes e capturas
+
+Não existem `@Entity`, DAO ou migration para esses quatro conjuntos; cada clique lê o provedor e apenas adapta/filtra os dados em memória na requisição. Os únicos dados internos lidos pela integração são as coordenadas já existentes, para marés. Artefatos JSON e imagens em `docs/evidencias/apf-aie` servem à auditoria e não são carregados pela aplicação, não são catálogos funcionais nem fallback de produção. Fixtures controladas ficam exclusivamente em `src/test/resources/referencias`.
+
+- [Consultas reais](evidencias/apf-aie/consultas-reais.json): chamadas HTTPS reais dos clientes Java a IBGE e BrasilAPI, com horário, endpoint e amostras dos itens usados.
+- [Roteiro e capturas](evidencias/apf-aie/README.md): Chromium real desktop/mobile com Spring Boot, JWT e PostgreSQL descartável. Provedores controlados para capturas reproduzíveis; chamadas públicas reais registradas separadamente; WorldTides apenas local/controlada ou bloqueada.
+- `ClientesReferenciaTest`: respostas HTTP controladas, gzip, estruturas IBGE, campos BrasilAPI, datas marés, erros/timeout, parcial/vazio e proteção de chave/créditos.
+- `ReferenciasServiceTest`, `ReferenciasControllerTest`: filtros, limites, metadados, seleção de coordenadas e erros HTTP seguros.
+- `NovasFuncionalidadesSegurancaTest`: módulo REFERENCIAS comercial desligado, permissão interna negada e tenant do JWT nas marés.
+- `ReferenciasVisualTest`: login/API reais e consultas controladas, verificando depois que bandeira PT (mesmo ao pesquisar Brasil) e quantidades de clientes, embarcações, vagas, ocupações e contratos permanecem intactas.
+- `referencias.component.spec.ts` e `referencias.service.spec.ts`: quatro grupos, formulários, fonte/campos, classificação, estados, bloqueio de marés e ausência de chave/tenant enviados pelo navegador.
+
+### Habilitação e uso dos provedores
+
+A plataforma deve liberar `REFERENCIAS` para a organização; a marina gerencia a permissão de leitura dos perfis. IBGE e BrasilAPI não precisam de credencial neste contrato. As consultas são manuais e pontuais; os termos da BrasilAPI pedem uso equivalente a consulta de pessoa e vedam crawling. [Termos no README oficial](https://github.com/BrasilAPI/BrasilAPI#termos-de-uso). A licença MIT do código do serviço não deve ser confundida com garantia jurídica sobre feriados ou licença irrestrita de qualquer fonte agregada. O Caisora exibe a fonte e não presume SLA ou cobertura completa.
+
+| Configuração do backend | Padrão/finalidade |
+|---|---|
+| `IBGE_URL` | `https://servicodados.ibge.gov.br` |
+| `BRASILAPI_URL` | `https://brasilapi.com.br` |
+| `WORLDTIDES_URL` | `https://www.worldtides.info` |
+| `WORLDTIDES_ENABLED` | false; habilitação técnica pela plataforma |
+| `WORLDTIDES_USE_AUTHORIZED` | false; revisão e autorização de uso/contrato/créditos |
+| `WORLDTIDES_API_KEY` | vazio; segredo exclusivamente no servidor |
+| `caisora.referencias.connect-timeout-ms` / `read-timeout-ms` | 3000 / 10000 |
+
+Qualquer habilitação comercial de WorldTides exige revisar plano, créditos, licenciamento por usuário/coordenada e finalidade permitida. Nenhuma configuração de teste ou cadastro externo é inserida em produção.
+
 ## Manutenção e configurações
 
 ### Localização da marina — criada
@@ -307,3 +446,13 @@ Os testes Angular usam DOM em jsdom: verificam renderização de resultados/vazi
 - Frontend: 136 testes em 30 arquivos, sem falhas.
 - Build de produção aprovado. Permanecem os avisos de orçamento do bundle inicial e do estilo do dashboard já registrados na entrega inicial.
 - Chromium real: desktop 1440×1100 e mobile 390×844, inspeção de filtros e painéis completos, inclusive vazio e rolagem horizontal contida na tabela. Quinze capturas e relatório de verificação em `docs/evidencias/se06/`; as capturas de painel completo ampliam apenas a altura do viewport, preservando sua largura.
+
+### Resultado da extensão AIE03–AIE06
+
+- Quatro consultas integradas em rotas próprias, sob REFERENCIAS: países, municípios, feriados e marés. Nenhuma tabela, migration de catálogo ou dependência de produção criada.
+- Backend: **469 testes aprovados**, sem falhas/erros na execução controlada/visual; um teste de sondagem real opt-in ignorado nessa execução (470 casos no relatório).
+- Frontend: **147 testes em 32 arquivos**, todos aprovados; build de produção aprovado com os avisos de orçamento já documentados.
+- Chromium: **46 capturas** desktop/mobile, incluindo WorldTides bloqueada e contrato de marés controlado. Login, autorização, API e PostgreSQL reais no ambiente de teste; provedores controlados para reprodutibilidade visual.
+- Três consultas reais iniciais de IBGE/BrasilAPI registradas em `consultas-reais.json`; sondagem posterior ao IBGE falhou com indisponibilidade, registrada em `sondagem-real-posterior.json`. Não há fallback funcional com esses arquivos.
+- AIE06/WorldTides sem validação real por ausência de credenciais/autorização. Nenhuma chamada real ou crédito consumido.
+- Fontes, campos e tipos de registro estão descritos para a análise manual da equipe. Não há contagem automática de PF nem multiplicação dos mesmos grupos por integrante.

@@ -1,0 +1,9 @@
+{
+  "registradoEm": "2026-10-22T14:40:08.656575+00:00",
+  "grupo": "AIE03",
+  "endpoint": "https://servicodados.ibge.gov.br/api/v1/paises/-",
+  "resultado": "Sondagem posterior indisponível; não substitui os registros de sucesso anteriores",
+  "duracaoTesteSegundos": "20.2",
+  "erro": "Serviço de referência externo indisponível ou com resposta inválida. Tente novamente mais tarde.",
+  "observacao": "A falha aconteceu na primeira consulta da sondagem posterior, ao IBGE Países. As três consultas anteriores bem-sucedidas estão em consultas-reais.json. Nenhuma resposta fictícia foi usada como fallback de produção."
+}

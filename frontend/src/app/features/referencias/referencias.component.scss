@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  padding: 24px;
+  max-width: 1200px;
+  margin: auto;
+  min-width: 0;
+}
+header h1 {
+  margin: 8px 0 12px;
+}
+.sobrelinha {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mat-sys-primary);
+}
+nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.selecionado {
+  background: var(--mat-sys-secondary-container, #d7e5f0);
+}
+form {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 24px 0;
+}
+mat-form-field {
+  width: 280px;
+  max-width: 100%;
+}
+.aviso {
+  padding: 16px;
+  border-left: 4px solid var(--mat-sys-primary, #28628b);
+  background: var(--mat-sys-surface-container, #edf3f7);
+  line-height: 1.5;
+}
+.erro {
+  color: var(--mat-sys-error, #b3261e);
+}
+mat-card {
+  padding: 20px;
+  margin: 20px 0;
+  min-width: 0;
+}
+.tabela {
+  overflow: auto;
+  max-height: 65vh;
+  margin: 16px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #ddd);
+}
+th {
+  white-space: nowrap;
+}
+td {
+  min-width: 110px;
+}
+p,
+a,
+.atribuicao {
+  overflow-wrap: anywhere;
+}
+.atribuicao {
+  white-space: pre-wrap;
+}
+footer {
+  margin: 24px 0;
+  font-size: 0.9rem;
+}
+@media (max-width: 600px) {
+  :host {
+    padding: 12px;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+  mat-card {
+    padding: 12px;
+  }
+  form {
+    gap: 24px;
+  }
+  .tabela {
+    max-height: 60vh;
+  }
+}

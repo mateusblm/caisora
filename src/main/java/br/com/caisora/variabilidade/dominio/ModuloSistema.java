@@ -26,6 +26,7 @@ public enum ModuloSistema {
     CHECKLIST_SAIDA("Checklist de saida", false,
             AcaoSistema.VISUALIZAR, AcaoSistema.EDITAR, AcaoSistema.CONCLUIR),
     AMBIENTE("Condições ambientais", false, AcaoSistema.VISUALIZAR),
+    REFERENCIAS("Referências externas", false, AcaoSistema.VISUALIZAR),
     RELATORIOS("Relatórios", false, AcaoSistema.VISUALIZAR),
     CONFIGURACOES("Configuracoes", true, AcaoSistema.CONFIGURAR);
 

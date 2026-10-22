@@ -1,0 +1,196 @@
+<header>
+  <p class="sobrelinha">Referências externas</p>
+  <h1>{{ config.titulo }}</h1>
+  <p>{{ config.descricao }}</p>
+</header>
+<nav aria-label="Grupos de referência externa">
+  @for (link of links; track link[0]) {
+    <a
+      mat-button
+      [routerLink]="'/referencias/' + link[0]"
+      routerLinkActive="selecionado"
+      ariaCurrentWhenActive="page"
+      >{{ link[1] }}</a
+    >
+  }
+</nav>
+@if (grupo === 'feriados') {
+  <p class="aviso">
+    A classificação é a informada pelo provedor. A lista pode incluir datas comemorativas ou pontos
+    facultativos; confirme o calendário oficial aplicável. A UF acrescenta as informações estaduais
+    disponíveis, sem garantir cobertura de todas as datas locais.
+  </p>
+}
+@if (grupo === 'mares') {
+  <p class="aviso">
+    Estimativas de marés não substituem referências oficiais de navegação. Não use estas previsões
+    para navegação ou decisões de segurança.
+  </p>
+  @if (disponibilidade(); as d) {
+    <p role="status">{{ d.mensagem }}</p>
+  } @else {
+    <p role="status">Verificando disponibilidade…</p>
+  }
+  @if (erro() && !disponibilidade()) {
+    <button mat-button (click)="verificarDisponibilidade()">Verificar novamente</button>
+  }
+}
+<form #form="ngForm" (ngSubmit)="consultar()" [attr.aria-busy]="carregando()">
+  @if (grupo === 'paises' || grupo === 'municipios') {
+    <mat-form-field appearance="outline"
+      ><mat-label>{{
+        grupo === 'paises' ? 'Nome ou código do país' : 'Nome ou código do município'
+      }}</mat-label
+      ><input matInput name="busca" [(ngModel)]="busca" maxlength="100" [disabled]="carregando()"
+    /></mat-form-field>
+  }
+  @if (grupo === 'municipios' || grupo === 'feriados') {
+    <mat-form-field appearance="outline"
+      ><mat-label>UF{{ grupo === 'feriados' ? ' (opcional)' : '' }}</mat-label
+      ><input
+        matInput
+        name="uf"
+        [(ngModel)]="uf"
+        placeholder="SC"
+        maxlength="2"
+        pattern="[a-zA-Z]{2}"
+        [required]="grupo === 'municipios'"
+        [disabled]="carregando()"
+      /><mat-hint>{{
+        grupo === 'feriados'
+          ? 'Em branco: somente a lista nacional.'
+          : 'Informe a sigla da unidade federativa.'
+      }}</mat-hint></mat-form-field
+    >
+  }
+  @if (grupo === 'feriados') {
+    <mat-form-field appearance="outline"
+      ><mat-label>Ano</mat-label
+      ><input
+        matInput
+        type="number"
+        name="ano"
+        [(ngModel)]="ano"
+        min="1900"
+        max="2199"
+        step="1"
+        required
+        [disabled]="carregando()"
+    /></mat-form-field>
+  }
+  @if (grupo === 'mares') {
+    <mat-form-field appearance="outline"
+      ><mat-label>Data inicial</mat-label
+      ><input
+        matInput
+        type="date"
+        name="inicio"
+        [(ngModel)]="inicio"
+        [min]="hoje"
+        [max]="limite"
+        required
+        [disabled]="carregando() || !disponibilidade()?.habilitada"
+      /><mat-hint>Dias no horário local da previsão.</mat-hint></mat-form-field
+    >
+    <mat-form-field appearance="outline"
+      ><mat-label>Quantidade de dias</mat-label
+      ><input
+        matInput
+        type="number"
+        name="dias"
+        [(ngModel)]="dias"
+        min="1"
+        max="7"
+        step="1"
+        required
+        [disabled]="carregando() || !disponibilidade()?.habilitada"
+    /></mat-form-field>
+  }
+  <button
+    mat-flat-button
+    [disabled]="
+      form.invalid || carregando() || (grupo === 'mares' && !disponibilidade()?.habilitada)
+    "
+  >
+    {{ carregando() ? 'Consultando…' : 'Consultar' }}
+  </button>
+</form>
+<p class="erro" role="alert">{{ erro() }}</p>
+@if (resultado(); as r) {
+  <mat-card data-testid="referencia-resultado"
+    ><h2>Resultado da consulta</h2>
+    <p>
+      Fonte: <a [href]="r.fonte" target="_blank" rel="noopener">{{ r.origem }}</a
+      >. Consultado em {{ r.consultadoEm | date: 'dd/MM/yyyy HH:mm:ss' : 'UTC' }} UTC.
+    </p>
+    @if (r.incompleta) {
+      <p role="status">Resposta incompleta: campos ausentes são apresentados como “—”.</p>
+    }
+    @if (grupo === 'mares') {
+      <p>
+        Referencial vertical solicitado: {{ r.datumSolicitado ?? '—' }}. Referencial utilizado:
+        {{ r.datumResposta ?? '—' }}. Alturas em metros, conforme o contrato da WorldTides.
+      </p>
+      <p>
+        Local de previsão retornado: {{ r.latitudeResposta ?? '—' }},
+        {{ r.longitudeResposta ?? '—' }}.
+      </p>
+      <p class="atribuicao">{{ r.copyright }}</p>
+      <a href="https://www.worldtides.info/copyright" target="_blank" rel="noopener"
+        >Atribuição e fontes WorldTides</a
+      >
+    }
+    @if (!r.registros.length) {
+      <p role="status">Nenhum registro encontrado para os filtros informados.</p>
+    }
+    <div
+      class="tabela"
+      role="region"
+      [attr.aria-label]="'Resultados: ' + config.titulo"
+      tabindex="0"
+    >
+      <table>
+        <thead>
+          <tr>
+            @for (c of config.colunas; track c[0]) {
+              <th scope="col">{{ c[1] }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (registro of r.registros; track $index) {
+            <tr>
+              @for (c of config.colunas; track c[0]) {
+                <td>
+                  @if (c[0] === 'data') {
+                    {{
+                      registro[c[0]] == null ? '—' : (registro[c[0]] | date: 'dd/MM/yyyy' : 'UTC')
+                    }}
+                  } @else if (c[0] === 'dataHora') {
+                    {{
+                      registro[c[0]] == null
+                        ? '—'
+                        : (registro[c[0]] | date: 'dd/MM/yyyy HH:mm' : 'UTC')
+                    }}
+                  } @else if (c[0] === 'tipo') {
+                    {{ tipo(registro[c[0]]) }}
+                  } @else if (c[0] === 'altura') {
+                    {{ registro[c[0]] == null ? '—' : (registro[c[0]] | number: '1.0-3') }}
+                  } @else {
+                    {{ registro[c[0]] ?? '—' }}
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-card>
+}
+<footer>
+  <p>
+    Dados de referência mantidos pelo provedor externo.
+    <a [href]="config.fonte" target="_blank" rel="noopener">Documentação da fonte</a>.
+  </p>
+</footer>

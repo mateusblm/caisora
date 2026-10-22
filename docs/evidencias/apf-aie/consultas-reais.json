@@ -1,0 +1,124 @@
+{
+  "worldTides" : "Não consultada: sem credenciais e autorização; permanece desabilitada",
+  "modo" : "Chamadas HTTPS reais pelo cliente Java, sem mocks",
+  "consultas" : [ {
+    "endpoint" : "https://servicodados.ibge.gov.br/api/v1/paises/-",
+    "amostra" : {
+      "codigoM49" : 76,
+      "codigoIso2" : "BR",
+      "codigoIso3" : "BRA",
+      "nome" : "Brasil"
+    },
+    "quantidade" : 193,
+    "consultadoEm" : "2026-10-22T14:15:45.010738782Z",
+    "grupo" : "AIE03"
+  }, {
+    "endpoint" : "https://servicodados.ibge.gov.br/api/v1/localidades/estados/SC/municipios",
+    "amostra" : {
+      "codigoIbge" : 4205407,
+      "nome" : "Florianópolis",
+      "codigoUf" : 42,
+      "siglaUf" : "SC",
+      "nomeUf" : "Santa Catarina"
+    },
+    "quantidade" : 295,
+    "consultadoEm" : "2026-10-22T14:15:45.049103632Z",
+    "grupo" : "AIE04"
+  }, {
+    "endpoint" : "https://brasilapi.com.br/api/feriados/v1/2026?uf=SC",
+    "amostra" : [ {
+      "data" : "2026-01-01",
+      "nome" : "Confraternização mundial",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "quinta-feira"
+    }, {
+      "data" : "2026-02-16",
+      "nome" : "Carnaval",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "segunda-feira"
+    }, {
+      "data" : "2026-02-17",
+      "nome" : "Carnaval",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "terça-feira"
+    }, {
+      "data" : "2026-04-03",
+      "nome" : "Sexta-feira Santa",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "sexta-feira"
+    }, {
+      "data" : "2026-04-05",
+      "nome" : "Páscoa",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "domingo"
+    }, {
+      "data" : "2026-04-21",
+      "nome" : "Tiradentes",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "terça-feira"
+    }, {
+      "data" : "2026-05-01",
+      "nome" : "Dia do trabalho",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "sexta-feira"
+    }, {
+      "data" : "2026-06-04",
+      "nome" : "Corpus Christi",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "quinta-feira"
+    }, {
+      "data" : "2026-08-11",
+      "nome" : "Dia do Estado de Santa Catarina",
+      "tipo" : "state",
+      "uf" : "SC",
+      "diaSemana" : null
+    }, {
+      "data" : "2026-09-07",
+      "nome" : "Independência do Brasil",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "segunda-feira"
+    }, {
+      "data" : "2026-10-12",
+      "nome" : "Nossa Senhora Aparecida",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "segunda-feira"
+    }, {
+      "data" : "2026-11-02",
+      "nome" : "Finados",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "segunda-feira"
+    }, {
+      "data" : "2026-11-15",
+      "nome" : "Proclamação da República",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "domingo"
+    }, {
+      "data" : "2026-11-20",
+      "nome" : "Dia da consciência negra",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "sexta-feira"
+    }, {
+      "data" : "2026-12-25",
+      "nome" : "Natal",
+      "tipo" : "national",
+      "uf" : null,
+      "diaSemana" : "sexta-feira"
+    } ],
+    "quantidade" : 15,
+    "consultadoEm" : "2026-10-22T14:15:45.177042350Z",
+    "grupo" : "AIE05"
+  } ]
+}

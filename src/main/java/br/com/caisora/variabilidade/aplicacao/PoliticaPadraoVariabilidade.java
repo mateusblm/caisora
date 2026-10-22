@@ -17,7 +17,7 @@ public class PoliticaPadraoVariabilidade {
     // Novos módulos e checklist exigem liberação explícita pela plataforma.
     public boolean moduloAtivo(ModuloSistema modulo) {
         return modulo != ModuloSistema.CHECKLIST_SAIDA
-                && modulo != ModuloSistema.AMBIENTE && modulo != ModuloSistema.RELATORIOS;
+                && modulo != ModuloSistema.AMBIENTE && modulo != ModuloSistema.RELATORIOS && modulo != ModuloSistema.REFERENCIAS;
     }
 
     public boolean permitido(PerfilUsuario perfil, ModuloSistema modulo, AcaoSistema acao) {

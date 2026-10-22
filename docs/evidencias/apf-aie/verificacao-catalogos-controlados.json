@@ -1,0 +1,328 @@
+{
+  "modo": "catalogos-controlados",
+  "navegador": "156.0.8078.4",
+  "consultadoEm": "2026-10-22T14:40:30.329Z",
+  "cenarios": [
+    {
+      "grupo": "paises",
+      "viewport": "desktop",
+      "estado": "resultado",
+      "captura": "paises-desktop-resultado.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "desktop",
+      "estado": "resultado-completo",
+      "captura": "paises-desktop-resultado-completo.png",
+      "largura": 1440,
+      "altura": 849,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "desktop",
+      "estado": "vazio-controlado",
+      "captura": "paises-desktop-vazio-controlado.png",
+      "largura": 1440,
+      "altura": 852,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "desktop",
+      "estado": "loading",
+      "captura": "paises-desktop-loading.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "desktop",
+      "estado": "erro-controlado",
+      "captura": "paises-desktop-erro-controlado.png",
+      "largura": 1440,
+      "altura": 604,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "desktop",
+      "estado": "resultado",
+      "captura": "municipios-desktop-resultado.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "desktop",
+      "estado": "resultado-completo",
+      "captura": "municipios-desktop-resultado-completo.png",
+      "largura": 1440,
+      "altura": 849,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "desktop",
+      "estado": "vazio-controlado",
+      "captura": "municipios-desktop-vazio-controlado.png",
+      "largura": 1440,
+      "altura": 852,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "desktop",
+      "estado": "loading",
+      "captura": "municipios-desktop-loading.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "desktop",
+      "estado": "erro-controlado",
+      "captura": "municipios-desktop-erro-controlado.png",
+      "largura": 1440,
+      "altura": 604,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "desktop",
+      "estado": "resultado",
+      "captura": "feriados-desktop-resultado.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "desktop",
+      "estado": "resultado-completo",
+      "captura": "feriados-desktop-resultado-completo.png",
+      "largura": 1440,
+      "altura": 992,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "desktop",
+      "estado": "vazio-controlado",
+      "captura": "feriados-desktop-vazio-controlado.png",
+      "largura": 1440,
+      "altura": 950,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "desktop",
+      "estado": "loading",
+      "captura": "feriados-desktop-loading.png",
+      "largura": 1440,
+      "altura": 1100,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "desktop",
+      "estado": "erro-controlado",
+      "captura": "feriados-desktop-erro-controlado.png",
+      "largura": 1440,
+      "altura": 702,
+      "overflow": false
+    },
+    {
+      "grupo": "mares",
+      "viewport": "desktop",
+      "estado": "desabilitada",
+      "captura": "mares-desktop-desabilitada.png",
+      "largura": 1440,
+      "altura": 671,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "resultado",
+      "captura": "paises-mobile-resultado.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "resultado-completo",
+      "captura": "paises-mobile-resultado-completo.png",
+      "largura": 390,
+      "altura": 933,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "tabela-rolada",
+      "captura": "paises-mobile-tabela-rolada.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "vazio-controlado",
+      "captura": "paises-mobile-vazio-controlado.png",
+      "largura": 390,
+      "altura": 956,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "loading",
+      "captura": "paises-mobile-loading.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "paises",
+      "viewport": "mobile",
+      "estado": "erro-controlado",
+      "captura": "paises-mobile-erro-controlado.png",
+      "largura": 390,
+      "altura": 704,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "resultado",
+      "captura": "municipios-mobile-resultado.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "resultado-completo",
+      "captura": "municipios-mobile-resultado-completo.png",
+      "largura": 390,
+      "altura": 1053,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "tabela-rolada",
+      "captura": "municipios-mobile-tabela-rolada.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "vazio-controlado",
+      "captura": "municipios-mobile-vazio-controlado.png",
+      "largura": 390,
+      "altura": 1056,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "loading",
+      "captura": "municipios-mobile-loading.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "municipios",
+      "viewport": "mobile",
+      "estado": "erro-controlado",
+      "captura": "municipios-mobile-erro-controlado.png",
+      "largura": 390,
+      "altura": 804,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "resultado",
+      "captura": "feriados-mobile-resultado.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "resultado-completo",
+      "captura": "feriados-mobile-resultado-completo.png",
+      "largura": 390,
+      "altura": 1300,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "tabela-rolada",
+      "captura": "feriados-mobile-tabela-rolada.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "vazio-controlado",
+      "captura": "feriados-mobile-vazio-controlado.png",
+      "largura": 390,
+      "altura": 1238,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "loading",
+      "captura": "feriados-mobile-loading.png",
+      "largura": 390,
+      "altura": 844,
+      "overflow": false
+    },
+    {
+      "grupo": "feriados",
+      "viewport": "mobile",
+      "estado": "erro-controlado",
+      "captura": "feriados-mobile-erro-controlado.png",
+      "largura": 390,
+      "altura": 986,
+      "overflow": false
+    },
+    {
+      "grupo": "mares",
+      "viewport": "mobile",
+      "estado": "desabilitada",
+      "captura": "mares-mobile-desabilitada.png",
+      "largura": 390,
+      "altura": 954,
+      "overflow": false
+    }
+  ],
+  "limites": [
+    "Desktop 1440×1100; mobile emulado 390×844 no Chromium real, sem aparelho físico.",
+    "Painéis completos preservam a largura e ampliam a altura para capturar a rolagem interna do layout.",
+    "Os provedores são servidores HTTP controlados de teste; a API, login e PostgreSQL são reais. As consultas reais externas são registradas separadamente em consultas-reais.json.",
+    "WorldTides é exclusivamente um servidor de teste local; nenhuma chamada à API paga é executada."
+  ]
+}

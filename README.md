@@ -270,3 +270,7 @@ O modelo planejado usa banco unico, schema unico e isolamento por coluna `organi
 ## Funcionalidades para análise de Pontos de Função
 
 O [inventário técnico](docs/inventario-apf.md) descreve consultas ambientais Open-Meteo, configuração de coordenadas, relatórios de ocupação/movimentações/contratos/permanência histórica, revisão das consultas e manutenções existentes, autorização dos módulos e evidências de testes. A integração externa começa desabilitada; os módulos AMBIENTE/RELATORIOS exigem liberação pela plataforma. O documento inclui configuração acadêmica/comercial e regras dos indicadores. Não há contagem automática de Pontos de Função.
+
+## Referências externas para APF
+
+O módulo REFERENCIAS reúne países e municípios do IBGE, calendário BrasilAPI e marés WorldTides. A plataforma deve liberar o módulo por organização. WorldTides permanece bloqueada sem habilitação, chave e autorização de uso; não há consumo de créditos ao abrir a tela. Consulte o [inventário](docs/inventario-apf.md) e as [evidências e reprodução](docs/evidencias/apf-aie/README.md). Os catálogos externos não são mantidos em tabelas do Caisora.

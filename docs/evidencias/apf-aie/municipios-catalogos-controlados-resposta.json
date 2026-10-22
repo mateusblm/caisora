@@ -1,0 +1,19 @@
+{
+  "modo": "catalogos-controlados",
+  "grupo": "municipios",
+  "resposta": {
+    "origem": "IBGE — Localidades",
+    "fonte": "https://servicodados.ibge.gov.br/api/docs/localidades",
+    "consultadoEm": "2026-10-22T14:40:32.207860160Z",
+    "incompleta": false,
+    "registros": [
+      {
+        "codigoIbge": 4205407,
+        "nome": "Florianópolis",
+        "codigoUf": 42,
+        "siglaUf": "SC",
+        "nomeUf": "Santa Catarina"
+      }
+    ]
+  }
+}

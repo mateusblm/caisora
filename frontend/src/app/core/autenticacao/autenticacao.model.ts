@@ -17,6 +17,7 @@ export type ModuloSistema =
   | 'USUARIOS'
   | 'CHECKLIST_SAIDA'
   | 'AMBIENTE'
+  | 'REFERENCIAS'
   | 'RELATORIOS'
   | 'CONFIGURACOES';
 

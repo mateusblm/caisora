@@ -31,6 +31,12 @@ export const routes: Routes = [
     canActivate: [autenticacaoGuard],
     canActivateChild: [autenticacaoFilhosGuard],
     children: [
+      { path: 'referencias', pathMatch:'full', redirectTo:'referencias/paises' },
+      ...(['paises','municipios','feriados','mares'] as const).map(grupo => ({
+        path: `referencias/${grupo}`, title:'Referências externas | Caisora',
+        data: {modulo:'REFERENCIAS',acao:'VISUALIZAR',grupo},
+        loadComponent: () => import('./features/referencias/referencias.component').then(m=>m.ReferenciasComponent)
+      })),
       { path: 'ambiente', title: 'Condições ambientais | Caisora', data: { modulo: 'AMBIENTE', acao: 'VISUALIZAR' },
         loadComponent: () => import('./features/ambiente/ambiente.component').then(m => m.AmbienteComponent) },
       { path: 'configuracoes/localizacao', title: 'Localização | Caisora', data: { modulo: 'CONFIGURACOES', acao: 'CONFIGURAR' },

@@ -1,0 +1,29 @@
+{
+  "modo": "mares-controladas",
+  "grupo": "mares",
+  "resposta": {
+    "origem": "WorldTides",
+    "fonte": "https://www.worldtides.info/apidocs",
+    "consultadoEm": "2026-10-22T14:40:42.416930411Z",
+    "incompleta": false,
+    "datumSolicitado": "MSL",
+    "datumResposta": "MSL",
+    "copyright": "RESPOSTA CONTROLADA EXCLUSIVA DE TESTE — WorldTides não consultada",
+    "latitudeResposta": -27.59,
+    "longitudeResposta": -48.55,
+    "registros": [
+      {
+        "dataHora": "2026-10-22T00:00:00Z",
+        "tipo": "High",
+        "altura": 1.2,
+        "unidade": "m"
+      },
+      {
+        "dataHora": "2026-10-22T06:00:00Z",
+        "tipo": "Low",
+        "altura": -0.3,
+        "unidade": "m"
+      }
+    ]
+  }
+}

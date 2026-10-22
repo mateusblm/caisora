@@ -87,6 +87,7 @@ const nomeModulo: Record<ModuloSistema, string> = {
   USUARIOS: 'Usuários',
   CHECKLIST_SAIDA: 'Checklist de saída',
   AMBIENTE: 'Condições ambientais',
+  REFERENCIAS: 'Referências externas',
   RELATORIOS: 'Relatórios',
   CONFIGURACOES: 'Configurações'
 };
