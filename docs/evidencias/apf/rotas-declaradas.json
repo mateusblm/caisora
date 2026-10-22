@@ -1,0 +1,568 @@
+[
+  {
+    "rota": "/login",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/autenticacao/inicial-desktop.png",
+      "capturas/autenticacao/credenciais-invalidas-desktop.png",
+      "capturas/sessao/apos-sair-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/painel-tv",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/painel-tv/inicial-desktop.png",
+      "capturas/painel-tv/saida-preenchida-desktop.png",
+      "capturas/painel-tv/saida-preenchida-mobile.png",
+      "capturas/painel-tv/inicial-mobile.png",
+      "capturas/painel-tv/transferencia-agendada-desktop.png",
+      "capturas/painel-tv/tela-cheia-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/referencias/paises",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/perfil-administrador_plataforma/referencias-acesso-desktop.png",
+      "capturas/perfil-administrador_marina/referencias-acesso-desktop.png",
+      "capturas/perfil-atendente/referencias-acesso-desktop.png",
+      "capturas/perfil-financeiro/referencias-acesso-desktop.png",
+      "../apf-aie/paises-desktop-resultado-completo.png",
+      "../apf-aie/paises-mobile-resultado-completo.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/referencias/municipios",
+    "estado_tela": "coberta",
+    "capturas": [
+      "../apf-aie/municipios-mobile-resultado-completo.png",
+      "../apf-aie/municipios-desktop-resultado-completo.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/referencias/feriados",
+    "estado_tela": "coberta",
+    "capturas": [
+      "../apf-aie/feriados-mobile-resultado-completo.png",
+      "../apf-aie/feriados-desktop-resultado-completo.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/referencias/mares",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/mares-desabilitada/inicial-desktop.png",
+      "capturas/mares-desabilitada/inicial-mobile.png",
+      "../apf-aie/mares-desktop-resultado-completo.png",
+      "../apf-aie/mares-mobile-resultado-completo.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/ambiente",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/ambiente-meteorologia/entrada-controlada-desktop.png",
+      "capturas/ambiente-meteorologia/saida-controlada-desktop.png",
+      "capturas/ambiente-meteorologia/indisponivel-controlado-desktop.png",
+      "capturas/ambiente-maritimo/entrada-controlada-desktop.png",
+      "capturas/ambiente-maritimo/saida-controlada-desktop.png",
+      "capturas/ambiente-maritimo/indisponivel-controlado-desktop.png",
+      "capturas/ambiente-meteorologia/entrada-controlada-mobile.png",
+      "capturas/ambiente-meteorologia/saida-controlada-mobile.png",
+      "capturas/ambiente-meteorologia/indisponivel-controlado-mobile.png",
+      "capturas/ambiente-maritimo/entrada-controlada-mobile.png",
+      "capturas/ambiente-maritimo/saida-controlada-mobile.png",
+      "capturas/ambiente-maritimo/indisponivel-controlado-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/configuracoes/localizacao",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/localizacao/inicial-desktop.png",
+      "capturas/localizacao-salvar/entrada-desktop.png",
+      "capturas/localizacao-salvar/entrada-mobile.png",
+      "capturas/localizacao-salvar/falhou-desktop.png",
+      "capturas/localizacao/inicial-mobile.png",
+      "capturas/localizacao-salvar/saida-desktop.png",
+      "capturas/localizacao-salvar/saida-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/relatorios",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/relatorio-ocupacao/entrada-desktop.png",
+      "capturas/relatorio-ocupacao/entrada-mobile.png",
+      "capturas/relatorio-ocupacao/saida-desktop.png",
+      "capturas/relatorio-ocupacao/saida-mobile.png",
+      "capturas/relatorio-ocupacao/vazio-desktop.png",
+      "capturas/relatorio-movimentacoes/entrada-desktop.png",
+      "capturas/relatorio-movimentacoes/entrada-mobile.png",
+      "capturas/relatorio-movimentacoes/saida-desktop.png",
+      "capturas/relatorio-movimentacoes/saida-mobile.png",
+      "capturas/relatorio-movimentacoes/vazio-desktop.png",
+      "capturas/relatorio-contratos/entrada-desktop.png",
+      "capturas/relatorio-contratos/entrada-mobile.png",
+      "capturas/relatorio-contratos/saida-desktop.png",
+      "capturas/relatorio-contratos/saida-mobile.png",
+      "capturas/relatorio-contratos/vazio-desktop.png",
+      "capturas/relatorio-permanencia-vagas/entrada-desktop.png",
+      "capturas/relatorio-permanencia-vagas/entrada-mobile.png",
+      "capturas/relatorio-permanencia-vagas/saida-desktop.png",
+      "capturas/relatorio-permanencia-vagas/saida-mobile.png",
+      "capturas/relatorio-permanencia-vagas/vazio-desktop.png",
+      "capturas/relatorio-movimentacoes/entrada-preenchida-desktop.png",
+      "capturas/relatorio-movimentacoes/saida-preenchida-desktop.png",
+      "capturas/relatorio-movimentacoes/saida-preenchida-mobile.png",
+      "capturas/relatorio-contratos/entrada-preenchida-desktop.png",
+      "capturas/relatorio-contratos/saida-preenchida-desktop.png",
+      "capturas/relatorio-contratos/saida-preenchida-mobile.png",
+      "capturas/relatorio-ocupacao/vazio-mobile.png",
+      "capturas/relatorio-movimentacoes/vazio-mobile.png",
+      "capturas/relatorio-contratos/vazio-mobile.png",
+      "capturas/relatorio-permanencia-vagas/vazio-mobile.png",
+      "capturas/perfil-administrador_plataforma/relatorios-acesso-desktop.png",
+      "capturas/perfil-administrador_marina/relatorios-acesso-desktop.png",
+      "capturas/perfil-gerente/relatorios-acesso-desktop.png",
+      "capturas/perfil-financeiro/relatorios-acesso-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/dashboard",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/modulos-bloqueados/acesso-negado-desktop.png",
+      "capturas/dashboard/inicial-desktop.png",
+      "capturas/dashboard/saida-preenchida-desktop.png",
+      "capturas/dashboard/saida-preenchida-mobile.png",
+      "capturas/dashboard/inicial-mobile.png",
+      "capturas/perfil-administrador_plataforma/menu-desktop.png",
+      "capturas/perfil-administrador_marina/menu-desktop.png",
+      "capturas/perfil-gerente/menu-desktop.png",
+      "capturas/perfil-atendente/menu-desktop.png",
+      "capturas/perfil-financeiro/menu-desktop.png",
+      "capturas/dashboard/transferencia-agendada-desktop.png",
+      "capturas/perfil-gerente/referencias-acesso-desktop.png",
+      "capturas/perfil-gerente/configuracoes-acesso-desktop.png",
+      "capturas/permissao-interna-negada/gerente-desktop.png",
+      "capturas/perfil-atendente/relatorios-acesso-desktop.png",
+      "capturas/perfil-atendente/configuracoes-acesso-desktop.png",
+      "capturas/perfil-financeiro/configuracoes-acesso-desktop.png",
+      "capturas/sessao/identidade-mobile.png",
+      "capturas/sessao/menu-aberto-mobile.png",
+      "capturas/dashboard/apos-atualizar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/clientes",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/clientes-consultar/inicial-desktop.png",
+      "capturas/clientes-consultar/entrada-desktop.png",
+      "capturas/clientes-consultar/entrada-mobile.png",
+      "capturas/clientes-consultar/saida-desktop.png",
+      "capturas/clientes-consultar/saida-mobile.png",
+      "capturas/clientes-consultar/vazio-desktop.png",
+      "capturas/clientes-cadastrar-pf/saida-desktop.png",
+      "capturas/clientes-cadastrar-pf/saida-mobile.png",
+      "capturas/clientes-cadastrar-pj/saida-desktop.png",
+      "capturas/clientes-cadastrar-pj/saida-mobile.png",
+      "capturas/clientes-alterar/saida-desktop.png",
+      "capturas/clientes-alterar/saida-mobile.png",
+      "capturas/clientes-inativar/confirmacao-desktop.png",
+      "capturas/clientes-inativar/confirmacao-mobile.png",
+      "capturas/clientes-inativar/saida-desktop.png",
+      "capturas/clientes-inativar/saida-mobile.png",
+      "capturas/clientes-ativar/confirmacao-desktop.png",
+      "capturas/clientes-ativar/confirmacao-mobile.png",
+      "capturas/clientes-ativar/saida-desktop.png",
+      "capturas/clientes-ativar/saida-mobile.png",
+      "capturas/clientes-consultar/inicial-mobile.png",
+      "capturas/clientes-consultar/vazio-mobile.png",
+      "capturas/perfil-administrador_plataforma/clientes-acesso-desktop.png",
+      "capturas/perfil-administrador_marina/clientes-acesso-desktop.png",
+      "capturas/perfil-gerente/clientes-acesso-desktop.png",
+      "capturas/perfil-atendente/clientes-acesso-desktop.png",
+      "capturas/perfil-financeiro/clientes-acesso-desktop.png",
+      "capturas/clientes-consultar/filtros-selecao-desktop.png",
+      "capturas/clientes-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/clientes/novo",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/clientes-cadastrar-pf/inicial-desktop.png",
+      "capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png",
+      "capturas/clientes-cadastrar-pf/entrada-desktop.png",
+      "capturas/clientes-cadastrar-pf/entrada-mobile.png",
+      "capturas/clientes-cadastrar-pj/entrada-desktop.png",
+      "capturas/clientes-cadastrar-pj/entrada-mobile.png",
+      "capturas/clientes-cadastrar-pf/inicial-mobile.png",
+      "capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/clientes/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/clientes-alterar/inicial-desktop.png",
+      "capturas/clientes-alterar/entrada-desktop.png",
+      "capturas/clientes-alterar/entrada-mobile.png",
+      "capturas/clientes-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/embarcacoes",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/embarcacoes-consultar/inicial-desktop.png",
+      "capturas/embarcacoes-consultar/entrada-desktop.png",
+      "capturas/embarcacoes-consultar/entrada-mobile.png",
+      "capturas/embarcacoes-consultar/saida-desktop.png",
+      "capturas/embarcacoes-consultar/saida-mobile.png",
+      "capturas/embarcacoes-consultar/vazio-desktop.png",
+      "capturas/embarcacoes-cadastrar/saida-desktop.png",
+      "capturas/embarcacoes-cadastrar/saida-mobile.png",
+      "capturas/embarcacoes-alterar/saida-desktop.png",
+      "capturas/embarcacoes-alterar/saida-mobile.png",
+      "capturas/embarcacoes-inativar/confirmacao-desktop.png",
+      "capturas/embarcacoes-inativar/confirmacao-mobile.png",
+      "capturas/embarcacoes-inativar/saida-desktop.png",
+      "capturas/embarcacoes-inativar/saida-mobile.png",
+      "capturas/embarcacoes-ativar/confirmacao-desktop.png",
+      "capturas/embarcacoes-ativar/confirmacao-mobile.png",
+      "capturas/embarcacoes-ativar/saida-desktop.png",
+      "capturas/embarcacoes-ativar/saida-mobile.png",
+      "capturas/embarcacoes-consultar/inicial-mobile.png",
+      "capturas/embarcacoes-consultar/vazio-mobile.png",
+      "capturas/embarcacoes-consultar/filtros-selecao-desktop.png",
+      "capturas/embarcacoes-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/embarcacoes/nova",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/embarcacoes-cadastrar/inicial-desktop.png",
+      "capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "capturas/embarcacoes-cadastrar/entrada-desktop.png",
+      "capturas/embarcacoes-cadastrar/entrada-mobile.png",
+      "capturas/embarcacoes-cadastrar/inicial-mobile.png",
+      "capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/embarcacoes/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/embarcacoes-alterar/inicial-desktop.png",
+      "capturas/embarcacoes-alterar/entrada-desktop.png",
+      "capturas/embarcacoes-alterar/entrada-mobile.png",
+      "capturas/embarcacoes-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/vagas",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/vagas-consultar/inicial-desktop.png",
+      "capturas/vagas-consultar/entrada-desktop.png",
+      "capturas/vagas-consultar/entrada-mobile.png",
+      "capturas/vagas-consultar/saida-desktop.png",
+      "capturas/vagas-consultar/saida-mobile.png",
+      "capturas/vagas-consultar/vazio-desktop.png",
+      "capturas/vagas-cadastrar/saida-desktop.png",
+      "capturas/vagas-cadastrar/saida-mobile.png",
+      "capturas/vagas-alterar/saida-desktop.png",
+      "capturas/vagas-alterar/saida-mobile.png",
+      "capturas/vagas-inativar/confirmacao-desktop.png",
+      "capturas/vagas-inativar/confirmacao-mobile.png",
+      "capturas/vagas-inativar/saida-desktop.png",
+      "capturas/vagas-inativar/saida-mobile.png",
+      "capturas/vagas-ativar/confirmacao-desktop.png",
+      "capturas/vagas-ativar/confirmacao-mobile.png",
+      "capturas/vagas-ativar/saida-desktop.png",
+      "capturas/vagas-ativar/saida-mobile.png",
+      "capturas/vagas-consultar/inicial-mobile.png",
+      "capturas/vagas-consultar/vazio-mobile.png",
+      "capturas/vagas-consultar/filtros-selecao-desktop.png",
+      "capturas/vagas-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/vagas/nova",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/vagas-cadastrar/inicial-desktop.png",
+      "capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png",
+      "capturas/vagas-cadastrar/entrada-desktop.png",
+      "capturas/vagas-cadastrar/entrada-mobile.png",
+      "capturas/vagas-cadastrar/inicial-mobile.png",
+      "capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/vagas/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/vagas-alterar/inicial-desktop.png",
+      "capturas/vagas-alterar/entrada-desktop.png",
+      "capturas/vagas-alterar/entrada-mobile.png",
+      "capturas/vagas-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/ocupacoes",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/ocupacoes-consultar/inicial-desktop.png",
+      "capturas/ocupacoes-cadastrar/saida-desktop.png",
+      "capturas/ocupacoes-cadastrar/saida-mobile.png",
+      "capturas/ocupacoes-alterar/saida-desktop.png",
+      "capturas/ocupacoes-alterar/saida-mobile.png",
+      "capturas/ocupacoes-encerrar/confirmacao-desktop.png",
+      "capturas/ocupacoes-encerrar/confirmacao-mobile.png",
+      "capturas/ocupacoes-encerrar/saida-desktop.png",
+      "capturas/ocupacoes-encerrar/saida-mobile.png",
+      "capturas/ocupacoes-consultar/inicial-mobile.png",
+      "capturas/movimentacoes-transferencia/ocupacoes-apos-conclusao-desktop.png",
+      "capturas/sessao/identidade-desktop.png",
+      "capturas/sessao/falhou-desktop.png",
+      "capturas/ocupacoes-consultar/filtros-selecao-desktop.png",
+      "capturas/ocupacoes-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/ocupacoes/nova",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/ocupacoes-cadastrar/inicial-desktop.png",
+      "capturas/ocupacoes-cadastrar/entrada-desktop.png",
+      "capturas/ocupacoes-cadastrar/entrada-mobile.png",
+      "capturas/ocupacoes-conflito/opcoes-bloqueadas-desktop.png",
+      "capturas/ocupacoes-cadastrar/inicial-mobile.png",
+      "capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/ocupacoes/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/ocupacoes-alterar/inicial-desktop.png",
+      "capturas/ocupacoes-alterar/entrada-desktop.png",
+      "capturas/ocupacoes-alterar/entrada-mobile.png",
+      "capturas/ocupacoes-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/movimentacoes",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/movimentacoes-consultar/inicial-desktop.png",
+      "capturas/movimentacoes-cadastrar/saida-desktop.png",
+      "capturas/movimentacoes-cadastrar/saida-mobile.png",
+      "capturas/movimentacoes-alterar/saida-desktop.png",
+      "capturas/movimentacoes-alterar/saida-mobile.png",
+      "capturas/movimentacoes-iniciar/confirmacao-desktop.png",
+      "capturas/movimentacoes-iniciar/confirmacao-mobile.png",
+      "capturas/movimentacoes-iniciar/saida-desktop.png",
+      "capturas/movimentacoes-iniciar/saida-mobile.png",
+      "capturas/movimentacoes-concluir/confirmacao-desktop.png",
+      "capturas/movimentacoes-concluir/confirmacao-mobile.png",
+      "capturas/movimentacoes-concluir/saida-desktop.png",
+      "capturas/movimentacoes-concluir/saida-mobile.png",
+      "capturas/movimentacoes-cancelar/confirmacao-desktop.png",
+      "capturas/movimentacoes-cancelar/confirmacao-mobile.png",
+      "capturas/movimentacoes-cancelar/saida-desktop.png",
+      "capturas/movimentacoes-cancelar/saida-mobile.png",
+      "capturas/movimentacoes-consultar/inicial-mobile.png",
+      "capturas/movimentacoes-transferencia/antes-desktop.png",
+      "capturas/movimentacoes-transferencia/iniciar-confirmacao-desktop.png",
+      "capturas/movimentacoes-transferencia/concluir-confirmacao-desktop.png",
+      "capturas/movimentacoes-transferencia/saida-desktop.png",
+      "capturas/movimentacoes-transferencia/saida-mobile.png",
+      "capturas/movimentacoes-consultar/filtros-selecao-desktop.png",
+      "capturas/movimentacoes-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/movimentacoes/nova",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/movimentacoes-cadastrar/inicial-desktop.png",
+      "capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "capturas/movimentacoes-cadastrar/entrada-desktop.png",
+      "capturas/movimentacoes-cadastrar/entrada-mobile.png",
+      "capturas/movimentacoes-cadastrar/inicial-mobile.png",
+      "capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/movimentacoes/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/movimentacoes-alterar/entrada-desktop.png",
+      "capturas/movimentacoes-alterar/entrada-mobile.png",
+      "capturas/movimentacoes-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/contratos",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/contratos-consultar/inicial-desktop.png",
+      "capturas/contratos-consultar/inicial-mobile.png",
+      "capturas/contratos-consultar/filtros-selecao-desktop.png",
+      "capturas/contratos-consultar/apos-limpar-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/contratos/novo",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/contratos-cadastrar/inicial-desktop.png",
+      "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "capturas/contratos-cadastrar/entrada-desktop.png",
+      "capturas/contratos-cadastrar/entrada-mobile.png",
+      "capturas/contratos-cadastrar/inicial-mobile.png",
+      "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/contratos/:id/editar",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/contratos-alterar/entrada-desktop.png",
+      "capturas/contratos-alterar/entrada-mobile.png",
+      "capturas/contratos-alterar/inicial-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/contratos/:id",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/contratos-cadastrar/inicial-desktop.png",
+      "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "capturas/contratos-cadastrar/entrada-desktop.png",
+      "capturas/contratos-cadastrar/entrada-mobile.png",
+      "capturas/contratos-cadastrar/saida-desktop.png",
+      "capturas/contratos-cadastrar/saida-mobile.png",
+      "capturas/contratos-alterar/saida-desktop.png",
+      "capturas/contratos-alterar/saida-mobile.png",
+      "capturas/contratos-enviar/confirmacao-desktop.png",
+      "capturas/contratos-enviar/confirmacao-mobile.png",
+      "capturas/contratos-enviar/saida-desktop.png",
+      "capturas/contratos-enviar/saida-mobile.png",
+      "capturas/contratos-ativar/confirmacao-desktop.png",
+      "capturas/contratos-ativar/confirmacao-mobile.png",
+      "capturas/contratos-ativar/saida-desktop.png",
+      "capturas/contratos-ativar/saida-mobile.png",
+      "capturas/contratos-vincular/falhou-desktop.png",
+      "capturas/contratos-desvincular/falhou-desktop.png",
+      "capturas/contratos-suspender/confirmacao-desktop.png",
+      "capturas/contratos-suspender/confirmacao-mobile.png",
+      "capturas/contratos-suspender/saida-desktop.png",
+      "capturas/contratos-suspender/saida-mobile.png",
+      "capturas/contratos-reativar/confirmacao-desktop.png",
+      "capturas/contratos-reativar/confirmacao-mobile.png",
+      "capturas/contratos-reativar/saida-desktop.png",
+      "capturas/contratos-reativar/saida-mobile.png",
+      "capturas/contratos-solicitar-encerramento/confirmacao-desktop.png",
+      "capturas/contratos-solicitar-encerramento/confirmacao-mobile.png",
+      "capturas/contratos-solicitar-encerramento/saida-desktop.png",
+      "capturas/contratos-solicitar-encerramento/saida-mobile.png",
+      "capturas/contratos-encerrar/confirmacao-desktop.png",
+      "capturas/contratos-encerrar/confirmacao-mobile.png",
+      "capturas/contratos-encerrar/saida-desktop.png",
+      "capturas/contratos-encerrar/saida-mobile.png",
+      "capturas/contratos-cancelar/confirmacao-desktop.png",
+      "capturas/contratos-cancelar/confirmacao-mobile.png",
+      "capturas/contratos-cancelar/saida-desktop.png",
+      "capturas/contratos-cancelar/saida-mobile.png",
+      "capturas/contratos-cadastrar/inicial-mobile.png",
+      "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "capturas/contratos-detalhe/inicial-mobile.png",
+      "capturas/contratos-vincular/entrada-desktop.png",
+      "capturas/contratos-vincular/entrada-mobile.png",
+      "capturas/contratos-vincular/saida-desktop.png",
+      "capturas/contratos-vincular/saida-mobile.png",
+      "capturas/contratos-desvincular/confirmacao-desktop.png",
+      "capturas/contratos-desvincular/confirmacao-mobile.png",
+      "capturas/contratos-desvincular/motivo-obrigatorio-desktop.png",
+      "capturas/contratos-desvincular/motivo-obrigatorio-mobile.png",
+      "capturas/contratos-desvincular/saida-desktop.png",
+      "capturas/contratos-desvincular/saida-mobile.png",
+      "capturas/perfil-administrador_plataforma/contratos-acesso-desktop.png",
+      "capturas/perfil-administrador_marina/contratos-acesso-desktop.png",
+      "capturas/perfil-gerente/contratos-acesso-desktop.png",
+      "capturas/perfil-atendente/contratos-acesso-desktop.png",
+      "capturas/contrato-acao-sem-permissao/erro-backend-desktop.png",
+      "capturas/perfil-financeiro/contratos-acesso-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/checklist-saida",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/checklist/inicial-desktop.png",
+      "capturas/checklist-concluir/entrada-desktop.png",
+      "capturas/checklist-concluir/entrada-mobile.png",
+      "capturas/checklist-concluir/saida-desktop.png",
+      "capturas/checklist-concluir/saida-mobile.png",
+      "capturas/checklist-concluir/apos-recarregar-desktop.png",
+      "capturas/checklist/inicial-mobile.png",
+      "capturas/checklist-concluir/apos-recarregar-mobile.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  },
+  {
+    "rota": "/configuracoes/variabilidade",
+    "estado_tela": "coberta",
+    "capturas": [
+      "capturas/modulos-bloqueados/marina-desktop.png",
+      "capturas/liberar-modulos/antes-desktop.png",
+      "capturas/liberar-modulos/depois-desktop.png",
+      "capturas/variabilidade/inicial-desktop.png",
+      "capturas/variabilidade/inicial-mobile.png",
+      "capturas/permissoes-salvar/entrada-desktop.png",
+      "capturas/permissoes-salvar/entrada-mobile.png",
+      "capturas/permissoes-salvar/saida-desktop.png",
+      "capturas/permissoes-salvar/saida-mobile.png",
+      "capturas/perfil-administrador_plataforma/configuracoes-acesso-desktop.png",
+      "capturas/perfil-administrador_marina/configuracoes-acesso-desktop.png"
+    ],
+    "nota": "Cobertura da tela não aprova automaticamente todas as ações/combinações."
+  }
+]

@@ -1,0 +1,2237 @@
+# Processos funcionais observados — inventário técnico
+
+SHA de produção inspecionado: `247c5ef07c49e2ebe8d119770309dabbc4fb8386`. 72 operações/estados funcionais candidatos, sem classificação ou pontuação APF definitiva. Estados de impedimento e checklist não constituem automaticamente processos contáveis.
+
+Campos vistos são obtidos do DOM real; mensagens do código que não foram vistas ficam somente em `rastreio-fontes.json`. Evidência de banco significa comparação imediatamente antes/depois, não mera ausência de chamadas POST. A execução do roteiro não implica que todo cenário foi aprovado; conferir falhas no manifesto.
+
+## autenticacao — Iniciar sessão e rejeitar credenciais inválidas
+
+- **modulo**: Autenticação
+- **ator_perfil**: ADMINISTRADOR_MARINA
+- **rota_ou_dialogo**: /login
+- **acao_do_usuario**: Iniciar sessão e rejeitar credenciais inválidas
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Codigo da marina; E-mail; Senha
+- **campos_condicionais**: mensagemErro(); formulario.controls.codigoOrganizacao .hasError('required'); formulario.controls.email .hasError('required'); formulario.controls.email .hasError('email'); formulario.controls.senha .hasError('required'); carregando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Mostrar senha; Entrar arrow_forward
+- **mensagens_erro_distintas**: error_outline Codigo da marina, e-mail ou senha invalidos. [visto: credenciais-invalidas; capturas/autenticacao/credenciais-invalidas-desktop.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/autenticacao/inicial-desktop.png
+- **screenshot_saida**:
+- **screenshot_erro**: capturas/autenticacao/credenciais-invalidas-desktop.png
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/autenticacao/pages/login/login.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Senha e JWT nunca compõem o inventário; captura de senha mascarada.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## sessao — Consultar identidade e encerrar sessão
+
+- **modulo**: Autenticação
+- **ator_perfil**: ADMINISTRADOR_MARINA
+- **rota_ou_dialogo**: Layout / botão Sair
+- **acao_do_usuario**: Consultar identidade e encerrar sessão
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Vaga; Status; Codigo da marina; E-mail; Senha
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add_home_workNova ocupação; filter_alt_offLimpar filtros; Abrir ações da ocupação; Abrir menu; refresh Atualizar; Abrir painel operacional para TV em nova aba; add Nova movimentação; precision_manufacturing 0 Em execução; schedule 0 Atrasadas; upcoming 0 Próxima hora; priority_high 0 Urgentes abertas; person_off 0 Sem operador; task_alt 0 Concluídas hoje; arrow_forward Ver agenda completa; add Agendar movimentação; Mostrar senha; Entrar arrow_forward
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/sessao/identidade-mobile.png; capturas/sessao/menu-aberto-mobile.png; capturas/sessao/apos-sair-mobile.png
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/autenticacao/me; GET /api/v1/autenticacao/me
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Dados da sessão e logout local; /autenticacao/me consulta permissões atualizadas.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-consultar — Pesquisar e listar clientes
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes
+- **acao_do_usuario**: Pesquisar e listar clientes
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); cliente.email; alterandoStatusId() === cliente.id; cliente.email; alterandoStatusId() === cliente.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; Limpar busca; Abrir menu; editEditar; person_off Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: clientes-consultar-abrir, clientes-pesquisar, clientes-consultar-abrir, clientes-pesquisar
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/clientes-consultar/inicial-desktop.png; capturas/clientes-consultar/entrada-desktop.png; capturas/clientes-consultar/entrada-mobile.png; capturas/clientes-consultar/inicial-mobile.png
+- **screenshot_saida**: capturas/clientes-consultar/saida-desktop.png; capturas/clientes-consultar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/clientes-consultar/entrada-mobile.png; capturas/clientes-consultar/saida-mobile.png; capturas/clientes-consultar/inicial-mobile.png; capturas/clientes-consultar/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-listagem/cliente-listagem.component.html; GET /api/v1/clientes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-cadastrar-pf — Cadastrar cliente pessoa física
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes/novo
+- **acao_do_usuario**: Cadastrar cliente pessoa física
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Tipo de pessoa; CPF; Nome completo; E-mail; Telefone; Celular; Observações; Buscar por nome; Status
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.cpfCnpj .hasError('required'); formulario.controls.cpfCnpj .hasError( 'documentoInvalido' ); erroApi('cpfCnpj'); formulario.controls.nome .hasError('required'); erroApi('nome'); formulario.controls .tipoPessoa.value === 'JURIDICA'; formulario.controls .razaoSocial .hasError('required'); erroApi('razaoSocial'); formulario.controls.email .hasError('email'); erroApi('email'); erroApi('telefone'); erroApi('celular'); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para clientes; Cancelar; save Cadastrar cliente; Abrir menu; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; editEditar; person_off Inativar
+- **mensagens_erro_distintas**: Informe o documento. [visto: validacao-obrigatorios; capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png]; Informe o nome. [visto: validacao-obrigatorios; capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png]; Informe o documento. [visto: validacao-obrigatorios; capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png]; Informe o nome. [visto: validacao-obrigatorios; capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Cliente cadastrado com sucesso. [texto inspecionado na captura de saída desktop]
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Clientes
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: clientes; execucao-browser.json/efeitos: clientes-cadastrar-pf-abrir, clientes-cadastrar-pf, clientes-cadastrar-pf-abrir
+- **arquivos_fisicos_consultados**: clientes
+- **screenshot_entrada**: capturas/clientes-cadastrar-pf/inicial-desktop.png; capturas/clientes-cadastrar-pf/entrada-desktop.png; capturas/clientes-cadastrar-pf/entrada-mobile.png; capturas/clientes-cadastrar-pf/inicial-mobile.png
+- **screenshot_saida**: capturas/clientes-cadastrar-pf/saida-desktop.png; capturas/clientes-cadastrar-pf/saida-mobile.png
+- **screenshot_erro**: capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png; capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/clientes-cadastrar-pf/entrada-mobile.png; capturas/clientes-cadastrar-pf/saida-mobile.png; capturas/clientes-cadastrar-pf/inicial-mobile.png; capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-formulario/cliente-formulario.component.html; POST /api/v1/clientes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-cadastrar-pj — Cadastrar cliente pessoa jurídica
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes/novo
+- **acao_do_usuario**: Cadastrar cliente pessoa jurídica
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Tipo de pessoa; CNPJ; Nome fantasia; Razão social; E-mail; Telefone; Celular; Observações; Buscar por nome; Status
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.cpfCnpj .hasError('required'); formulario.controls.cpfCnpj .hasError( 'documentoInvalido' ); erroApi('cpfCnpj'); formulario.controls.nome .hasError('required'); erroApi('nome'); formulario.controls .tipoPessoa.value === 'JURIDICA'; formulario.controls .razaoSocial .hasError('required'); erroApi('razaoSocial'); formulario.controls.email .hasError('email'); erroApi('email'); erroApi('telefone'); erroApi('celular'); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para clientes; Cancelar; save Cadastrar cliente; Abrir menu; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; editEditar; person_off Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Clientes
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: clientes; execucao-browser.json/efeitos: clientes-cadastrar-pj
+- **arquivos_fisicos_consultados**: clientes
+- **screenshot_entrada**: capturas/clientes-cadastrar-pj/entrada-desktop.png; capturas/clientes-cadastrar-pj/entrada-mobile.png
+- **screenshot_saida**: capturas/clientes-cadastrar-pj/saida-desktop.png; capturas/clientes-cadastrar-pj/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/clientes-cadastrar-pj/entrada-mobile.png; capturas/clientes-cadastrar-pj/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-formulario/cliente-formulario.component.html; POST /api/v1/clientes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-alterar — Alterar cliente
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes/:id/editar
+- **acao_do_usuario**: Alterar cliente
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Tipo de pessoa; CPF; Nome completo; E-mail; Telefone; Celular; Observações; Buscar por nome; Status
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.cpfCnpj .hasError('required'); formulario.controls.cpfCnpj .hasError( 'documentoInvalido' ); erroApi('cpfCnpj'); formulario.controls.nome .hasError('required'); erroApi('nome'); formulario.controls .tipoPessoa.value === 'JURIDICA'; formulario.controls .razaoSocial .hasError('required'); erroApi('razaoSocial'); formulario.controls.email .hasError('email'); erroApi('email'); erroApi('telefone'); erroApi('celular'); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para clientes; Cancelar; save Salvar alterações; Abrir menu; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; editEditar; person_off Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Clientes
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: clientes; execucao-browser.json/efeitos: clientes-alterar-abrir, clientes-alterar, clientes-alterar-abrir
+- **arquivos_fisicos_consultados**: clientes
+- **screenshot_entrada**: capturas/clientes-alterar/inicial-desktop.png; capturas/clientes-alterar/entrada-desktop.png; capturas/clientes-alterar/entrada-mobile.png; capturas/clientes-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/clientes-alterar/saida-desktop.png; capturas/clientes-alterar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/clientes-alterar/entrada-mobile.png; capturas/clientes-alterar/saida-mobile.png; capturas/clientes-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-formulario/cliente-formulario.component.html; PUT /api/v1/clientes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-inativar — Inativar cliente
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes / ações da linha
+- **acao_do_usuario**: Inativar cliente
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); cliente.email; alterandoStatusId() === cliente.id; cliente.email; alterandoStatusId() === cliente.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; Abrir menu; editEditar; person_off Inativar; person_add Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: person_off Inativar cliente? O cliente Empresa Auditoria deixará de aparecer como ativo nas operações da marina. O cadastro não será excluído e poderá ser reativado posteriormente. Cancelar Inativar
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Clientes
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: clientes; execucao-browser.json/efeitos: clientes-inativar
+- **arquivos_fisicos_consultados**: clientes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/clientes-inativar/saida-desktop.png; capturas/clientes-inativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/clientes-inativar/confirmacao-mobile.png; capturas/clientes-inativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-listagem/cliente-listagem.component.html; PATCH /api/v1/clientes/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## clientes-ativar — Ativar cliente
+
+- **modulo**: Clientes
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /clientes / ações da linha
+- **acao_do_usuario**: Ativar cliente
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); cliente.email; alterandoStatusId() === cliente.id; cliente.email; alterandoStatusId() === cliente.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; person_addNovo cliente; Pesquisar; Abrir ações do cliente; chevron_leftAnterior; chevron_rightPróxima; Abrir menu; editEditar; person_off Inativar; person_add Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: person_add Ativar cliente? O cliente Empresa Auditoria voltará a ficar disponível para as operações da marina. O cadastro permanecerá com os mesmos dados e histórico. Cancelar Ativar
+- **campos_saida_visiveis**: Ações; Cliente; Contato; Documento; Status
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Cliente; Contato; Documento; Status
+- **grupos_logicos_lidos**: Clientes; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Clientes
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: clientes; execucao-browser.json/efeitos: clientes-ativar
+- **arquivos_fisicos_consultados**: clientes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/clientes-ativar/saida-desktop.png; capturas/clientes-ativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/clientes-ativar/confirmacao-mobile.png; capturas/clientes-ativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/clientes/pages/cliente-listagem/cliente-listagem.component.html; PATCH /api/v1/clientes/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## embarcacoes-consultar — Pesquisar e listar embarcacoes
+
+- **modulo**: Embarcações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /embarcacoes
+- **acao_do_usuario**: Pesquisar e listar embarcacoes
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Tipo; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === embarcacao.id; alterandoStatusId() === embarcacao.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; directions_boatNova embarcação; Pesquisar; Abrir ações da embarcação; chevron_leftAnterior; chevron_rightPróxima; Limpar filtros; Abrir menu; editEditar; directions_boat_filled Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **grupos_logicos_lidos**: Embarcações; Clientes (seleção do proprietário); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: embarcacoes-consultar-abrir, embarcacoes-pesquisar, embarcacoes-consultar-abrir, embarcacoes-pesquisar
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/embarcacoes-consultar/inicial-desktop.png; capturas/embarcacoes-consultar/entrada-desktop.png; capturas/embarcacoes-consultar/entrada-mobile.png; capturas/embarcacoes-consultar/inicial-mobile.png
+- **screenshot_saida**: capturas/embarcacoes-consultar/saida-desktop.png; capturas/embarcacoes-consultar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/embarcacoes-consultar/entrada-mobile.png; capturas/embarcacoes-consultar/saida-mobile.png; capturas/embarcacoes-consultar/inicial-mobile.png; capturas/embarcacoes-consultar/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/embarcacoes/pages/embarcacao-listagem/embarcacao-listagem.component.html; GET /api/v1/embarcacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## embarcacoes-cadastrar — Cadastrar embarcacao
+
+- **modulo**: Embarcações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /embarcacoes/nova
+- **acao_do_usuario**: Cadastrar embarcacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Pesquise o proprietário; Nome da embarcação; Tipo; Ano de fabricação; Fabricante; Modelo; Cor predominante; Número de inscrição; Número do casco; Porto de inscrição; País da bandeira; Comprimento total; Boca; Calado; Pontal; Altura total; Peso; Tipo de propulsão; Capacidade de pessoas; Observações; Buscar por nome; Status
+- **campos_condicionais**: carregando() || carregandoProprietarios(); mensagemErro(); !proprietario.ativo; carregandoProprietarios(); formulario.controls.proprietario .hasError('required'); formulario.controls.proprietario .hasError( 'proprietarioInvalido' ) && formulario.controls.proprietario .touched; erroApi('proprietario'); erroApi('nome'); formulario.controls.tipo .hasError('required'); erroApi('tipo'); formulario.controls .anoFabricacao .hasError('min') || formulario.controls .anoFabricacao .hasError('max'); formulario.controls .anoFabricacao .hasError('numeroInteiro'); erroApi('anoFabricacao'); erroApi('fabricante'); erroApi('modelo'); erroApi('corPredominante'); erroApi('numeroInscricao'); erroApi('numeroCasco'); erroApi('portoInscricao'); formulario.controls .codigoPaisBandeira .hasError('required') || formulario.controls .codigoPaisBandeira .hasError('pattern'); erroApi( 'codigoPaisBandeira' ); formulario.controls .comprimentoTotalMetros .hasError('required'); formulario.controls .comprimentoTotalMetros .hasError('min'); erroApi( 'comprimentoTotalMetros' ); formulario.controls.bocaMetros .hasError('required'); formulario.controls.bocaMetros .hasError('min'); erroApi('bocaMetros'); formulario.controls.caladoMetros .hasError('min'); erroApi('caladoMetros'); formulario.controls.pontalMetros .hasError('min'); erroApi('pontalMetros'); formulario.controls .alturaTotalMetros .hasError('min'); erroApi( 'alturaTotalMetros' ); formulario.controls.pesoKg .hasError('min'); erroApi('pesoKg'); formulario.controls .tipoPropulsao .hasError('required'); erroApi('tipoPropulsao'); formulario.controls .capacidadePessoas .hasError('min') || formulario.controls .capacidadePessoas .hasError('numeroInteiro'); erroApi( 'capacidadePessoas' ); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para embarcações; Cancelar; save Cadastrar embarcação; Abrir menu; directions_boatNova embarcação; Pesquisar; Abrir ações da embarcação; chevron_leftAnterior; chevron_rightPróxima; editEditar; directions_boat_filled Inativar
+- **mensagens_erro_distintas**: Selecione um proprietário. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png]; Selecione um cliente da lista. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png]; Informe o comprimento. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png]; Informe a boca. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png]; Selecione um proprietário. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png]; Selecione um cliente da lista. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png]; Informe o comprimento. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png]; Informe a boca. [visto: validacao-obrigatorios; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Embarcação cadastrada com sucesso. [texto inspecionado na captura de saída desktop]
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **grupos_logicos_lidos**: Embarcações; Clientes (seleção do proprietário); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Embarcações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: embarcacoes; execucao-browser.json/efeitos: embarcacoes-cadastrar-abrir, embarcacoes-cadastrar, embarcacoes-cadastrar-abrir
+- **arquivos_fisicos_consultados**: embarcacoes
+- **screenshot_entrada**: capturas/embarcacoes-cadastrar/inicial-desktop.png; capturas/embarcacoes-cadastrar/entrada-desktop.png; capturas/embarcacoes-cadastrar/entrada-mobile.png; capturas/embarcacoes-cadastrar/inicial-mobile.png
+- **screenshot_saida**: capturas/embarcacoes-cadastrar/saida-desktop.png; capturas/embarcacoes-cadastrar/saida-mobile.png
+- **screenshot_erro**: capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/embarcacoes-cadastrar/entrada-mobile.png; capturas/embarcacoes-cadastrar/saida-mobile.png; capturas/embarcacoes-cadastrar/inicial-mobile.png; capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/embarcacoes/pages/embarcacao-formulario/embarcacao-formulario.component.html; POST /api/v1/embarcacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## embarcacoes-alterar — Alterar embarcacao
+
+- **modulo**: Embarcações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /embarcacoes/:id/editar
+- **acao_do_usuario**: Alterar embarcacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Pesquise o proprietário; Nome da embarcação; Tipo; Ano de fabricação; Fabricante; Modelo; Cor predominante; Número de inscrição; Número do casco; Porto de inscrição; País da bandeira; Comprimento total; Boca; Calado; Pontal; Altura total; Peso; Tipo de propulsão; Capacidade de pessoas; Observações; Buscar por nome; Status
+- **campos_condicionais**: carregando() || carregandoProprietarios(); mensagemErro(); !proprietario.ativo; carregandoProprietarios(); formulario.controls.proprietario .hasError('required'); formulario.controls.proprietario .hasError( 'proprietarioInvalido' ) && formulario.controls.proprietario .touched; erroApi('proprietario'); erroApi('nome'); formulario.controls.tipo .hasError('required'); erroApi('tipo'); formulario.controls .anoFabricacao .hasError('min') || formulario.controls .anoFabricacao .hasError('max'); formulario.controls .anoFabricacao .hasError('numeroInteiro'); erroApi('anoFabricacao'); erroApi('fabricante'); erroApi('modelo'); erroApi('corPredominante'); erroApi('numeroInscricao'); erroApi('numeroCasco'); erroApi('portoInscricao'); formulario.controls .codigoPaisBandeira .hasError('required') || formulario.controls .codigoPaisBandeira .hasError('pattern'); erroApi( 'codigoPaisBandeira' ); formulario.controls .comprimentoTotalMetros .hasError('required'); formulario.controls .comprimentoTotalMetros .hasError('min'); erroApi( 'comprimentoTotalMetros' ); formulario.controls.bocaMetros .hasError('required'); formulario.controls.bocaMetros .hasError('min'); erroApi('bocaMetros'); formulario.controls.caladoMetros .hasError('min'); erroApi('caladoMetros'); formulario.controls.pontalMetros .hasError('min'); erroApi('pontalMetros'); formulario.controls .alturaTotalMetros .hasError('min'); erroApi( 'alturaTotalMetros' ); formulario.controls.pesoKg .hasError('min'); erroApi('pesoKg'); formulario.controls .tipoPropulsao .hasError('required'); erroApi('tipoPropulsao'); formulario.controls .capacidadePessoas .hasError('min') || formulario.controls .capacidadePessoas .hasError('numeroInteiro'); erroApi( 'capacidadePessoas' ); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para embarcações; Cancelar; save Salvar alterações; Abrir menu; directions_boatNova embarcação; Pesquisar; Abrir ações da embarcação; chevron_leftAnterior; chevron_rightPróxima; editEditar; directions_boat_filled Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **grupos_logicos_lidos**: Embarcações; Clientes (seleção do proprietário); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Embarcações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: embarcacoes; execucao-browser.json/efeitos: embarcacoes-alterar-abrir, embarcacoes-alterar, embarcacoes-alterar-abrir
+- **arquivos_fisicos_consultados**: embarcacoes
+- **screenshot_entrada**: capturas/embarcacoes-alterar/inicial-desktop.png; capturas/embarcacoes-alterar/entrada-desktop.png; capturas/embarcacoes-alterar/entrada-mobile.png; capturas/embarcacoes-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/embarcacoes-alterar/saida-desktop.png; capturas/embarcacoes-alterar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/embarcacoes-alterar/entrada-mobile.png; capturas/embarcacoes-alterar/saida-mobile.png; capturas/embarcacoes-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/embarcacoes/pages/embarcacao-formulario/embarcacao-formulario.component.html; PUT /api/v1/embarcacoes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## embarcacoes-inativar — Inativar embarcacao
+
+- **modulo**: Embarcações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /embarcacoes / ações da linha
+- **acao_do_usuario**: Inativar embarcacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Tipo; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === embarcacao.id; alterandoStatusId() === embarcacao.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; directions_boatNova embarcação; Pesquisar; Abrir ações da embarcação; chevron_leftAnterior; chevron_rightPróxima; Abrir menu; editEditar; directions_boat_filled Inativar; sailing Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: directions_boat_filled Inativar embarcação? A embarcação Barco Auditoria deixará de ficar disponível para novas operações da marina. O cadastro não será excluído e poderá ser reativado posteriormente. Cancelar Inativar
+- **campos_saida_visiveis**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **grupos_logicos_lidos**: Embarcações; Clientes (seleção do proprietário); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Embarcações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: embarcacoes; execucao-browser.json/efeitos: embarcacoes-inativar
+- **arquivos_fisicos_consultados**: embarcacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/embarcacoes-inativar/saida-desktop.png; capturas/embarcacoes-inativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/embarcacoes-inativar/confirmacao-mobile.png; capturas/embarcacoes-inativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/embarcacoes/pages/embarcacao-listagem/embarcacao-listagem.component.html; PATCH /api/v1/embarcacoes/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## embarcacoes-ativar — Ativar embarcacao
+
+- **modulo**: Embarcações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /embarcacoes / ações da linha
+- **acao_do_usuario**: Ativar embarcacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Buscar por nome; Tipo; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === embarcacao.id; alterandoStatusId() === embarcacao.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; directions_boatNova embarcação; Pesquisar; Abrir ações da embarcação; chevron_leftAnterior; chevron_rightPróxima; Abrir menu; editEditar; sailing Ativar; directions_boat_filled Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: sailing Ativar embarcação? A embarcação Barco Auditoria voltará a ficar disponível para as operações da marina. O cadastro permanecerá com os mesmos dados, proprietário e histórico. Cancelar Ativar
+- **campos_saida_visiveis**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Dimensões; Embarcação; Proprietário; Status; Tipo
+- **grupos_logicos_lidos**: Embarcações; Clientes (seleção do proprietário); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Embarcações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: embarcacoes; execucao-browser.json/efeitos: embarcacoes-ativar
+- **arquivos_fisicos_consultados**: embarcacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/embarcacoes-ativar/saida-desktop.png; capturas/embarcacoes-ativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/embarcacoes-ativar/confirmacao-mobile.png; capturas/embarcacoes-ativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/embarcacoes/pages/embarcacao-listagem/embarcacao-listagem.component.html; PATCH /api/v1/embarcacoes/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## vagas-consultar — Pesquisar e listar vagas
+
+- **modulo**: Vagas
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /vagas
+- **acao_do_usuario**: Pesquisar e listar vagas
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Filtro; Buscar por codigo; Tipo; Status; Buscar por setor
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === vaga.id; alterandoStatusId() === vaga.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; anchorNova vaga; Pesquisar; Abrir acoes da vaga; chevron_leftAnterior; chevron_rightProxima; Limpar filtros; Abrir menu; editEditar; block Inativar; anchor Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **grupos_logicos_lidos**: Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: vagas-consultar-abrir, vagas-pesquisar, vagas-consultar-abrir, vagas-pesquisar
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/vagas-consultar/inicial-desktop.png; capturas/vagas-consultar/entrada-desktop.png; capturas/vagas-consultar/entrada-mobile.png; capturas/vagas-consultar/inicial-mobile.png
+- **screenshot_saida**: capturas/vagas-consultar/saida-desktop.png; capturas/vagas-consultar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/vagas-consultar/entrada-mobile.png; capturas/vagas-consultar/saida-mobile.png; capturas/vagas-consultar/inicial-mobile.png; capturas/vagas-consultar/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/vagas/pages/vaga-listagem/vaga-listagem.component.html; GET /api/v1/vagas
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## vagas-cadastrar — Cadastrar vaga
+
+- **modulo**: Vagas
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /vagas/nova
+- **acao_do_usuario**: Cadastrar vaga
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Codigo; Tipo; Setor; Localizacao; Comprimento maximo; Boca maxima; Calado maximo; Altura maxima; Peso maximo; Observacoes; Filtro; Buscar por codigo; Status
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.codigo .hasError('required'); erroApi('codigo'); formulario.controls.tipo .hasError('required'); erroApi('tipo'); erroApi('setor'); erroApi('localizacao'); formulario.controls .comprimentoMaximoMetros .hasError('required'); formulario.controls .comprimentoMaximoMetros .hasError('min'); erroApi( 'comprimentoMaximoMetros' ); formulario.controls .bocaMaximaMetros .hasError('required'); formulario.controls .bocaMaximaMetros .hasError('min'); erroApi('bocaMaximaMetros'); formulario.controls .caladoMaximoMetros .hasError('min'); erroApi('caladoMaximoMetros'); formulario.controls .alturaMaximaMetros .hasError('min'); erroApi('alturaMaximaMetros'); formulario.controls .pesoMaximoKg .hasError('min'); erroApi('pesoMaximoKg'); erroApi('possuiAgua'); erroApi('possuiEnergia'); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para vagas; Cancelar; save Cadastrar vaga; Abrir menu; anchorNova vaga; Pesquisar; Abrir acoes da vaga; chevron_leftAnterior; chevron_rightProxima; editEditar; block Inativar; anchor Ativar
+- **mensagens_erro_distintas**: Informe o codigo. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png]; Informe o comprimento. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png]; Informe a boca. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png]; Informe o codigo. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png]; Informe o comprimento. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png]; Informe a boca. [visto: validacao-obrigatorios; capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Vaga cadastrada com sucesso. [texto inspecionado na captura de saída desktop]
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **grupos_logicos_lidos**: Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Vagas
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: vagas; execucao-browser.json/efeitos: vagas-cadastrar-abrir, vagas-cadastrar, vagas-cadastrar-abrir
+- **arquivos_fisicos_consultados**: vagas
+- **screenshot_entrada**: capturas/vagas-cadastrar/inicial-desktop.png; capturas/vagas-cadastrar/entrada-desktop.png; capturas/vagas-cadastrar/entrada-mobile.png; capturas/vagas-cadastrar/inicial-mobile.png
+- **screenshot_saida**: capturas/vagas-cadastrar/saida-desktop.png; capturas/vagas-cadastrar/saida-mobile.png
+- **screenshot_erro**: capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png; capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/vagas-cadastrar/entrada-mobile.png; capturas/vagas-cadastrar/saida-mobile.png; capturas/vagas-cadastrar/inicial-mobile.png; capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/vagas/pages/vaga-formulario/vaga-formulario.component.html; POST /api/v1/vagas
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## vagas-alterar — Alterar vaga
+
+- **modulo**: Vagas
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /vagas/:id/editar
+- **acao_do_usuario**: Alterar vaga
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Codigo; Tipo; Setor; Localizacao; Comprimento maximo; Boca maxima; Calado maximo; Altura maxima; Peso maximo; Observacoes; Filtro; Buscar por codigo; Status
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.codigo .hasError('required'); erroApi('codigo'); formulario.controls.tipo .hasError('required'); erroApi('tipo'); erroApi('setor'); erroApi('localizacao'); formulario.controls .comprimentoMaximoMetros .hasError('required'); formulario.controls .comprimentoMaximoMetros .hasError('min'); erroApi( 'comprimentoMaximoMetros' ); formulario.controls .bocaMaximaMetros .hasError('required'); formulario.controls .bocaMaximaMetros .hasError('min'); erroApi('bocaMaximaMetros'); formulario.controls .caladoMaximoMetros .hasError('min'); erroApi('caladoMaximoMetros'); formulario.controls .alturaMaximaMetros .hasError('min'); erroApi('alturaMaximaMetros'); formulario.controls .pesoMaximoKg .hasError('min'); erroApi('pesoMaximoKg'); erroApi('possuiAgua'); erroApi('possuiEnergia'); erroApi('observacoes'); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para vagas; Cancelar; save Salvar alteracoes; Abrir menu; anchorNova vaga; Pesquisar; Abrir acoes da vaga; chevron_leftAnterior; chevron_rightProxima; editEditar; block Inativar; anchor Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **grupos_logicos_lidos**: Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Vagas
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: vagas; execucao-browser.json/efeitos: vagas-alterar-abrir, vagas-alterar, vagas-alterar-abrir
+- **arquivos_fisicos_consultados**: vagas
+- **screenshot_entrada**: capturas/vagas-alterar/inicial-desktop.png; capturas/vagas-alterar/entrada-desktop.png; capturas/vagas-alterar/entrada-mobile.png; capturas/vagas-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/vagas-alterar/saida-desktop.png; capturas/vagas-alterar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/vagas-alterar/entrada-mobile.png; capturas/vagas-alterar/saida-mobile.png; capturas/vagas-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/vagas/pages/vaga-formulario/vaga-formulario.component.html; PUT /api/v1/vagas/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## vagas-inativar — Inativar vaga
+
+- **modulo**: Vagas
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /vagas / ações da linha
+- **acao_do_usuario**: Inativar vaga
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Filtro; Buscar por codigo; Tipo; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === vaga.id; alterandoStatusId() === vaga.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; anchorNova vaga; Pesquisar; Abrir acoes da vaga; chevron_leftAnterior; chevron_rightProxima; Abrir menu; editEditar; block Inativar; anchor Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: block Inativar vaga? A vaga AUD-01 deixara de ficar disponivel para novas operacoes. O cadastro nao sera excluido e podera ser reativado posteriormente. Cancelar Inativar
+- **campos_saida_visiveis**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **grupos_logicos_lidos**: Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Vagas
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: vagas; execucao-browser.json/efeitos: vagas-inativar
+- **arquivos_fisicos_consultados**: vagas
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/vagas-inativar/saida-desktop.png; capturas/vagas-inativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/vagas-inativar/confirmacao-mobile.png; capturas/vagas-inativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/vagas/pages/vaga-listagem/vaga-listagem.component.html; PATCH /api/v1/vagas/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## vagas-ativar — Ativar vaga
+
+- **modulo**: Vagas
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /vagas / ações da linha
+- **acao_do_usuario**: Ativar vaga
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Filtro; Buscar por codigo; Tipo; Status
+- **campos_condicionais**: busca.value; carregando(); telaDesktop(); alterandoStatusId() === vaga.id; alterandoStatusId() === vaga.id
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; anchorNova vaga; Pesquisar; Abrir acoes da vaga; chevron_leftAnterior; chevron_rightProxima; Abrir menu; editEditar; anchor Ativar; block Inativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: anchor Ativar vaga? A vaga AUD-01 voltara a aparecer nas operacoes da marina. O cadastro permanecera com as mesmas dimensoes, infraestrutura e historico. Cancelar Ativar
+- **campos_saida_visiveis**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Acoes; Dimensoes; Infraestrutura; Status; Tipo; Vaga
+- **grupos_logicos_lidos**: Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Vagas
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: vagas; execucao-browser.json/efeitos: vagas-ativar
+- **arquivos_fisicos_consultados**: vagas
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/vagas-ativar/saida-desktop.png; capturas/vagas-ativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/vagas-ativar/confirmacao-mobile.png; capturas/vagas-ativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/vagas/pages/vaga-listagem/vaga-listagem.component.html; PATCH /api/v1/vagas/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Alternância de situação; preserva histórico. Não é exclusão física.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ocupacoes-consultar — Pesquisar e listar ocupacoes
+
+- **modulo**: Ocupações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ocupacoes
+- **acao_do_usuario**: Pesquisar e listar ocupacoes
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Vaga; Status
+- **campos_condicionais**: carregando(); telaDesktop(); ocupacao.status === 'ATIVA'; encerrandoId() === ocupacao.id; ocupacao.status === 'ATIVA'; encerrandoId() === ocupacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add_home_workNova ocupação; filter_alt_offLimpar filtros; Abrir ações da ocupação; Abrir menu; editEditar; logout Encerrar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **grupos_logicos_lidos**: Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: ocupacoes-consultar-abrir, ocupacoes-consultar-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/ocupacoes-consultar/inicial-desktop.png; capturas/ocupacoes-consultar/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/ocupacoes-consultar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ocupacoes/pages/ocupacao-listagem/ocupacao-listagem.component.html; GET /api/v1/ocupacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ocupacoes-cadastrar — Cadastrar ocupacao
+
+- **modulo**: Ocupações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ocupacoes/nova
+- **acao_do_usuario**: Cadastrar ocupacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Vaga; Início da ocupação; Fim previsto; Observações; Status
+- **campos_condicionais**: carregando(); mensagemErro(); semOpcoesDisponiveis(); formulario.controls .embarcacaoId .hasError('required'); erroApi('embarcacaoId'); formulario.controls .vagaId .hasError('required'); erroApi('vagaId'); embarcacaoSelecionada() || vagaSelecionada(); embarcacaoSelecionada(); as embarcacao; vagaSelecionada(); as vaga; incompatibilidades().length > 0; formulario.controls.inicioEm .hasError('required'); formulario.controls.inicioEm .hasError('inicioFuturo'); formulario.controls.inicioEm .hasError('dataInvalida'); erroApi('inicioEm'); formulario.hasError( 'fimNaoPosterior' ) && formulario.controls .fimPrevistoEm.touched; formulario.hasError( 'periodoInvalido' ) && formulario.controls .fimPrevistoEm.touched; erroApi('fimPrevistoEm'); formulario.controls .observacoes .hasError('maxlength'); erroApi('observacoes'); !ocupacaoEncerrada(); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para ocupações; Cancelar; save Registrar ocupação; Abrir menu; add_home_workNova ocupação; filter_alt_offLimpar filtros; Abrir ações da ocupação; editEditar; logout Encerrar
+- **mensagens_erro_distintas**: Selecione uma embarcação. [visto: validacao-obrigatorios; capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png]; Selecione uma vaga. [visto: validacao-obrigatorios; capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Ocupação registrada com sucesso. [texto inspecionado na captura de saída desktop]
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **grupos_logicos_lidos**: Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Ocupações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: ocupacoes; execucao-browser.json/efeitos: ocupacoes-cadastrar-abrir, ocupacoes-cadastrar, ocupacoes-cadastrar-abrir
+- **arquivos_fisicos_consultados**: ocupacoes
+- **screenshot_entrada**: capturas/ocupacoes-cadastrar/inicial-desktop.png; capturas/ocupacoes-cadastrar/entrada-desktop.png; capturas/ocupacoes-cadastrar/entrada-mobile.png; capturas/ocupacoes-cadastrar/inicial-mobile.png
+- **screenshot_saida**: capturas/ocupacoes-cadastrar/saida-desktop.png; capturas/ocupacoes-cadastrar/saida-mobile.png
+- **screenshot_erro**: capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/ocupacoes-cadastrar/entrada-mobile.png; capturas/ocupacoes-cadastrar/saida-mobile.png; capturas/ocupacoes-cadastrar/inicial-mobile.png; capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ocupacoes/pages/ocupacao-formulario/ocupacao-formulario.component.html; POST /api/v1/ocupacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ocupacoes-alterar — Alterar ocupacao
+
+- **modulo**: Ocupações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ocupacoes/:id/editar
+- **acao_do_usuario**: Alterar ocupacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Vaga; Início da ocupação; Fim previsto; Observações; Status
+- **campos_condicionais**: carregando(); mensagemErro(); semOpcoesDisponiveis(); formulario.controls .embarcacaoId .hasError('required'); erroApi('embarcacaoId'); formulario.controls .vagaId .hasError('required'); erroApi('vagaId'); embarcacaoSelecionada() || vagaSelecionada(); embarcacaoSelecionada(); as embarcacao; vagaSelecionada(); as vaga; incompatibilidades().length > 0; formulario.controls.inicioEm .hasError('required'); formulario.controls.inicioEm .hasError('inicioFuturo'); formulario.controls.inicioEm .hasError('dataInvalida'); erroApi('inicioEm'); formulario.hasError( 'fimNaoPosterior' ) && formulario.controls .fimPrevistoEm.touched; formulario.hasError( 'periodoInvalido' ) && formulario.controls .fimPrevistoEm.touched; erroApi('fimPrevistoEm'); formulario.controls .observacoes .hasError('maxlength'); erroApi('observacoes'); !ocupacaoEncerrada(); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para ocupações; Cancelar; save Salvar alterações; Abrir menu; add_home_workNova ocupação; filter_alt_offLimpar filtros; Abrir ações da ocupação; editEditar; logout Encerrar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **grupos_logicos_lidos**: Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Ocupações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: ocupacoes; execucao-browser.json/efeitos: ocupacoes-alterar-abrir, ocupacoes-alterar, ocupacoes-alterar-abrir
+- **arquivos_fisicos_consultados**: ocupacoes
+- **screenshot_entrada**: capturas/ocupacoes-alterar/inicial-desktop.png; capturas/ocupacoes-alterar/entrada-desktop.png; capturas/ocupacoes-alterar/entrada-mobile.png; capturas/ocupacoes-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/ocupacoes-alterar/saida-desktop.png; capturas/ocupacoes-alterar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/ocupacoes-alterar/entrada-mobile.png; capturas/ocupacoes-alterar/saida-mobile.png; capturas/ocupacoes-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ocupacoes/pages/ocupacao-formulario/ocupacao-formulario.component.html; PUT /api/v1/ocupacoes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-consultar — Pesquisar e listar movimentacoes
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes
+- **acao_do_usuario**: Pesquisar e listar movimentacoes
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Status; Tipo; Embarcação; Início do período; Fim do período
+- **campos_condicionais**: carregandoEmbarcacoes(); carregando(); telaDesktop(); possuiAcao(movimentacao); operacaoId() === movimentacao.id; movimentacao.status === 'AGENDADA'; movimentacao.status === 'EM_EXECUCAO'; possuiAcao(movimentacao); operacaoId() === movimentacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Movimentações; Embarcações; Posições; Vagas; Usuários (responsável); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: movimentacoes-consultar-abrir, movimentacoes-consultar-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/movimentacoes-consultar/inicial-desktop.png; capturas/movimentacoes-consultar/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/movimentacoes-consultar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component.html; GET /api/v1/movimentacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-cadastrar — Cadastrar movimentacao
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes/nova
+- **acao_do_usuario**: Cadastrar movimentacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Tipo de movimentação; Prioridade; Tipo de destino; Descrição do destino; Agendada para; Operador responsável; Observações; Status; Tipo; Início do período; Fim do período
+- **campos_condicionais**: carregando(); mensagemErro(); semEmbarcacoesDisponiveis(); formulario.controls .embarcacaoId .hasError('required'); erroApi('embarcacaoId'); opcao.disponivel === false; ocupacaoAtivaSelecionada(); formulario.controls.tipo .hasError('required'); erroApi('tipo'); carregandoPosicao(); tipoSelecionado(); opcao.valor === tipoSelecionado(); erroApi('prioridade'); formulario.controls .tipoPosicaoDestino .hasError('required'); erroApi('tipoPosicaoDestino'); tipoDestinoSelecionado() === 'VAGA'; tipoSelecionado() === 'RETIRADA' || tipoSelecionado() === 'RETORNO_PARA_VAGA'; formulario.controls .vagaDestinoId .hasError('required'); erroApi('vagaDestinoId'); formulario.controls .descricaoDestino .hasError('maxlength'); erroApi('descricaoDestino'); vagaDestinoSelecionada(); as vaga; incompatibilidades().length > 0; formulario.controls .agendadaPara .hasError('required'); formulario.controls .agendadaPara .hasError('dataInvalida'); erroApi('agendadaPara'); erroApi('operadorResponsavelId'); formulario.controls .observacoes .hasError('maxlength'); erroApi('observacoes'); !somenteConsulta(); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para movimentações; Cancelar; save Agendar movimentação; Abrir menu; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Ações da movimentação de Barco Auditoria; edit Editar; play_arrow Iniciar; cancel Cancelar
+- **mensagens_erro_distintas**: error_outlineSelecione uma embarcação com posição atual disponível. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png]; Selecione uma embarcação. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png]; Selecione o tipo de movimentação. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png]; Selecione o tipo de destino. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png]; error_outlineSelecione uma embarcação com posição atual disponível. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png]; Selecione uma embarcação. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png]; Selecione o tipo de movimentação. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png]; Selecione o tipo de destino. [visto: validacao-obrigatorios; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **grupos_logicos_lidos**: Movimentações; Embarcações; Posições; Vagas; Usuários (responsável); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Movimentações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_movimentacoes, movimentacoes; execucao-browser.json/efeitos: movimentacoes-cadastrar-abrir, movimentacoes-cadastrar, movimentacoes-cadastrar-abrir
+- **arquivos_fisicos_consultados**: historicos_movimentacoes; movimentacoes
+- **screenshot_entrada**: capturas/movimentacoes-cadastrar/inicial-desktop.png; capturas/movimentacoes-cadastrar/entrada-desktop.png; capturas/movimentacoes-cadastrar/entrada-mobile.png; capturas/movimentacoes-cadastrar/inicial-mobile.png
+- **screenshot_saida**: capturas/movimentacoes-cadastrar/saida-desktop.png; capturas/movimentacoes-cadastrar/saida-mobile.png
+- **screenshot_erro**: capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/movimentacoes-cadastrar/entrada-mobile.png; capturas/movimentacoes-cadastrar/saida-mobile.png; capturas/movimentacoes-cadastrar/inicial-mobile.png; capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-formulario/movimentacao-formulario.component.html; POST /api/v1/movimentacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-alterar — Alterar movimentacao
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes/:id/editar
+- **acao_do_usuario**: Alterar movimentacao
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Tipo de movimentação; Prioridade; Tipo de destino; Descrição do destino; Agendada para; Operador responsável; Observações; Status; Tipo; Início do período; Fim do período
+- **campos_condicionais**: carregando(); mensagemErro(); semEmbarcacoesDisponiveis(); formulario.controls .embarcacaoId .hasError('required'); erroApi('embarcacaoId'); opcao.disponivel === false; ocupacaoAtivaSelecionada(); formulario.controls.tipo .hasError('required'); erroApi('tipo'); carregandoPosicao(); tipoSelecionado(); opcao.valor === tipoSelecionado(); erroApi('prioridade'); formulario.controls .tipoPosicaoDestino .hasError('required'); erroApi('tipoPosicaoDestino'); tipoDestinoSelecionado() === 'VAGA'; tipoSelecionado() === 'RETIRADA' || tipoSelecionado() === 'RETORNO_PARA_VAGA'; formulario.controls .vagaDestinoId .hasError('required'); erroApi('vagaDestinoId'); formulario.controls .descricaoDestino .hasError('maxlength'); erroApi('descricaoDestino'); vagaDestinoSelecionada(); as vaga; incompatibilidades().length > 0; formulario.controls .agendadaPara .hasError('required'); formulario.controls .agendadaPara .hasError('dataInvalida'); erroApi('agendadaPara'); erroApi('operadorResponsavelId'); formulario.controls .observacoes .hasError('maxlength'); erroApi('observacoes'); !somenteConsulta(); salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Voltar para movimentações; Cancelar; save Salvar alterações; Abrir menu; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Ações da movimentação de Barco Auditoria; edit Editar; play_arrow Iniciar; cancel Cancelar
+- **mensagens_erro_distintas**: error_outlineSomente movimentações agendadas podem ser editadas. [visto: inicial; capturas/movimentacoes-alterar/inicial-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **grupos_logicos_lidos**: Movimentações; Embarcações; Posições; Vagas; Usuários (responsável); proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Movimentações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_movimentacoes, movimentacoes; execucao-browser.json/efeitos: movimentacoes-alterar, movimentacoes-alterar-abrir
+- **arquivos_fisicos_consultados**: historicos_movimentacoes; movimentacoes
+- **screenshot_entrada**: capturas/movimentacoes-alterar/entrada-desktop.png; capturas/movimentacoes-alterar/entrada-mobile.png; capturas/movimentacoes-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/movimentacoes-alterar/saida-desktop.png; capturas/movimentacoes-alterar/saida-mobile.png
+- **screenshot_erro**: capturas/movimentacoes-alterar/inicial-mobile.png
+- **screenshot_mobile**: capturas/movimentacoes-alterar/entrada-mobile.png; capturas/movimentacoes-alterar/saida-mobile.png; capturas/movimentacoes-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-formulario/movimentacao-formulario.component.html; PUT /api/v1/movimentacoes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-consultar — Pesquisar e listar contratos
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos
+- **acao_do_usuario**: Pesquisar e listar contratos
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Status; Cliente; Embarcação
+- **campos_condicionais**: carregando(); podeEditar(contrato); podeEditar(contrato); !carregando() && totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add Novo contrato; filter_alt_off Limpar; search Filtrar; Abrir menu; visibility Detalhes
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; Clientes; Embarcações; Ocupações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: contratos-consultar-abrir, contratos-consultar-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/contratos-consultar/inicial-desktop.png; capturas/contratos-consultar/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-consultar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-listagem/contrato-listagem.component.html; GET /api/v1/contratos
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-cadastrar — Cadastrar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/novo
+- **acao_do_usuario**: Cadastrar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Cliente; Embarcação; Tipo de acomodação; Periodicidade; Data de início; Data de término; Valor base; Dia do vencimento; Observações
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.clienteId.hasError("required"); formulario.controls.embarcacaoId.hasError("required"); formulario.controls.tipoVagaContratada.hasError("required"); formulario.controls.periodicidade.hasError("required"); formulario.controls.dataInicio.hasError("required"); formulario.hasError("dataFimObrigatoria") && formulario.controls.dataFim.touched; formulario.controls.valorBase.hasError("required"); formulario.controls.diaVencimento.invalid && formulario.controls.diaVencimento.touched; formulario.controls.renovacaoAutomatica.value; formulario.hasError("avisoPrevioObrigatorio") && formulario.controls.diasAvisoPrevio.touched; salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Cancelar; save Criar contrato; Abrir menu; edit Editar rascunho; draw Enviar para assinatura; cancel Cancelar
+- **mensagens_erro_distintas**: Selecione o cliente. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Selecione a acomodação. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Selecione a periodicidade. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Informe a data de início. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Informe o valor base. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Informe um dia entre 1 e 31. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png]; Selecione o cliente. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]; Selecione a acomodação. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]; Selecione a periodicidade. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]; Informe a data de início. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]; Informe o valor base. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]; Informe um dia entre 1 e 31. [visto: validacao-obrigatorios; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; Clientes; Embarcações; Ocupações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato, sequencias_contrato; execucao-browser.json/efeitos: contratos-cadastrar-abrir, contratos-cadastrar, contratos-cadastrar-abrir
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato; sequencias_contrato
+- **screenshot_entrada**: capturas/contratos-cadastrar/inicial-desktop.png; capturas/contratos-cadastrar/entrada-desktop.png; capturas/contratos-cadastrar/entrada-mobile.png; capturas/contratos-cadastrar/inicial-mobile.png
+- **screenshot_saida**: capturas/contratos-cadastrar/saida-desktop.png; capturas/contratos-cadastrar/saida-mobile.png
+- **screenshot_erro**: capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png
+- **screenshot_mobile**: capturas/contratos-cadastrar/entrada-mobile.png; capturas/contratos-cadastrar/saida-mobile.png; capturas/contratos-cadastrar/inicial-mobile.png; capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-formulario/contrato-formulario.component.html; POST /api/v1/contratos
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-alterar — Alterar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id/editar
+- **acao_do_usuario**: Alterar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Cliente; Embarcação; Tipo de acomodação; Periodicidade; Data de início; Data de término; Valor base; Dia do vencimento; Observações
+- **campos_condicionais**: carregando(); mensagemErro(); formulario.controls.clienteId.hasError("required"); formulario.controls.embarcacaoId.hasError("required"); formulario.controls.tipoVagaContratada.hasError("required"); formulario.controls.periodicidade.hasError("required"); formulario.controls.dataInicio.hasError("required"); formulario.hasError("dataFimObrigatoria") && formulario.controls.dataFim.touched; formulario.controls.valorBase.hasError("required"); formulario.controls.diaVencimento.invalid && formulario.controls.diaVencimento.touched; formulario.controls.renovacaoAutomatica.value; formulario.hasError("avisoPrevioObrigatorio") && formulario.controls.diasAvisoPrevio.touched; salvando()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Cancelar; save Salvar alterações; Abrir menu; edit Editar rascunho; draw Enviar para assinatura; cancel Cancelar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; Clientes; Embarcações; Ocupações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-alterar, contratos-alterar-abrir
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**: capturas/contratos-alterar/entrada-desktop.png; capturas/contratos-alterar/entrada-mobile.png; capturas/contratos-alterar/inicial-mobile.png
+- **screenshot_saida**: capturas/contratos-alterar/saida-desktop.png; capturas/contratos-alterar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-alterar/entrada-mobile.png; capturas/contratos-alterar/saida-mobile.png; capturas/contratos-alterar/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-formulario/contrato-formulario.component.html; PUT /api/v1/contratos/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ocupacoes-encerrar — Encerrar ocupação
+
+- **modulo**: Ocupações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ocupacoes / ações da linha
+- **acao_do_usuario**: Encerrar ocupação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Embarcação; Vaga; Status
+- **campos_condicionais**: carregando(); telaDesktop(); ocupacao.status === 'ATIVA'; encerrandoId() === ocupacao.id; ocupacao.status === 'ATIVA'; encerrandoId() === ocupacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add_home_workNova ocupação; filter_alt_offLimpar filtros; Abrir ações da ocupação; Abrir menu; editEditar; logout Encerrar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: logout Encerrar ocupação? A ocupação da embarcação Barco Auditoria na vaga AUD-01 será encerrada agora. A vaga e a embarcação ficarão disponíveis para uma nova ocupação. Esta ação preserva o histórico e não poderá ser desfeita. Cancelar Encerrar
+- **campos_saida_visiveis**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Ações; Embarcação; Período; Proprietário; Status; Vaga
+- **grupos_logicos_lidos**: Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Ocupações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: ocupacoes; execucao-browser.json/efeitos: ocupacoes-encerrar
+- **arquivos_fisicos_consultados**: ocupacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/ocupacoes-encerrar/saida-desktop.png; capturas/ocupacoes-encerrar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/ocupacoes-encerrar/confirmacao-mobile.png; capturas/ocupacoes-encerrar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ocupacoes/pages/ocupacao-listagem/ocupacao-listagem.component.html; PATCH /api/v1/ocupacoes/{id}/encerramento
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-iniciar — Iniciar movimentação
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes / ações da linha
+- **acao_do_usuario**: Iniciar movimentação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Status; Tipo; Embarcação; Início do período; Fim do período
+- **campos_condicionais**: carregandoEmbarcacoes(); carregando(); telaDesktop(); possuiAcao(movimentacao); operacaoId() === movimentacao.id; movimentacao.status === 'AGENDADA'; movimentacao.status === 'EM_EXECUCAO'; possuiAcao(movimentacao); operacaoId() === movimentacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Ações da movimentação de Barco Auditoria; Abrir menu; edit Editar; play_arrow Iniciar; cancel Cancelar; check_circle Concluir movimentação
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: play_arrow Iniciar movimentação? A movimentação da embarcação Barco Auditoria será iniciada agora. Após o início, ela não poderá ser editada nem cancelada. Cancelar Iniciar
+- **campos_saida_visiveis**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **grupos_logicos_lidos**: Movimentações; Posições; Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Movimentações; histórico
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_movimentacoes, movimentacoes; execucao-browser.json/efeitos: movimentacoes-iniciar
+- **arquivos_fisicos_consultados**: historicos_movimentacoes; movimentacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/movimentacoes-iniciar/saida-desktop.png; capturas/movimentacoes-iniciar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/movimentacoes-iniciar/confirmacao-mobile.png; capturas/movimentacoes-iniciar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component.html; PATCH /api/v1/movimentacoes/{id}/inicio
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-concluir — Concluir movimentação
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes / ações da linha
+- **acao_do_usuario**: Concluir movimentação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Status; Tipo; Embarcação; Início do período; Fim do período
+- **campos_condicionais**: carregandoEmbarcacoes(); carregando(); telaDesktop(); possuiAcao(movimentacao); operacaoId() === movimentacao.id; movimentacao.status === 'AGENDADA'; movimentacao.status === 'EM_EXECUCAO'; possuiAcao(movimentacao); operacaoId() === movimentacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Ações da movimentação de Barco Auditoria; Abrir menu; check_circle Concluir movimentação
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Movimentação concluída com sucesso. [texto inspecionado na captura de saída desktop]
+- **confirmacoes_modal**: check_circle Concluir movimentação? Confirme que a embarcação Barco Auditoria chegou ao destino. A posição atual da embarcação e, quando aplicável, a ocupação serão atualizadas. Cancelar Concluir
+- **campos_saida_visiveis**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **grupos_logicos_lidos**: Movimentações; Posições; Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Movimentações; histórico; Posições/Ocupações conforme destino
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_movimentacoes, movimentacoes, posicoes_embarcacoes; execucao-browser.json/efeitos: movimentacoes-concluir
+- **arquivos_fisicos_consultados**: historicos_movimentacoes; movimentacoes; posicoes_embarcacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/movimentacoes-concluir/saida-desktop.png; capturas/movimentacoes-concluir/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/movimentacoes-concluir/confirmacao-mobile.png; capturas/movimentacoes-concluir/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component.html; PATCH /api/v1/movimentacoes/{id}/conclusao
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-cancelar — Cancelar movimentação
+
+- **modulo**: Movimentações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /movimentacoes / ações da linha
+- **acao_do_usuario**: Cancelar movimentação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Status; Tipo; Embarcação; Início do período; Fim do período
+- **campos_condicionais**: carregandoEmbarcacoes(); carregando(); telaDesktop(); possuiAcao(movimentacao); operacaoId() === movimentacao.id; movimentacao.status === 'AGENDADA'; movimentacao.status === 'EM_EXECUCAO'; possuiAcao(movimentacao); operacaoId() === movimentacao.id; totalPaginas() > 1
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; add Nova movimentação; date_range Aplicar período; filter_alt_off Limpar filtros; Ações da movimentação de Barco Auditoria; Abrir menu; edit Editar; play_arrow Iniciar; cancel Cancelar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Cancelar movimentação Informe o motivo do cancelamento da movimentação da embarcação Barco Auditoria. Motivo do cancelamento 0/1000 Voltar Cancelar movimentação
+- **campos_saida_visiveis**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Agendamento; Ações; Embarcação; Operador; Origem e destino; Prioridade; Status; Tipo
+- **grupos_logicos_lidos**: Movimentações; Posições; Ocupações; Vagas; Embarcações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Movimentações; histórico
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_movimentacoes, movimentacoes; execucao-browser.json/efeitos: movimentacoes-cancelar
+- **arquivos_fisicos_consultados**: historicos_movimentacoes; movimentacoes
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/movimentacoes-cancelar/saida-desktop.png; capturas/movimentacoes-cancelar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/movimentacoes-cancelar/confirmacao-mobile.png; capturas/movimentacoes-cancelar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component.html; PATCH /api/v1/movimentacoes/{id}/cancelamento
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## movimentacoes-historico — Consultar eventos de uma movimentação
+
+- **modulo**: Movimentações
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Consultar eventos de uma movimentação
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em GET /api/v1/movimentacoes/{id}/historico
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Movimentações e seu histórico; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: movimentacoes-historico
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/movimentacoes/{id}/historico; GET /api/v1/movimentacoes/{id}/historico
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Controller existente; listagem não apresenta botão de histórico. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## posicao-primeira-consulta — Obter ou inicializar posição da embarcação
+
+- **modulo**: Posições
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Exibida ao selecionar embarcação em movimentações
+- **acao_do_usuario**: Obter ou inicializar posição da embarcação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Embarcações; Ocupações; Posições; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Posições na primeira consulta
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: posicoes_embarcacoes; execucao-browser.json/efeitos: posicao-primeira-consulta
+- **arquivos_fisicos_consultados**: posicoes_embarcacoes
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/embarcacoes/{id}/posicao; GET /api/v1/embarcacoes/{id}/posicao
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Efeito colateral verificado: pode persistir posição inicial. Não considerar consulta sem manutenção. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## posicoes-listar — Consultar posições atuais
+
+- **modulo**: Posições
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela própria; painel operacional
+- **acao_do_usuario**: Consultar posições atuais
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em GET /api/v1/posicoes-embarcacoes
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Posições; Embarcações; Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: posicoes-listar
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/posicoes-embarcacoes; GET /api/v1/posicoes-embarcacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:  Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-detalhe — Consultar condições, vínculos e histórico do contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA
+- **rota_ou_dialogo**: /contratos/:id
+- **acao_do_usuario**: Consultar condições, vínculos e histórico do contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Abrir menu; Sair do Caisora
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; Clientes; Embarcações; vínculos/histórico; Ocupações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: contratos-detalhe-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/contratos-detalhe/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-detalhe/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; GET /api/v1/contratos/{id}; /ocupacoes; /historico
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-enviar — Enviar para assinatura
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Enviar para assinatura
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; edit Editar rascunho; draw Enviar para assinatura; cancel Cancelar; Abrir menu; task_alt Ativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: drawEnviar contrato para assinatura?Os dados comerciais deixarão de ser editáveis. Revise cliente, embarcação, vigência e valor antes de continuar. Observação do envio 0/1000 Cancelar Enviar para assinatura
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-enviar
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-enviar/saida-desktop.png; capturas/contratos-enviar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-enviar/confirmacao-mobile.png; capturas/contratos-enviar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/enviar-para-assinatura
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-ativar — Ativar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Ativar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; task_alt Ativar; cancel Cancelar; Abrir menu; pause_circle Suspender; pending_actions Solicitar encerramento; link Vincular
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: task_altAtivar contrato?Confirme a data em que o contrato foi assinado. Data da assinatura Observação da ativação 0/1000 Cancelar Ativar contrato
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-ativar
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-ativar/saida-desktop.png; capturas/contratos-ativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-ativar/confirmacao-mobile.png; capturas/contratos-ativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/ativar
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-suspender — Suspender contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Suspender contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; pause_circle Suspender; pending_actions Solicitar encerramento; link Vincular; Abrir menu; play_circle Reativar
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: pause_circleSuspender contrato?O vínculo comercial permanecerá existente, mas ficará suspenso. Motivo da suspensão 0/1000 Cancelar Suspender
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-suspender
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-suspender/saida-desktop.png; capturas/contratos-suspender/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-suspender/confirmacao-mobile.png; capturas/contratos-suspender/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/suspender
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-reativar — Reativar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Reativar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; play_circle Reativar; pending_actions Solicitar encerramento; Abrir menu; pause_circle Suspender; link Vincular
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: play_circleReativar contrato?O contrato voltará ao estado ativo. Observação da reativação 0/1000 Cancelar Reativar
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-reativar
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-reativar/saida-desktop.png; capturas/contratos-reativar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-reativar/confirmacao-mobile.png; capturas/contratos-reativar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/reativar
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-solicitar-encerramento — Solicitar encerramento
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Solicitar encerramento
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; pause_circle Suspender; pending_actions Solicitar encerramento; link Vincular; Abrir menu; event_busy Encerrar contrato
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: pending_actionsIniciar encerramento?O contrato passará para o estado Em encerramento. A ocupação não será encerrada até a conclusão formal do contrato. Motivo do encerramento 0/1000 Cancelar Iniciar encerramento
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-solicitar-encerramento
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-solicitar-encerramento/saida-desktop.png; capturas/contratos-solicitar-encerramento/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-solicitar-encerramento/confirmacao-mobile.png; capturas/contratos-solicitar-encerramento/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/solicitar-encerramento
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-encerrar — Encerrar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Encerrar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; event_busy Encerrar contrato; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: event_busyEncerrar contrato?Esta ação finaliza o vínculo comercial e o vínculo de ocupação aberto. Data de encerramento Descrição do encerramento 0/1000 Cancelar Encerrar contrato
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-encerrar
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-encerrar/saida-desktop.png; capturas/contratos-encerrar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-encerrar/confirmacao-mobile.png; capturas/contratos-encerrar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/encerrar
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-cancelar — Cancelar contrato
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Cancelar contrato
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; edit Editar rascunho; draw Enviar para assinatura; cancel Cancelar; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: cancelCancelar contrato?O contrato será cancelado antes da ativação. Motivo do cancelamento 0/1000 Cancelar Cancelar contrato
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: contratos, historicos_contrato; execucao-browser.json/efeitos: contratos-cancelar
+- **arquivos_fisicos_consultados**: contratos; historicos_contrato
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-cancelar/saida-desktop.png; capturas/contratos-cancelar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-cancelar/confirmacao-mobile.png; capturas/contratos-cancelar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/cancelar
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-vincular — Vincular ocupação
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Vincular ocupação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; pause_circle Suspender; pending_actions Solicitar encerramento; link Vincular; Abrir menu; Desvincular ocupação
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_contrato, vinculos_contrato_ocupacao; execucao-browser.json/efeitos: contratos-vincular
+- **arquivos_fisicos_consultados**: historicos_contrato; vinculos_contrato_ocupacao
+- **screenshot_entrada**: capturas/contratos-vincular/entrada-desktop.png; capturas/contratos-vincular/entrada-mobile.png
+- **screenshot_saida**: capturas/contratos-vincular/saida-desktop.png; capturas/contratos-vincular/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/contratos-vincular/entrada-mobile.png; capturas/contratos-vincular/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; POST /api/v1/contratos/{id}/ocupacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## contratos-desvincular — Desvincular ocupação
+
+- **modulo**: Contratos
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /contratos/:id / diálogo ou ação
+- **acao_do_usuario**: Desvincular ocupação
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Ocupação ativa da embarcação
+- **campos_condicionais**: carregando(); podeEditar(); podeEnviarParaAssinatura(); podeAtivar(); podeSuspender(); podeReativar(); podeSolicitarEncerramento(); podeEncerrar(); podeCancelar(); contrato()!.dataEncerramento; contrato()!.observacoes; podeGerenciarOcupacao() && !vinculoAberto(); ocupacoesDisponiveis().length === 0; vinculos().length === 0; vinculo.fimEm; vinculo.motivoFim; vinculo.aberto && podeGerenciarOcupacao(); historico().length === 0; evento.descricao; evento.statusAnterior !== evento.statusNovo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; pause_circle Suspender; pending_actions Solicitar encerramento; link Vincular; Desvincular ocupação; Abrir menu
+- **mensagens_erro_distintas**: Informe o motivo. [visto: motivo-obrigatorio; capturas/contratos-desvincular/motivo-obrigatorio-desktop.png]; Informe o motivo. [visto: motivo-obrigatorio; capturas/contratos-desvincular/motivo-obrigatorio-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: link_offDesvincular ocupação?A vaga S-01 deixará de estar vinculada ao contrato. Motivo do desvínculo 0/1000 Cancelar Desvincular; link_offDesvincular ocupação?A vaga S-01 deixará de estar vinculada ao contrato. Motivo do desvínculo Informe o motivo.Cancelar Desvincular
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Contratos; histórico; Ocupações; vínculos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Contratos e histórico; vínculos conforme ação
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: historicos_contrato, vinculos_contrato_ocupacao; execucao-browser.json/efeitos: contratos-desvincular
+- **arquivos_fisicos_consultados**: historicos_contrato; vinculos_contrato_ocupacao
+- **screenshot_entrada**:
+- **screenshot_saida**: capturas/contratos-desvincular/saida-desktop.png; capturas/contratos-desvincular/saida-mobile.png
+- **screenshot_erro**: capturas/contratos-desvincular/motivo-obrigatorio-desktop.png; capturas/contratos-desvincular/motivo-obrigatorio-mobile.png
+- **screenshot_mobile**: capturas/contratos-desvincular/confirmacao-mobile.png; capturas/contratos-desvincular/motivo-obrigatorio-mobile.png; capturas/contratos-desvincular/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html; DELETE /api/v1/contratos/{id}/ocupacoes/{vinculoId}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Condição por status; botões de status no detalhe são condicionados por status, sem verificação explícita da permissão nessa classe; backend verifica ação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## dashboard — Dashboard operacional
+
+- **modulo**: Operação
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /dashboard
+- **acao_do_usuario**: Dashboard operacional
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: atualizando(); carregandoInicial(); mensagemErro(); painel()!.indicadores.atrasadas > 0; semOperacoesHoje(); painel()!.concluidasRecentemente .length > 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; refresh Atualizar; Abrir painel operacional para TV em nova aba; add Nova movimentação; precision_manufacturing 0 Em execução; schedule 0 Atrasadas; upcoming 0 Próxima hora; priority_high 0 Urgentes abertas; person_off 0 Sem operador; task_alt 0 Concluídas hoje; arrow_forward Ver agenda completa; add Agendar movimentação; task_alt 1 Concluídas hoje; Abrir menu; upcoming 1 Próxima hora; person_off 1 Sem operador; edit Editar; play_arrowIniciar agora
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Em execução; Atrasadas; Próxima hora; Urgentes abertas; Sem operador; Concluídas hoje; filas por janela de tempo e concluídas recentemente; embarcação/proprietário, origem/destino, horário, prioridade, operador e ações nos cartões.
+- **campos_saida_derivados**: Contagem de abertas em execução/atrasadas; agendadas entre agora e agora+1h; abertas urgentes e sem operador; concluídas no dia local; agrupamentos até 30min/2h/restante do dia e recentes.
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Movimentações; Ocupações; Vagas; Embarcações; Posições; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: dashboard-abrir, dashboard-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/dashboard/inicial-desktop.png; capturas/dashboard/inicial-mobile.png
+- **screenshot_saida**: capturas/dashboard/saida-preenchida-desktop.png; capturas/dashboard/saida-preenchida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/dashboard/saida-preenchida-mobile.png; capturas/dashboard/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/dashboard/pages/dashboard/dashboard.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Indicadores derivados candidatos; classificação pendente da equipe.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## painel-tv — Painel operacional TV
+
+- **modulo**: Operação
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /painel-tv
+- **acao_do_usuario**: Painel operacional TV
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: atualizando(); carregando(); quantidadeRestante( painel()!.alertas.length, limiteAlertas ) > 0; quantidadeRestante( painel()!.descidasParaAgua.length, limitePrincipal ) > 0; quantidadeRestante( painel()!.retiradasDaAgua.length, limitePrincipal ) > 0; quantidadeRestante( painel()!.emExecucao.length, limitePrincipal ) > 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Atualizar painel; Entrar em tela cheia; Sair da tela cheia
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Descidas para água; Retiradas da água; Transferências de vaga; Deslocamentos internos; Em execução; Alertas; cartões com embarcação, operação, prioridade, origem/destino, operador e tempo relativo; atualização e relógio.
+- **campos_saida_derivados**: Contagem por tipo e alertas; atraso/tempo até início/duração em execução em minutos arredondados para cima: (segundos+59)/60; próximo até 15min; critérios de alerta do PainelTvOperacionalService.
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Movimentações; Ocupações; Vagas; Embarcações; Posições; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: painel-tv-abrir, painel-tv-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/painel-tv/inicial-desktop.png; capturas/painel-tv/inicial-mobile.png
+- **screenshot_saida**: capturas/painel-tv/saida-preenchida-desktop.png; capturas/painel-tv/saida-preenchida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/painel-tv/saida-preenchida-mobile.png; capturas/painel-tv/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/painel-tv/pages/painel-tv/painel-tv.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Indicadores derivados candidatos; classificação pendente da equipe.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## checklist — Conferir itens antes da saída
+
+- **modulo**: Checklist
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /checklist-saida
+- **acao_do_usuario**: Conferir itens antes da saída
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: concluido()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; task_alt Concluir checklist; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: checklist-abrir, checklist-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/checklist/inicial-desktop.png; capturas/checklist/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/checklist/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/checklist-saida/pages/checklist-saida/checklist-saida.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Protótipo local com retirada/embarcação fixas no template; não lê nem mantém dados de negócio.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## checklist-concluir — Marcar itens e concluir conferência
+
+- **modulo**: Checklist
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /checklist-saida
+- **acao_do_usuario**: Marcar itens e concluir conferência
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: concluido()
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; task_alt Concluir checklist; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: checklist-concluir, checklist-concluir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/checklist-concluir/entrada-desktop.png; capturas/checklist-concluir/entrada-mobile.png
+- **screenshot_saida**: capturas/checklist-concluir/saida-desktop.png; capturas/checklist-concluir/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/checklist-concluir/entrada-mobile.png; capturas/checklist-concluir/saida-mobile.png; capturas/checklist-concluir/apos-recarregar-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/checklist-saida/pages/checklist-saida/checklist-saida.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Marcações perdidas ao recarregar; confirmação de liberação não persiste nem conclui movimentação.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## relatorio-ocupacao — Analisar ocupação instantânea
+
+- **modulo**: Relatórios
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /relatorios
+- **acao_do_usuario**: Analisar ocupação instantânea
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Relatório; Setor (correspondência exata); Tipo de vaga
+- **campos_condicionais**: pode('VAGAS') && pode('OCUPACOES'); pode('MOVIMENTACOES'); pode('CONTRATOS'); tipo === 'ocupacao' || tipo === 'permanencia-vagas'; tipo === 'permanencia-vagas'; tipo === 'movimentacoes'; ocupacao(); as r; movimentacoes(); as r; contratos(); as r; permanencia(); as r; r.resumo.quantidadeOcupacoes === 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Gerar relatório; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Total; Ocupadas; Disponíveis; Taxa de ocupação (%); Setor; Tipo; Ativas; Ocupadas; Disponíveis; Ocupação (%).
+- **campos_saida_derivados**: Taxa = ocupadas ativas / total de vagas ativas × 100; total zero → 0%; grupos por tipo/setor; disponíveis = ativas − ocupadas.
+- **tabelas_listagens**: Ativas; Disponíveis; Ocupadas; Ocupação; Setor; Tipo
+- **grupos_logicos_lidos**: Vagas; Ocupações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: relatorio-ocupacao, relatorio-ocupacao
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/relatorio-ocupacao/entrada-desktop.png; capturas/relatorio-ocupacao/entrada-mobile.png
+- **screenshot_saida**: capturas/relatorio-ocupacao/saida-desktop.png; capturas/relatorio-ocupacao/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/relatorio-ocupacao/entrada-mobile.png; capturas/relatorio-ocupacao/saida-mobile.png; capturas/relatorio-ocupacao/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/relatorios/relatorios.component.html; GET /api/v1/relatorios/ocupacao
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:   Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## relatorio-movimentacoes — Analisar desempenho operacional
+
+- **modulo**: Relatórios
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /relatorios
+- **acao_do_usuario**: Analisar desempenho operacional
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Relatório; Data inicial de agendamento (UTC); Data final; Tipo de movimentação
+- **campos_condicionais**: pode('VAGAS') && pode('OCUPACOES'); pode('MOVIMENTACOES'); pode('CONTRATOS'); tipo === 'ocupacao' || tipo === 'permanencia-vagas'; tipo === 'permanencia-vagas'; tipo === 'movimentacoes'; ocupacao(); as r; movimentacoes(); as r; contratos(); as r; permanencia(); as r; r.resumo.quantidadeOcupacoes === 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Gerar relatório; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Total; Concluídas; Canceladas; Tempo médio (segundos); Amostras de duração; No prazo (quantidade e %); regra de pontualidade; Situação; Quantidade.
+- **campos_saida_derivados**: Duração = conclusão − início; média somente amostras completas e cronológicas; pontual = conclusão <= agendadaPara; percentual pontuais / concluídas × 100; zero concluídas → 0%.
+- **tabelas_listagens**: Quantidade; Situação
+- **grupos_logicos_lidos**: Movimentações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: relatorio-movimentacoes, relatorio-movimentacoes
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/relatorio-movimentacoes/entrada-desktop.png; capturas/relatorio-movimentacoes/entrada-mobile.png; capturas/relatorio-movimentacoes/entrada-preenchida-desktop.png
+- **screenshot_saida**: capturas/relatorio-movimentacoes/saida-desktop.png; capturas/relatorio-movimentacoes/saida-mobile.png; capturas/relatorio-movimentacoes/saida-preenchida-desktop.png; capturas/relatorio-movimentacoes/saida-preenchida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/relatorio-movimentacoes/entrada-mobile.png; capturas/relatorio-movimentacoes/saida-mobile.png; capturas/relatorio-movimentacoes/saida-preenchida-mobile.png; capturas/relatorio-movimentacoes/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/relatorios/relatorios.component.html; GET /api/v1/relatorios/movimentacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:   Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## relatorio-contratos — Analisar carteira de contratos
+
+- **modulo**: Relatórios
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /relatorios
+- **acao_do_usuario**: Analisar carteira de contratos
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Relatório; Data inicial de início; Data final; Situação; Periodicidade
+- **campos_condicionais**: pode('VAGAS') && pode('OCUPACOES'); pode('MOVIMENTACOES'); pode('CONTRATOS'); tipo === 'ocupacao' || tipo === 'permanencia-vagas'; tipo === 'permanencia-vagas'; tipo === 'movimentacoes'; ocupacao(); as r; movimentacoes(); as r; contratos(); as r; permanencia(); as r; r.resumo.quantidadeOcupacoes === 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Gerar relatório; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Total de contratos; Situação; Quantidade; Percentual (%); Periodicidade; Quantidade; Valor-base (R$); aviso de que valores não são pagamentos ou faturamento realizado.
+- **campos_saida_derivados**: Contagens por status e periodicidade; percentual status/total × 100; soma valorBase por periodicidade separada; não receita recebida.
+- **tabelas_listagens**: Percentual; Periodicidade; Quantidade; Situação; Soma dos valores-base (R$)
+- **grupos_logicos_lidos**: Contratos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: relatorio-contratos, relatorio-contratos
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/relatorio-contratos/entrada-desktop.png; capturas/relatorio-contratos/entrada-mobile.png; capturas/relatorio-contratos/entrada-preenchida-desktop.png
+- **screenshot_saida**: capturas/relatorio-contratos/saida-desktop.png; capturas/relatorio-contratos/saida-mobile.png; capturas/relatorio-contratos/saida-preenchida-desktop.png; capturas/relatorio-contratos/saida-preenchida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/relatorio-contratos/entrada-mobile.png; capturas/relatorio-contratos/saida-mobile.png; capturas/relatorio-contratos/saida-preenchida-mobile.png; capturas/relatorio-contratos/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/relatorios/relatorios.component.html; GET /api/v1/relatorios/contratos
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:   Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## relatorio-permanencia-vagas — Analisar permanência histórica
+
+- **modulo**: Relatórios
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /relatorios
+- **acao_do_usuario**: Analisar permanência histórica
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Relatório; Encerramento inicial (UTC); Encerramento final (UTC); Setor (correspondência exata); Tipo de vaga
+- **campos_condicionais**: pode('VAGAS') && pode('OCUPACOES'); pode('MOVIMENTACOES'); pode('CONTRATOS'); tipo === 'ocupacao' || tipo === 'permanencia-vagas'; tipo === 'permanencia-vagas'; tipo === 'movimentacoes'; ocupacao(); as r; movimentacoes(); as r; contratos(); as r; permanencia(); as r; r.resumo.quantidadeOcupacoes === 0
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Gerar relatório; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Ocupações encerradas; Permanência média (segundos); Menor permanência (segundos); Maior permanência (segundos); Total de horas de ocupação; Setor; Tipo; quantidade/média/mínimo/máximo/horas por grupo; sem dados no vazio.
+- **campos_saida_derivados**: Somente ENCERRADAS por encerradaEm em datas inclusivas UTC; duração encerradaEm−inicioEm; média, mínimo, máximo em segundos; soma/3600 em horas; vazio: quantidade e soma zero, média/mín/máx nulos; tipo/setor atuais.
+- **tabelas_listagens**: Encerradas; Máximo (s); Média (s); Mínimo (s); Setor; Tipo; Total (h)
+- **grupos_logicos_lidos**: Ocupações; Vagas; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: relatorio-permanencia-vagas, relatorio-permanencia-vagas
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/relatorio-permanencia-vagas/entrada-desktop.png; capturas/relatorio-permanencia-vagas/entrada-mobile.png
+- **screenshot_saida**: capturas/relatorio-permanencia-vagas/saida-desktop.png; capturas/relatorio-permanencia-vagas/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/relatorio-permanencia-vagas/entrada-mobile.png; capturas/relatorio-permanencia-vagas/saida-mobile.png; capturas/relatorio-permanencia-vagas/vazio-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/relatorios/relatorios.component.html; GET /api/v1/relatorios/permanencia-vagas
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:   Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ambiente-meteorologia — Consultar previsão meteorológica
+
+- **modulo**: Ambiente
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ambiente
+- **acao_do_usuario**: Consultar previsão meteorológica
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Conjunto de dados; Data inicial (UTC); Data final (UTC)
+- **campos_condicionais**: resultado(); as r; r.incompleta; !r.horas.length
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Sair do Caisora; Consultar; Abrir menu
+- **mensagens_erro_distintas**: Integração desabilitada. A plataforma deve revisar os termos e configurar o acesso Open-Meteo [visto: saida-controlada; capturas/ambiente-meteorologia/saida-controlada-desktop.png]; Provedor indisponível — resposta controlada de teste [visto: indisponivel-controlado; capturas/ambiente-meteorologia/indisponivel-controlado-desktop.png]; Integração desabilitada. A plataforma deve revisar os termos e configurar o acesso Open-Meteo [visto: saida-controlada; capturas/ambiente-meteorologia/saida-controlada-mobile.png]; Provedor indisponível — resposta controlada de teste [visto: indisponivel-controlado; capturas/ambiente-meteorologia/indisponivel-controlado-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: Open-Meteo Weather — time, temperature_2m, wind_speed_10m, wind_direction_10m, wind_gusts_10m, precipitation_probability, hourly_units
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: ambiente-meteorologia, ambiente-meteorologia
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/ambiente-meteorologia/entrada-controlada-desktop.png; capturas/ambiente-meteorologia/entrada-controlada-mobile.png
+- **screenshot_saida**: capturas/ambiente-meteorologia/saida-controlada-desktop.png; capturas/ambiente-meteorologia/saida-controlada-mobile.png
+- **screenshot_erro**: capturas/ambiente-meteorologia/saida-controlada-desktop.png; capturas/ambiente-meteorologia/indisponivel-controlado-desktop.png; capturas/ambiente-meteorologia/saida-controlada-mobile.png; capturas/ambiente-meteorologia/indisponivel-controlado-mobile.png
+- **screenshot_mobile**: capturas/ambiente-meteorologia/entrada-controlada-mobile.png; capturas/ambiente-meteorologia/saida-controlada-mobile.png; capturas/ambiente-meteorologia/indisponivel-controlado-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ambiente/ambiente.component.html; GET /api/v1/ambiente/meteorologia
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Capturas com upstream Open-Meteo controlado; nenhuma consulta real adicional nesta auditoria.  Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## ambiente-maritimo — Consultar condições marítimas
+
+- **modulo**: Ambiente
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /ambiente
+- **acao_do_usuario**: Consultar condições marítimas
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Conjunto de dados; Data inicial (UTC); Data final (UTC)
+- **campos_condicionais**: resultado(); as r; r.incompleta; !r.horas.length
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Sair do Caisora; Consultar; Abrir menu
+- **mensagens_erro_distintas**: Integração desabilitada. A plataforma deve revisar os termos e configurar o acesso Open-Meteo [visto: saida-controlada; capturas/ambiente-maritimo/saida-controlada-desktop.png]; Provedor indisponível — resposta controlada de teste [visto: indisponivel-controlado; capturas/ambiente-maritimo/indisponivel-controlado-desktop.png]; Integração desabilitada. A plataforma deve revisar os termos e configurar o acesso Open-Meteo [visto: saida-controlada; capturas/ambiente-maritimo/saida-controlada-mobile.png]; Provedor indisponível — resposta controlada de teste [visto: indisponivel-controlado; capturas/ambiente-maritimo/indisponivel-controlado-mobile.png]
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: Open-Meteo Marine — time, wave_height, wave_direction, wave_period, swell_wave_height, swell_wave_direction, hourly_units
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: ambiente-maritimo, ambiente-maritimo
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/ambiente-maritimo/entrada-controlada-desktop.png; capturas/ambiente-maritimo/entrada-controlada-mobile.png
+- **screenshot_saida**: capturas/ambiente-maritimo/saida-controlada-desktop.png; capturas/ambiente-maritimo/saida-controlada-mobile.png
+- **screenshot_erro**: capturas/ambiente-maritimo/saida-controlada-desktop.png; capturas/ambiente-maritimo/indisponivel-controlado-desktop.png; capturas/ambiente-maritimo/saida-controlada-mobile.png; capturas/ambiente-maritimo/indisponivel-controlado-mobile.png
+- **screenshot_mobile**: capturas/ambiente-maritimo/entrada-controlada-mobile.png; capturas/ambiente-maritimo/saida-controlada-mobile.png; capturas/ambiente-maritimo/indisponivel-controlado-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ambiente/ambiente.component.html; GET /api/v1/ambiente/maritimo
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Capturas com upstream Open-Meteo controlado; nenhuma consulta real adicional nesta auditoria.  Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## referencias-paises — Pesquisar países
+
+- **modulo**: Referências
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: /referencias/paises
+- **acao_do_usuario**: Pesquisar países
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: grupo === 'feriados'; grupo === 'mares'; disponibilidade(); as d; erro() && !disponibilidade(); grupo === 'paises' || grupo === 'municipios'; grupo === 'municipios' || grupo === 'feriados'; grupo === 'feriados'; grupo === 'mares'; resultado(); as r; r.incompleta; grupo === 'mares'; !r.registros.length; c[0] === 'data'
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: IBGE Países — identificação M49, nome, ISO2/ISO3
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: ../apf-aie/paises-desktop-resultado.png; ../apf-aie/paises-mobile-resultado.png
+- **screenshot_saida**: ../apf-aie/paises-desktop-resultado-completo.png; ../apf-aie/paises-mobile-resultado-completo.png
+- **screenshot_erro**:
+- **screenshot_mobile**: ../apf-aie/paises-mobile-erro-controlado.png; ../apf-aie/paises-mobile-tabela-rolada.png; ../apf-aie/paises-mobile-vazio-controlado.png; ../apf-aie/paises-mobile-resultado.png; ../apf-aie/paises-mobile-resultado-completo.png; ../apf-aie/paises-mobile-loading.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/referencias/referencias.component.html; GET /api/v1/referencias/paises; ../apf-aie/README.md; ../apf-aie/consultas-reais.json
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Reutiliza evidências de apf-aie; WorldTides desabilitada e teste controlado separados. Sem execução visual específica; implementação inspecionada estaticamente. Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## referencias-municipios — Pesquisar municípios brasileiros
+
+- **modulo**: Referências
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: /referencias/municipios
+- **acao_do_usuario**: Pesquisar municípios brasileiros
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: grupo === 'feriados'; grupo === 'mares'; disponibilidade(); as d; erro() && !disponibilidade(); grupo === 'paises' || grupo === 'municipios'; grupo === 'municipios' || grupo === 'feriados'; grupo === 'feriados'; grupo === 'mares'; resultado(); as r; r.incompleta; grupo === 'mares'; !r.registros.length; c[0] === 'data'
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: IBGE Localidades — município/código IBGE e UF/código/nome
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: ../apf-aie/municipios-mobile-resultado.png; ../apf-aie/municipios-desktop-resultado.png
+- **screenshot_saida**: ../apf-aie/municipios-mobile-resultado-completo.png; ../apf-aie/municipios-desktop-resultado-completo.png
+- **screenshot_erro**:
+- **screenshot_mobile**: ../apf-aie/municipios-mobile-resultado-completo.png; ../apf-aie/municipios-mobile-erro-controlado.png; ../apf-aie/municipios-mobile-resultado.png; ../apf-aie/municipios-mobile-vazio-controlado.png; ../apf-aie/municipios-mobile-loading.png; ../apf-aie/municipios-mobile-tabela-rolada.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/referencias/referencias.component.html; GET /api/v1/referencias/municipios; ../apf-aie/README.md; ../apf-aie/consultas-reais.json
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Reutiliza evidências de apf-aie; WorldTides desabilitada e teste controlado separados. Sem execução visual específica; implementação inspecionada estaticamente. Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## referencias-feriados — Consultar calendário de feriados
+
+- **modulo**: Referências
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: /referencias/feriados
+- **acao_do_usuario**: Consultar calendário de feriados
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Não observados nesta passagem; rótulos condicionais no rastreio-fontes.json
+- **campos_condicionais**: grupo === 'feriados'; grupo === 'mares'; disponibilidade(); as d; erro() && !disponibilidade(); grupo === 'paises' || grupo === 'municipios'; grupo === 'municipios' || grupo === 'feriados'; grupo === 'feriados'; grupo === 'mares'; resultado(); as r; r.incompleta; grupo === 'mares'; !r.registros.length; c[0] === 'data'
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: BrasilAPI — data/nome/tipo/UF/dia da semana conforme disponibilidade
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: ../apf-aie/feriados-desktop-resultado.png; ../apf-aie/feriados-mobile-resultado.png
+- **screenshot_saida**: ../apf-aie/feriados-mobile-resultado-completo.png; ../apf-aie/feriados-desktop-resultado-completo.png
+- **screenshot_erro**:
+- **screenshot_mobile**: ../apf-aie/feriados-mobile-tabela-rolada.png; ../apf-aie/feriados-mobile-loading.png; ../apf-aie/feriados-mobile-erro-controlado.png; ../apf-aie/feriados-mobile-resultado-completo.png; ../apf-aie/feriados-mobile-vazio-controlado.png; ../apf-aie/feriados-mobile-resultado.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/referencias/referencias.component.html; GET /api/v1/referencias/feriados; ../apf-aie/README.md; ../apf-aie/consultas-reais.json
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Reutiliza evidências de apf-aie; WorldTides desabilitada e teste controlado separados. Sem execução visual específica; implementação inspecionada estaticamente. Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## referencias-mares — Consultar previsões de marés
+
+- **modulo**: Referências
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /referencias/mares
+- **acao_do_usuario**: Consultar previsões de marés
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Data inicial; Quantidade de dias
+- **campos_condicionais**: grupo === 'feriados'; grupo === 'mares'; disponibilidade(); as d; erro() && !disponibilidade(); grupo === 'paises' || grupo === 'municipios'; grupo === 'municipios' || grupo === 'feriados'; grupo === 'feriados'; grupo === 'mares'; resultado(); as r; r.incompleta; grupo === 'mares'; !r.registros.length; c[0] === 'data'
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões. Coordenadas da organização; configuração segura do provedor.
+- **conjunto_botoes_acao**: Sair do Caisora; Países; Municípios; Feriados; Marés; Consultar; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: ; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**: WorldTides — dt/date/type/height/copyright/responseDatum (teste controlado); origem e m conforme contrato
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: ../apf-aie/mares-mobile-resultado.png; ../apf-aie/mares-desktop-resultado.png
+- **screenshot_saida**: ../apf-aie/mares-desktop-resultado-completo.png; ../apf-aie/mares-mobile-resultado-completo.png
+- **screenshot_erro**:
+- **screenshot_mobile**: ../apf-aie/mares-mobile-loading.png; ../apf-aie/mares-mobile-resultado-completo.png; ../apf-aie/mares-mobile-resultado.png; ../apf-aie/mares-mobile-vazio-controlado.png; ../apf-aie/mares-mobile-desabilitada.png; ../apf-aie/mares-mobile-tabela-rolada.png; ../apf-aie/mares-mobile-erro-controlado.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/referencias/referencias.component.html; GET /api/v1/referencias/mares; ../apf-aie/README.md; ../apf-aie/consultas-reais.json
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Reutiliza evidências de apf-aie; WorldTides desabilitada e teste controlado separados.  Campos/fórmulas da tela compartilhada podem depender da seleção; não unir DETs automaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## organizacoes-consultar — Consultar organização
+
+- **modulo**: Organizações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Consultar organização
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em GET /api/v1/organizacoes
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/organizacoes; GET /api/v1/organizacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Somente Administrador da Plataforma; UCP não disponibilizado para verificar vínculo. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## organizacoes-criar — Criar organização
+
+- **modulo**: Organizações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Criar organização
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em POST /api/v1/organizacoes
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Organizações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: organizacoes; execucao-browser.json/efeitos: organizacoes-criar
+- **arquivos_fisicos_consultados**: organizacoes
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; POST /api/v1/organizacoes; POST /api/v1/organizacoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Somente Administrador da Plataforma; UCP não disponibilizado para verificar vínculo. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## organizacoes-alterar — Alterar organização
+
+- **modulo**: Organizações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Alterar organização
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em PUT /api/v1/organizacoes/{id}
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Organizações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: organizacoes; execucao-browser.json/efeitos: organizacoes-alterar
+- **arquivos_fisicos_consultados**: organizacoes
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; PUT /api/v1/organizacoes/{id}; PUT /api/v1/organizacoes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Somente Administrador da Plataforma; UCP não disponibilizado para verificar vínculo. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## organizacoes-inativar — Inativar organização
+
+- **modulo**: Organizações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Inativar organização
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em DELETE /api/v1/organizacoes/{id}
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Organizações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: organizacoes; execucao-browser.json/efeitos: organizacoes-inativar
+- **arquivos_fisicos_consultados**: organizacoes
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; DELETE /api/v1/organizacoes/{id}; DELETE /api/v1/organizacoes/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Somente Administrador da Plataforma; UCP não disponibilizado para verificar vínculo. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## usuarios-consultar — Consultar usuário
+
+- **modulo**: Usuários
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Consultar usuário
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em GET /api/v1/usuarios
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Usuários; Organização; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; GET /api/v1/usuarios; GET /api/v1/usuarios
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Ator segundo política de permissões; perfis Operador/Técnico não implementados. UCP indisponível. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## usuarios-criar — Criar usuário
+
+- **modulo**: Usuários
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Criar usuário
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em POST /api/v1/usuarios
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Usuários; Organização; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Usuários
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: usuarios; execucao-browser.json/efeitos: usuarios-criar
+- **arquivos_fisicos_consultados**: usuarios
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; POST /api/v1/usuarios; POST /api/v1/usuarios
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Ator segundo política de permissões; perfis Operador/Técnico não implementados. UCP indisponível. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## usuarios-alterar — Alterar usuário
+
+- **modulo**: Usuários
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Alterar usuário
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em PUT /api/v1/usuarios/{id}
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Usuários; Organização; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Usuários
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: usuarios; execucao-browser.json/efeitos: usuarios-alterar
+- **arquivos_fisicos_consultados**: usuarios
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; PUT /api/v1/usuarios/{id}; PUT /api/v1/usuarios/{id}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Ator segundo política de permissões; perfis Operador/Técnico não implementados. UCP indisponível. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## usuarios-inativar — Inativar usuário
+
+- **modulo**: Usuários
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Inativar usuário
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em PATCH /api/v1/usuarios/{id}/status
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Usuários; Organização; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Usuários
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: usuarios; execucao-browser.json/efeitos: usuarios-inativar
+- **arquivos_fisicos_consultados**: usuarios
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; PATCH /api/v1/usuarios/{id}/status; PATCH /api/v1/usuarios/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Ator segundo política de permissões; perfis Operador/Técnico não implementados. UCP indisponível. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## usuarios-ativar — Ativar usuário
+
+- **modulo**: Usuários
+- **ator_perfil**: Conforme política backend; sem sessão capturada específica
+- **rota_ou_dialogo**: Sem tela implementada
+- **acao_do_usuario**: Ativar usuário
+- **situacao**: apenas API
+- **campos_entrada_visiveis**: Sem tela implementada; parâmetros da API em PATCH /api/v1/usuarios/{id}/status
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Não observado; ações da fonte em rastreio-fontes.json
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Sem tela
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Usuários; Organização; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Usuários
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: usuarios; execucao-browser.json/efeitos: usuarios-ativar
+- **arquivos_fisicos_consultados**: usuarios
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; PATCH /api/v1/usuarios/{id}/status; PATCH /api/v1/usuarios/{id}/status
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**: Ator segundo política de permissões; perfis Operador/Técnico não implementados. UCP indisponível. Sem execução visual específica; implementação inspecionada estaticamente.
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## localizacao — Consultar coordenadas da marina
+
+- **modulo**: Configurações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /configuracoes/localizacao
+- **acao_do_usuario**: Consultar coordenadas da marina
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Latitude; Longitude
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Salvar localização; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: localizacao-abrir, localizacao-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/localizacao/inicial-desktop.png; capturas/localizacao/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/localizacao/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ambiente/localizacao.component.html; GET /api/v1/minha-organizacao/coordenadas
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## localizacao-salvar — Configurar coordenadas da marina
+
+- **modulo**: Configurações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /configuracoes/localizacao
+- **acao_do_usuario**: Configurar coordenadas da marina
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Latitude; Longitude
+- **campos_condicionais**:
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Salvar localização; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Organizações
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: organizacoes; execucao-browser.json/efeitos: localizacao-salvar
+- **arquivos_fisicos_consultados**: organizacoes
+- **screenshot_entrada**: capturas/localizacao-salvar/entrada-desktop.png; capturas/localizacao-salvar/entrada-mobile.png
+- **screenshot_saida**: capturas/localizacao-salvar/saida-desktop.png; capturas/localizacao-salvar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/localizacao-salvar/entrada-mobile.png; capturas/localizacao-salvar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/ambiente/localizacao.component.html; PUT /api/v1/minha-organizacao/coordenadas
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## variabilidade — Consultar módulos e permissões
+
+- **modulo**: Configurações
+- **ator_perfil**: ADMINISTRADOR_MARINA; ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /configuracoes/variabilidade
+- **acao_do_usuario**: Consultar módulos e permissões
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Perfil
+- **campos_condicionais**: plataforma(); erro() && !configuracao(); carregando(); mensagem(); erro(); !plataforma(); !modulo.ativo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; ; save Salvar permissões; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Disponibilidade de módulos; permissões por perfil; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Nenhum proposto; conferir prova de banco
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: não: hashes e quantidades idênticos; execucao-browser.json/efeitos: variabilidade-abrir, variabilidade-abrir
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**: capturas/variabilidade/inicial-desktop.png; capturas/variabilidade/inicial-mobile.png
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/variabilidade/inicial-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/variabilidade/pages/configuracao-variabilidade/configuracao-variabilidade.component.html;
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## liberar-modulos — Liberar módulos comerciais pela Plataforma
+
+- **modulo**: Configurações
+- **ator_perfil**: ADMINISTRADOR_PLATAFORMA
+- **rota_ou_dialogo**: /configuracoes/variabilidade
+- **acao_do_usuario**: Liberar módulos comerciais pela Plataforma
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Organização (UUID)
+- **campos_condicionais**: plataforma(); erro() && !configuracao(); carregando(); mensagem(); erro(); !plataforma(); !modulo.ativo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; Consultar organização;
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Organizações; Disponibilidade de módulos; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Disponibilidade de módulos
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: indeterminado: sem comparação de banco específica nesta auditoria
+- **arquivos_fisicos_consultados**: Ver hashes por tabela no manifesto; nomes físicos não definem ALI
+- **screenshot_entrada**:
+- **screenshot_saida**:
+- **screenshot_erro**:
+- **screenshot_mobile**:
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/variabilidade/pages/configuracao-variabilidade/configuracao-variabilidade.component.html; PUT /api/v1/organizacoes/{organizacaoId}/modulos/{modulo}
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386
+
+## permissoes-salvar — Gerenciar permissões internas pela Marina
+
+- **modulo**: Configurações
+- **ator_perfil**: ADMINISTRADOR_MARINA
+- **rota_ou_dialogo**: /configuracoes/variabilidade
+- **acao_do_usuario**: Gerenciar permissões internas pela Marina
+- **situacao**: implementada
+- **campos_entrada_visiveis**: Perfil
+- **campos_condicionais**: plataforma(); erro() && !configuracao(); carregando(); mensagem(); erro(); !plataforma(); !modulo.ativo
+- **parametros_indiretos**: Usuário/perfil e organização do JWT; configuração comercial e permissões.
+- **conjunto_botoes_acao**: Sair do Caisora; ; save Salvar permissões; Abrir menu
+- **mensagens_erro_distintas**: Nenhuma mensagem efetivamente vista neste processo; catálogo da fonte separado
+- **mensagens_sucesso**: Ver texto renderizado dos estados de saída em execucao-browser.json; não presumir sucesso apenas por HTTP
+- **confirmacoes_modal**: Não observada
+- **campos_saida_visiveis**: Texto/indicadores renderizados no manifesto; verificar capturas e rastreio
+- **campos_saida_derivados**: Nenhum cálculo derivado identificado no escopo deste processo
+- **tabelas_listagens**: Não há cabeçalhos observados
+- **grupos_logicos_lidos**: Disponibilidade de módulos; permissões por perfil; proposta funcional a conferir, não deduzida como quantidade de ALIs
+- **grupos_logicos_alterados**: Permissões por perfil
+- **dados_externos_referenciados**:
+- **houve_escrita_no_banco**: sim: perfil_permissoes; execucao-browser.json/efeitos: permissoes-salvar
+- **arquivos_fisicos_consultados**: perfil_permissoes
+- **screenshot_entrada**: capturas/permissoes-salvar/entrada-desktop.png; capturas/permissoes-salvar/entrada-mobile.png
+- **screenshot_saida**: capturas/permissoes-salvar/saida-desktop.png; capturas/permissoes-salvar/saida-mobile.png
+- **screenshot_erro**:
+- **screenshot_mobile**: capturas/permissoes-salvar/entrada-mobile.png; capturas/permissoes-salvar/saida-mobile.png
+- **evidencias_teste**: execucao-browser.json; frontend/src/app/features/variabilidade/pages/configuracao-variabilidade/configuracao-variabilidade.component.html; PUT /api/v1/variabilidade/perfis/{perfil}/permissoes
+- **requisito_UCP_candidato**: Pendente: UCP e slides não fornecidos no repositório; sem vínculo verificável
+- **notas_ambiguidade**:
+- **sha_commit**: 247c5ef07c49e2ebe8d119770309dabbc4fb8386

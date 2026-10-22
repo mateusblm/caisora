@@ -1,0 +1,11 @@
+{
+  "shaProducao": "247c5ef07c49e2ebe8d119770309dabbc4fb8386",
+  "arquivosInstrumentacaoBuild": {
+    "scripts/auditar-apf-browser.mjs": "8c29734c7043e8e40a06d3dadfa9bbdfd57944419d17dff441d8f753c6602854",
+    "scripts/gerar-inventario-apf.py": "990f33df5937789bc90e4a97cdc91399d0131023ebba28715cb56964b70fab5a",
+    "src/test/java/br/com/caisora/auditoria/AuditoriaVisualApfTest.java": "55a660c3f5884f25f9df97e4252737568764d5d8b0fa674f40d917f424e810b5",
+    "src/test/java/br/com/caisora/relatorio/suporte/PermanenciaFixture.java": "05c3ca07d7cb7136df6afc493edfb5278953a69a896b31ffab5da4ad51ea51a7",
+    "frontend/dist/caisora-web/browser/index.html": "cd04215e6c6c179204bd2164374654d3e90711133db6de15cc6f9a18d47e5f76"
+  },
+  "nota": "Instrumentação nova ainda não commitada; SHA identifica código de produção auditado. Passagens adicionais documentadas no manifesto; fontes corrigem seletores de coleta, sem alterar negócio."
+}

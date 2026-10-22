@@ -1,0 +1,360 @@
+{
+  "error_outline Codigo da marina, e-mail ou senha invalidos.": [
+    {
+      "processo": "autenticacao",
+      "gatilho_estado": "credenciais-invalidas",
+      "captura": "capturas/autenticacao/credenciais-invalidas-desktop.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o documento.": [
+    {
+      "processo": "clientes-cadastrar-pf",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "clientes-cadastrar-pf",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o nome.": [
+    {
+      "processo": "clientes-cadastrar-pf",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/clientes-cadastrar-pf/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "clientes-cadastrar-pf",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/clientes-cadastrar-pf/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione um proprietário.": [
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione um cliente da lista.": [
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o comprimento.": [
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe a boca.": [
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "embarcacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/embarcacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o codigo.": [
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "vagas-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/vagas-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "error_outlineSelecione uma embarcação com posição atual disponível.": [
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione uma embarcação.": [
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "ocupacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione o tipo de movimentação.": [
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione o tipo de destino.": [
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "movimentacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/movimentacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione o cliente.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione a acomodação.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione a periodicidade.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe a data de início.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o valor base.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe um dia entre 1 e 31.": [
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "contratos-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/contratos-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Integração desabilitada. A plataforma deve revisar os termos e configurar o acesso Open-Meteo": [
+    {
+      "processo": "ambiente-meteorologia",
+      "gatilho_estado": "saida-controlada",
+      "captura": "capturas/ambiente-meteorologia/saida-controlada-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "ambiente-maritimo",
+      "gatilho_estado": "saida-controlada",
+      "captura": "capturas/ambiente-maritimo/saida-controlada-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "ambiente-meteorologia",
+      "gatilho_estado": "saida-controlada",
+      "captura": "capturas/ambiente-meteorologia/saida-controlada-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "ambiente-maritimo",
+      "gatilho_estado": "saida-controlada",
+      "captura": "capturas/ambiente-maritimo/saida-controlada-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Provedor indisponível — resposta controlada de teste": [
+    {
+      "processo": "ambiente-meteorologia",
+      "gatilho_estado": "indisponivel-controlado",
+      "captura": "capturas/ambiente-meteorologia/indisponivel-controlado-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "ambiente-maritimo",
+      "gatilho_estado": "indisponivel-controlado",
+      "captura": "capturas/ambiente-maritimo/indisponivel-controlado-desktop.png",
+      "perfil": "ADMINISTRADOR_PLATAFORMA"
+    },
+    {
+      "processo": "ambiente-meteorologia",
+      "gatilho_estado": "indisponivel-controlado",
+      "captura": "capturas/ambiente-meteorologia/indisponivel-controlado-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "ambiente-maritimo",
+      "gatilho_estado": "indisponivel-controlado",
+      "captura": "capturas/ambiente-maritimo/indisponivel-controlado-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Selecione uma vaga.": [
+    {
+      "processo": "ocupacoes-cadastrar",
+      "gatilho_estado": "validacao-obrigatorios",
+      "captura": "capturas/ocupacoes-cadastrar/validacao-obrigatorios-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "error_outlineSomente movimentações agendadas podem ser editadas.": [
+    {
+      "processo": "movimentacoes-alterar",
+      "gatilho_estado": "inicial",
+      "captura": "capturas/movimentacoes-alterar/inicial-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ],
+  "Informe o motivo.": [
+    {
+      "processo": "contratos-desvincular",
+      "gatilho_estado": "motivo-obrigatorio",
+      "captura": "capturas/contratos-desvincular/motivo-obrigatorio-desktop.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    },
+    {
+      "processo": "contratos-desvincular",
+      "gatilho_estado": "motivo-obrigatorio",
+      "captura": "capturas/contratos-desvincular/motivo-obrigatorio-mobile.png",
+      "perfil": "ADMINISTRADOR_MARINA"
+    }
+  ]
+}

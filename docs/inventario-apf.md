@@ -456,3 +456,15 @@ Os testes Angular usam DOM em jsdom: verificam renderização de resultados/vazi
 - Três consultas reais iniciais de IBGE/BrasilAPI registradas em `consultas-reais.json`; sondagem posterior ao IBGE falhou com indisponibilidade, registrada em `sondagem-real-posterior.json`. Não há fallback funcional com esses arquivos.
 - AIE06/WorldTides sem validação real por ausência de credenciais/autorização. Nenhuma chamada real ou crédito consumido.
 - Fontes, campos e tipos de registro estão descritos para a análise manual da equipe. Não há contagem automática de PF nem multiplicação dos mesmos grupos por integrante.
+
+## Auditoria visual funcional do sistema — SHA 247c5ef
+
+O [índice da auditoria](evidencias/apf/README.md) reúne as jornadas da branch atual, capturas reais em Chromium desktop/mobile emulado, perfis, origem dos dados e comparações de hashes/quantidades no PostgreSQL descartável. O código de negócio foi preservado.
+
+- [Processos funcionais em CSV](evidencias/apf/processos-funcionais.csv) e [descrição detalhada](evidencias/apf/processos-funcionais.md): objetivos, campos efetivamente observados, ações, entradas/saídas, provas de persistência e referências técnicas.
+- [Cobertura de rotas, diálogos e controles](evidencias/apf/rotas-cobertura.csv), incluindo ações identificadas sem comprovação individual.
+- [Grupos de dados candidatos](evidencias/apf/grupos-de-dados.md), com mantenedores, uso funcional e agrupamentos pendentes.
+- [Cálculos observados](evidencias/apf/calculos-observados.md) nas seis saídas candidatas; [validações efetivamente vistas](evidencias/apf/mensagens-observadas.json).
+- [Lacunas e divergências](evidencias/apf/lacunas-e-divergencias.md): GET individual de posição pode persistir; checklist é local e contém textos fixos; CRUD de usuários/organizações e histórico de movimentações não possuem tela própria; Operador/Técnico não existem como perfis; Atendente vê ação de contrato que o backend nega; há limitações visuais e de cobertura explicitadas.
+
+As consultas reais anteriores IBGE/BrasilAPI e as imagens SE06/AIE foram referenciadas com suas limitações de proveniência. Open-Meteo usa somente respostas controladas nesta auditoria; WorldTides permanece bloqueada. Não foram criados cadastros espelho, operações para ampliar pontuação ou contagem automática. Os processos/grupos são candidatos técnicos; classificação e pontuação continuam dependendo da equipe e do professor.

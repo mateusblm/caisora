@@ -1,0 +1,1233 @@
+{
+  "frontend/src/app/app.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [],
+    "condicoes": []
+  },
+  "frontend/src/app/core/layout/layout/layout.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "telaPequena() && menu.close()"
+      },
+      {
+        "evento": "click",
+        "expressao": "menu.toggle()"
+      },
+      {
+        "evento": "click",
+        "expressao": "sair()"
+      }
+    ],
+    "condicoes": [
+      "telaPequena()"
+    ]
+  },
+  "frontend/src/app/features/ambiente/ambiente.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "consultar()"
+      },
+      {
+        "evento": "ngModelChange",
+        "expressao": "resultado.set(null)"
+      }
+    ],
+    "condicoes": [
+      "resultado(); as r",
+      "r.incompleta",
+      "!r.horas.length"
+    ]
+  },
+  "frontend/src/app/features/ambiente/localizacao.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      }
+    ],
+    "condicoes": []
+  },
+  "frontend/src/app/features/autenticacao/pages/login/login.component.html": {
+    "rotulosFonte": [
+      "Codigo da marina",
+      "E-mail",
+      "Senha"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Informe o codigo da marina.",
+      "Informe seu e-mail.",
+      "Informe um e-mail válido.",
+      "Informe sua senha."
+    ],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "entrar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "alternarSenha()"
+      }
+    ],
+    "condicoes": [
+      "mensagemErro()",
+      "formulario.controls.codigoOrganizacao .hasError('required')",
+      "formulario.controls.email .hasError('required')",
+      "formulario.controls.email .hasError('email')",
+      "formulario.controls.senha .hasError('required')",
+      "carregando()"
+    ]
+  },
+  "frontend/src/app/features/checklist-saida/pages/checklist-saida/checklist-saida.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "change",
+        "expressao": "alterarItem(item.id, $event.checked)"
+      },
+      {
+        "evento": "click",
+        "expressao": "concluir()"
+      }
+    ],
+    "condicoes": [
+      "concluido()"
+    ]
+  },
+  "frontend/src/app/features/clientes/pages/cliente-formulario/cliente-formulario.component.html": {
+    "rotulosFonte": [
+      "Tipo de pessoa",
+      "{{ rotuloDocumento() }}",
+      "{{ formulario.controls .tipoPessoa.value === 'FISICA' ? 'Nome completo' : 'Nome fantasia' }}",
+      "Razão social",
+      "E-mail",
+      "Telefone",
+      "Celular",
+      "Observações"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Informe o documento.",
+      "Informe um {{ rotuloDocumento() }} válido.",
+      "{{ erroApi('cpfCnpj') }}",
+      "Informe o nome.",
+      "{{ erroApi('nome') }}",
+      "Informe a razão social.",
+      "{{ erroApi('razaoSocial') }}",
+      "Informe um e-mail válido.",
+      "{{ erroApi('email') }}",
+      "{{ erroApi('telefone') }}",
+      "{{ erroApi('celular') }}",
+      "{{ erroApi('observacoes') }}"
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "mensagemErro()",
+      "formulario.controls.cpfCnpj .hasError('required')",
+      "formulario.controls.cpfCnpj .hasError( 'documentoInvalido' )",
+      "erroApi('cpfCnpj')",
+      "formulario.controls.nome .hasError('required')",
+      "erroApi('nome')",
+      "formulario.controls .tipoPessoa.value === 'JURIDICA'",
+      "formulario.controls .razaoSocial .hasError('required')",
+      "erroApi('razaoSocial')",
+      "formulario.controls.email .hasError('email')",
+      "erroApi('email')",
+      "erroApi('telefone')",
+      "erroApi('celular')",
+      "erroApi('observacoes')",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/clientes/pages/cliente-listagem/cliente-listagem.component.html": {
+    "rotulosFonte": [
+      "Buscar por nome",
+      "Status"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroStatus()"
+      },
+      {
+        "evento": "click",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus(cliente)"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus(cliente)"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "busca.value",
+      "carregando()",
+      "telaDesktop()",
+      "cliente.email",
+      "alterandoStatusId() === cliente.id",
+      "cliente.email",
+      "alterandoStatusId() === cliente.id"
+    ]
+  },
+  "frontend/src/app/features/contratos/componentes/dialogo-acao-contrato/dialogo-acao-contrato.component.html": {
+    "rotulosFonte": [
+      "{{ dados.rotuloData || \"Data\" }}",
+      "{{ dados.rotuloDescricao || \"Observação\" }}"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Informe a data.",
+      "Informe o motivo."
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "confirmar()"
+      }
+    ],
+    "condicoes": [
+      "dados.detalhe",
+      "dados.solicitarData",
+      "formulario.controls.data.hasError(\"required\")",
+      "dados.solicitarDescricao",
+      "formulario.controls.descricao.hasError(\"required\")"
+    ]
+  },
+  "frontend/src/app/features/contratos/pages/contrato-detalhe/contrato-detalhe.component.html": {
+    "rotulosFonte": [
+      "Ocupação ativa da embarcação"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "ngOnInit()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarEnvioParaAssinatura()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAtivacao()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarSuspensao()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarReativacao()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarInicioEncerramento()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarConclusaoEncerramento()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarCancelamento()"
+      },
+      {
+        "evento": "click",
+        "expressao": "vincularOcupacao()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarDesvinculo(vinculo)"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "podeEditar()",
+      "podeEnviarParaAssinatura()",
+      "podeAtivar()",
+      "podeSuspender()",
+      "podeReativar()",
+      "podeSolicitarEncerramento()",
+      "podeEncerrar()",
+      "podeCancelar()",
+      "contrato()!.dataEncerramento",
+      "contrato()!.observacoes",
+      "podeGerenciarOcupacao() && !vinculoAberto()",
+      "ocupacoesDisponiveis().length === 0",
+      "vinculos().length === 0",
+      "vinculo.fimEm",
+      "vinculo.motivoFim",
+      "vinculo.aberto && podeGerenciarOcupacao()",
+      "historico().length === 0",
+      "evento.descricao",
+      "evento.statusAnterior !== evento.statusNovo"
+    ]
+  },
+  "frontend/src/app/features/contratos/pages/contrato-formulario/contrato-formulario.component.html": {
+    "rotulosFonte": [
+      "Cliente",
+      "Embarcação",
+      "Tipo de acomodação",
+      "Periodicidade",
+      "Data de início",
+      "Data de término",
+      "Valor base",
+      "Dia do vencimento",
+      "Dias de aviso prévio",
+      "Observações"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Selecione o cliente.",
+      "Selecione a embarcação.",
+      "Selecione a acomodação.",
+      "Selecione a periodicidade.",
+      "Informe a data de início.",
+      "Informe a data de término.",
+      "A data final não pode ser anterior ao início.",
+      "Informe o valor base.",
+      "O valor não pode ser negativo.",
+      "Informe um dia entre 1 e 31.",
+      "Informe o prazo de aviso prévio."
+    ],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "mensagemErro()",
+      "formulario.controls.clienteId.hasError(\"required\")",
+      "formulario.controls.embarcacaoId.hasError(\"required\")",
+      "formulario.controls.tipoVagaContratada.hasError(\"required\")",
+      "formulario.controls.periodicidade.hasError(\"required\")",
+      "formulario.controls.dataInicio.hasError(\"required\")",
+      "formulario.hasError(\"dataFimObrigatoria\") && formulario.controls.dataFim.touched",
+      "formulario.controls.valorBase.hasError(\"required\")",
+      "formulario.controls.diaVencimento.invalid && formulario.controls.diaVencimento.touched",
+      "formulario.controls.renovacaoAutomatica.value",
+      "formulario.hasError(\"avisoPrevioObrigatorio\") && formulario.controls.diasAvisoPrevio.touched",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/contratos/pages/contrato-listagem/contrato-listagem.component.html": {
+    "rotulosFonte": [
+      "Status",
+      "Cliente",
+      "Embarcação"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "click",
+        "expressao": "aplicarFiltros()"
+      },
+      {
+        "evento": "click",
+        "expressao": "aplicarFiltros()"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "podeEditar(contrato)",
+      "podeEditar(contrato)",
+      "!carregando() && totalPaginas() > 1"
+    ]
+  },
+  "frontend/src/app/features/dashboard/componentes/cartao-movimentacao-operacional/cartao-movimentacao-operacional.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "solicitarInicio()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarConclusao()"
+      }
+    ],
+    "condicoes": [
+      "movimentacao.observacoes",
+      "movimentacao.status === 'AGENDADA' || movimentacao.status === 'EM_EXECUCAO'",
+      "movimentacao.status === 'AGENDADA'",
+      "processando",
+      "movimentacao.status === 'EM_EXECUCAO'",
+      "processando"
+    ]
+  },
+  "frontend/src/app/features/dashboard/pages/dashboard/dashboard.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "atualizarAgora()"
+      },
+      {
+        "evento": "click",
+        "expressao": "atualizarAgora()"
+      },
+      {
+        "evento": "click",
+        "expressao": "atualizarAgora()"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('atrasadas')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('em-execucao')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('em-execucao')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('atrasadas')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('proximas')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('proximas')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('proximas')"
+      },
+      {
+        "evento": "click",
+        "expressao": "rolarPara('concluidas')"
+      }
+    ],
+    "condicoes": [
+      "atualizando()",
+      "carregandoInicial()",
+      "mensagemErro()",
+      "painel()!.indicadores.atrasadas > 0",
+      "semOperacoesHoje()",
+      "painel()!.concluidasRecentemente .length > 0"
+    ]
+  },
+  "frontend/src/app/features/embarcacoes/pages/embarcacao-formulario/embarcacao-formulario.component.html": {
+    "rotulosFonte": [
+      "Pesquise o proprietário",
+      "Nome da embarcação",
+      "Tipo",
+      "Ano de fabricação",
+      "Fabricante",
+      "Modelo",
+      "Cor predominante",
+      "Número de inscrição",
+      "Número do casco",
+      "Porto de inscrição",
+      "País da bandeira",
+      "Comprimento total",
+      "Boca",
+      "Calado",
+      "Pontal",
+      "Altura total",
+      "Peso",
+      "Tipo de propulsão",
+      "Capacidade de pessoas",
+      "Observações"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Selecione um proprietário.",
+      "Selecione um cliente da lista.",
+      "{{ erroApi('proprietario') }}",
+      "{{ erroApi('nome') }}",
+      "Selecione o tipo.",
+      "{{ erroApi('tipo') }}",
+      "Informe um ano entre 1800 e {{ anoMaximo }}.",
+      "Informe um ano inteiro.",
+      "{{ erroApi('anoFabricacao') }}",
+      "{{ erroApi('fabricante') }}",
+      "{{ erroApi('modelo') }}",
+      "{{ erroApi( 'corPredominante' ) }}",
+      "{{ erroApi( 'numeroInscricao' ) }}",
+      "{{ erroApi('numeroCasco') }}",
+      "{{ erroApi( 'portoInscricao' ) }}",
+      "Informe duas letras, como BR.",
+      "{{ erroApi( 'codigoPaisBandeira' ) }}",
+      "Informe o comprimento.",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'comprimentoTotalMetros' ) }}",
+      "Informe a boca.",
+      "O valor deve ser positivo.",
+      "{{ erroApi('bocaMetros') }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi('caladoMetros') }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi('pontalMetros') }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'alturaTotalMetros' ) }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi('pesoKg') }}",
+      "Selecione a propulsão.",
+      "{{ erroApi( 'tipoPropulsao' ) }}",
+      "Informe um número inteiro positivo.",
+      "{{ erroApi( 'capacidadePessoas' ) }}",
+      "{{ erroApi('observacoes') }}"
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      }
+    ],
+    "condicoes": [
+      "carregando() || carregandoProprietarios()",
+      "mensagemErro()",
+      "!proprietario.ativo",
+      "carregandoProprietarios()",
+      "formulario.controls.proprietario .hasError('required')",
+      "formulario.controls.proprietario .hasError( 'proprietarioInvalido' ) && formulario.controls.proprietario .touched",
+      "erroApi('proprietario')",
+      "erroApi('nome')",
+      "formulario.controls.tipo .hasError('required')",
+      "erroApi('tipo')",
+      "formulario.controls .anoFabricacao .hasError('min') || formulario.controls .anoFabricacao .hasError('max')",
+      "formulario.controls .anoFabricacao .hasError('numeroInteiro')",
+      "erroApi('anoFabricacao')",
+      "erroApi('fabricante')",
+      "erroApi('modelo')",
+      "erroApi('corPredominante')",
+      "erroApi('numeroInscricao')",
+      "erroApi('numeroCasco')",
+      "erroApi('portoInscricao')",
+      "formulario.controls .codigoPaisBandeira .hasError('required') || formulario.controls .codigoPaisBandeira .hasError('pattern')",
+      "erroApi( 'codigoPaisBandeira' )",
+      "formulario.controls .comprimentoTotalMetros .hasError('required')",
+      "formulario.controls .comprimentoTotalMetros .hasError('min')",
+      "erroApi( 'comprimentoTotalMetros' )",
+      "formulario.controls.bocaMetros .hasError('required')",
+      "formulario.controls.bocaMetros .hasError('min')",
+      "erroApi('bocaMetros')",
+      "formulario.controls.caladoMetros .hasError('min')",
+      "erroApi('caladoMetros')",
+      "formulario.controls.pontalMetros .hasError('min')",
+      "erroApi('pontalMetros')",
+      "formulario.controls .alturaTotalMetros .hasError('min')",
+      "erroApi( 'alturaTotalMetros' )",
+      "formulario.controls.pesoKg .hasError('min')",
+      "erroApi('pesoKg')",
+      "formulario.controls .tipoPropulsao .hasError('required')",
+      "erroApi('tipoPropulsao')",
+      "formulario.controls .capacidadePessoas .hasError('min') || formulario.controls .capacidadePessoas .hasError('numeroInteiro')",
+      "erroApi( 'capacidadePessoas' )",
+      "erroApi('observacoes')",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/embarcacoes/pages/embarcacao-listagem/embarcacao-listagem.component.html": {
+    "rotulosFonte": [
+      "Buscar por nome",
+      "Tipo",
+      "Status"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroTipo()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroStatus()"
+      },
+      {
+        "evento": "click",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus( embarcacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus( embarcacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "busca.value",
+      "carregando()",
+      "telaDesktop()",
+      "alterandoStatusId() === embarcacao.id",
+      "alterandoStatusId() === embarcacao.id"
+    ]
+  },
+  "frontend/src/app/features/inicio/pages/inicio/inicio.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [],
+    "condicoes": []
+  },
+  "frontend/src/app/features/movimentacoes/componentes/cancelamento-movimentacao-dialog/cancelamento-movimentacao-dialog.component.html": {
+    "rotulosFonte": [
+      "Motivo do cancelamento"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "O motivo do cancelamento é obrigatório."
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "confirmar()"
+      }
+    ],
+    "condicoes": [
+      "motivo.touched && motivo.hasError('required')"
+    ]
+  },
+  "frontend/src/app/features/movimentacoes/pages/movimentacao-formulario/movimentacao-formulario.component.html": {
+    "rotulosFonte": [
+      "Embarcação",
+      "Tipo de movimentação",
+      "Prioridade",
+      "Tipo de destino",
+      "Vaga de destino",
+      "Descrição do destino",
+      "Agendada para",
+      "Operador responsável",
+      "Observações"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Selecione uma embarcação.",
+      "{{ erroApi('embarcacaoId') }}",
+      "Selecione o tipo de movimentação.",
+      "{{ erroApi('tipo') }}",
+      "{{ erroApi('prioridade') }}",
+      "Selecione o tipo de destino.",
+      "{{ erroApi('tipoPosicaoDestino') }}",
+      "Selecione a vaga de destino.",
+      "{{ erroApi('vagaDestinoId') }}",
+      "O limite é de 255 caracteres.",
+      "{{ erroApi('descricaoDestino') }}",
+      "Informe a data e o horário.",
+      "Informe uma data válida.",
+      "{{ erroApi('agendadaPara') }}",
+      "{{ erroApi( 'operadorResponsavelId' ) }}",
+      "O limite é de 2000 caracteres.",
+      "{{ erroApi('observacoes') }}"
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "mensagemErro()",
+      "semEmbarcacoesDisponiveis()",
+      "formulario.controls .embarcacaoId .hasError('required')",
+      "erroApi('embarcacaoId')",
+      "opcao.disponivel === false",
+      "ocupacaoAtivaSelecionada()",
+      "formulario.controls.tipo .hasError('required')",
+      "erroApi('tipo')",
+      "carregandoPosicao()",
+      "tipoSelecionado()",
+      "opcao.valor === tipoSelecionado()",
+      "erroApi('prioridade')",
+      "formulario.controls .tipoPosicaoDestino .hasError('required')",
+      "erroApi('tipoPosicaoDestino')",
+      "tipoDestinoSelecionado() === 'VAGA'",
+      "tipoSelecionado() === 'RETIRADA' || tipoSelecionado() === 'RETORNO_PARA_VAGA'",
+      "formulario.controls .vagaDestinoId .hasError('required')",
+      "erroApi('vagaDestinoId')",
+      "formulario.controls .descricaoDestino .hasError('maxlength')",
+      "erroApi('descricaoDestino')",
+      "vagaDestinoSelecionada(); as vaga",
+      "incompatibilidades().length > 0",
+      "formulario.controls .agendadaPara .hasError('required')",
+      "formulario.controls .agendadaPara .hasError('dataInvalida')",
+      "erroApi('agendadaPara')",
+      "erroApi('operadorResponsavelId')",
+      "formulario.controls .observacoes .hasError('maxlength')",
+      "erroApi('observacoes')",
+      "!somenteConsulta()",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/movimentacoes/pages/movimentacao-listagem/movimentacao-listagem.component.html": {
+    "rotulosFonte": [
+      "Status",
+      "Tipo",
+      "Embarcação",
+      "Início do período",
+      "Fim do período"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroStatus()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroTipo()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroEmbarcacao()"
+      },
+      {
+        "evento": "click",
+        "expressao": "aplicarFiltroPeriodo()"
+      },
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "click",
+        "expressao": "carregarMovimentacoes(paginaAtual())"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarInicio( movimentacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarCancelamento( movimentacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarConclusao( movimentacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarInicio(movimentacao)"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarCancelamento( movimentacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarConclusao( movimentacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "carregandoEmbarcacoes()",
+      "carregando()",
+      "telaDesktop()",
+      "possuiAcao(movimentacao)",
+      "operacaoId() === movimentacao.id",
+      "movimentacao.status === 'AGENDADA'",
+      "movimentacao.status === 'EM_EXECUCAO'",
+      "possuiAcao(movimentacao)",
+      "operacaoId() === movimentacao.id",
+      "totalPaginas() > 1"
+    ]
+  },
+  "frontend/src/app/features/ocupacoes/pages/ocupacao-formulario/ocupacao-formulario.component.html": {
+    "rotulosFonte": [
+      "Embarcação",
+      "Vaga",
+      "Início da ocupação",
+      "Fim previsto",
+      "Observações"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Selecione uma embarcação.",
+      "{{ erroApi('embarcacaoId') }}",
+      "Selecione uma vaga.",
+      "{{ erroApi('vagaId') }}",
+      "Informe o início.",
+      "O início não pode estar no futuro.",
+      "Informe uma data válida.",
+      "{{ erroApi('inicioEm') }}",
+      "O fim previsto deve ser posterior ao início.",
+      "Informe uma data válida.",
+      "{{ erroApi('fimPrevistoEm') }}",
+      "O limite é de 2000 caracteres.",
+      "{{ erroApi('observacoes') }}"
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "mensagemErro()",
+      "semOpcoesDisponiveis()",
+      "formulario.controls .embarcacaoId .hasError('required')",
+      "erroApi('embarcacaoId')",
+      "formulario.controls .vagaId .hasError('required')",
+      "erroApi('vagaId')",
+      "embarcacaoSelecionada() || vagaSelecionada()",
+      "embarcacaoSelecionada(); as embarcacao",
+      "vagaSelecionada(); as vaga",
+      "incompatibilidades().length > 0",
+      "formulario.controls.inicioEm .hasError('required')",
+      "formulario.controls.inicioEm .hasError('inicioFuturo')",
+      "formulario.controls.inicioEm .hasError('dataInvalida')",
+      "erroApi('inicioEm')",
+      "formulario.hasError( 'fimNaoPosterior' ) && formulario.controls .fimPrevistoEm.touched",
+      "formulario.hasError( 'periodoInvalido' ) && formulario.controls .fimPrevistoEm.touched",
+      "erroApi('fimPrevistoEm')",
+      "formulario.controls .observacoes .hasError('maxlength')",
+      "erroApi('observacoes')",
+      "!ocupacaoEncerrada()",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/ocupacoes/pages/ocupacao-listagem/ocupacao-listagem.component.html": {
+    "rotulosFonte": [
+      "Embarcação",
+      "Vaga",
+      "Status"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroEmbarcacao()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroVaga()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroStatus()"
+      },
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "click",
+        "expressao": "carregarOcupacoes()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarEncerramento( ocupacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarEncerramento( ocupacao )"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "telaDesktop()",
+      "ocupacao.status === 'ATIVA'",
+      "encerrandoId() === ocupacao.id",
+      "ocupacao.status === 'ATIVA'",
+      "encerrandoId() === ocupacao.id",
+      "totalPaginas() > 1"
+    ]
+  },
+  "frontend/src/app/features/painel-tv/componentes/cartao-painel-tv/cartao-painel-tv.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [],
+    "condicoes": [
+      "movimentacao.embarcacaoModelo",
+      "possuiAlerta('URGENTE')",
+      "possuiAlerta('SEM_OPERADOR')"
+    ]
+  },
+  "frontend/src/app/features/painel-tv/pages/painel-tv/painel-tv.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "atualizarAgora()"
+      },
+      {
+        "evento": "click",
+        "expressao": "alternarTelaCheia()"
+      },
+      {
+        "evento": "click",
+        "expressao": "atualizarAgora()"
+      }
+    ],
+    "condicoes": [
+      "atualizando()",
+      "carregando()",
+      "quantidadeRestante( painel()!.alertas.length, limiteAlertas ) > 0",
+      "quantidadeRestante( painel()!.descidasParaAgua.length, limitePrincipal ) > 0",
+      "quantidadeRestante( painel()!.retiradasDaAgua.length, limitePrincipal ) > 0",
+      "quantidadeRestante( painel()!.emExecucao.length, limitePrincipal ) > 0"
+    ]
+  },
+  "frontend/src/app/features/referencias/referencias.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "verificarDisponibilidade()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "consultar()"
+      }
+    ],
+    "condicoes": [
+      "grupo === 'feriados'",
+      "grupo === 'mares'",
+      "disponibilidade(); as d",
+      "erro() && !disponibilidade()",
+      "grupo === 'paises' || grupo === 'municipios'",
+      "grupo === 'municipios' || grupo === 'feriados'",
+      "grupo === 'feriados'",
+      "grupo === 'mares'",
+      "resultado(); as r",
+      "r.incompleta",
+      "grupo === 'mares'",
+      "!r.registros.length",
+      "c[0] === 'data'"
+    ]
+  },
+  "frontend/src/app/features/relatorios/relatorios.component.html": {
+    "rotulosFonte": [
+      "Relatório</mat-label ><mat-select [disabled]=\"carregando()\" name=\"relatorio\" [(ngModel)]=\"tipo\" (ngModelChange)=\"limpar()\" > @if (pode('VAGAS') && pode('OCUPACOES')) { <mat-option value=\"ocupacao\">Ocupação de vagas</mat-option> <mat-option value=\"permanencia-vagas\">Permanência histórica nas vagas</mat-option> } @if (pode('MOVIMENTACOES')) { <mat-option value=\"movimentacoes\">Desempenho das movimentações</mat-option> } @if (pode('CONTRATOS')) { <mat-option value=\"contratos\">Carteira de contratos</mat-option> } </mat-select></mat-form-field > @if (tipo === 'ocupacao' || tipo === 'permanencia-vagas') { @if (tipo === 'permanencia-vagas') { <p class=\"explicacao-filtro\"> Selecione ocupações pelo encerramento efetivo. Datas inclusivas em UTC; a duração considera toda a permanência. </p> <mat-form-field> <mat-label>Encerramento inicial (UTC)",
+      "Encerramento final (UTC)"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "consultar()"
+      },
+      {
+        "evento": "ngModelChange",
+        "expressao": "limpar()"
+      }
+    ],
+    "condicoes": [
+      "pode('VAGAS') && pode('OCUPACOES')",
+      "pode('MOVIMENTACOES')",
+      "pode('CONTRATOS')",
+      "tipo === 'ocupacao' || tipo === 'permanencia-vagas'",
+      "tipo === 'permanencia-vagas'",
+      "tipo === 'movimentacoes'",
+      "ocupacao(); as r",
+      "movimentacoes(); as r",
+      "contratos(); as r",
+      "permanencia(); as r",
+      "r.resumo.quantidadeOcupacoes === 0"
+    ]
+  },
+  "frontend/src/app/features/vagas/pages/vaga-formulario/vaga-formulario.component.html": {
+    "rotulosFonte": [
+      "Codigo",
+      "Tipo",
+      "Setor",
+      "Localizacao",
+      "Comprimento maximo",
+      "Boca maxima",
+      "Calado maximo",
+      "Altura maxima",
+      "Peso maximo",
+      "Observacoes"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [
+      "Informe o codigo.",
+      "{{ erroApi('codigo') }}",
+      "Selecione o tipo.",
+      "{{ erroApi('tipo') }}",
+      "{{ erroApi('setor') }}",
+      "{{ erroApi('localizacao') }}",
+      "Informe o comprimento.",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'comprimentoMaximoMetros' ) }}",
+      "Informe a boca.",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'bocaMaximaMetros' ) }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'caladoMaximoMetros' ) }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi( 'alturaMaximaMetros' ) }}",
+      "O valor deve ser positivo.",
+      "{{ erroApi('pesoMaximoKg') }}",
+      "{{ erroApi('observacoes') }}"
+    ],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "ngSubmit",
+        "expressao": "salvar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      }
+    ],
+    "condicoes": [
+      "carregando()",
+      "mensagemErro()",
+      "formulario.controls.codigo .hasError('required')",
+      "erroApi('codigo')",
+      "formulario.controls.tipo .hasError('required')",
+      "erroApi('tipo')",
+      "erroApi('setor')",
+      "erroApi('localizacao')",
+      "formulario.controls .comprimentoMaximoMetros .hasError('required')",
+      "formulario.controls .comprimentoMaximoMetros .hasError('min')",
+      "erroApi( 'comprimentoMaximoMetros' )",
+      "formulario.controls .bocaMaximaMetros .hasError('required')",
+      "formulario.controls .bocaMaximaMetros .hasError('min')",
+      "erroApi('bocaMaximaMetros')",
+      "formulario.controls .caladoMaximoMetros .hasError('min')",
+      "erroApi('caladoMaximoMetros')",
+      "formulario.controls .alturaMaximaMetros .hasError('min')",
+      "erroApi('alturaMaximaMetros')",
+      "formulario.controls .pesoMaximoKg .hasError('min')",
+      "erroApi('pesoMaximoKg')",
+      "erroApi('possuiAgua')",
+      "erroApi('possuiEnergia')",
+      "erroApi('observacoes')",
+      "salvando()"
+    ]
+  },
+  "frontend/src/app/features/vagas/pages/vaga-listagem/vaga-listagem.component.html": {
+    "rotulosFonte": [
+      "Filtro",
+      "{{ rotuloBusca() }}",
+      "Tipo",
+      "Status"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "ngSubmit",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarModoBusca()"
+      },
+      {
+        "evento": "click",
+        "expressao": "limparFiltros()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroTipo()"
+      },
+      {
+        "evento": "selectionChange",
+        "expressao": "alterarFiltroStatus()"
+      },
+      {
+        "evento": "click",
+        "expressao": "pesquisar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus( vaga )"
+      },
+      {
+        "evento": "click",
+        "expressao": "solicitarAlteracaoStatus(vaga)"
+      },
+      {
+        "evento": "click",
+        "expressao": "paginaAnterior()"
+      },
+      {
+        "evento": "click",
+        "expressao": "proximaPagina()"
+      }
+    ],
+    "condicoes": [
+      "busca.value",
+      "carregando()",
+      "telaDesktop()",
+      "alterandoStatusId() === vaga.id",
+      "alterandoStatusId() === vaga.id"
+    ]
+  },
+  "frontend/src/app/features/variabilidade/pages/configuracao-variabilidade/configuracao-variabilidade.component.html": {
+    "rotulosFonte": [
+      "Organização (UUID)</mat-label ><input matInput [disabled]=\"salvando() || carregando()\" #org [value]=\"organizacaoId\" placeholder=\"UUID da organização\" /></mat-form-field> <button mat-button (click)=\"organizacaoId = org.value.trim(); carregar()\" [disabled]=\"!org.value.trim() || carregando() || salvando()\" > Consultar organização </button> } @if (erro() && !configuracao()) { <p role=\"alert\">{{ erro() }}</p> } @if (carregando()) { <div class=\"estado\"><mat-spinner diameter=\"38\" /></div> } @else if (configuracao(); as cfg) { @if (mensagem()) { <div class=\"mensagem mensagem--sucesso\">{{ mensagem() }}</div> } @if (erro()) { <div class=\"mensagem mensagem--erro\">{{ erro() }}</div> } <mat-card class=\"bloco\"> <mat-card-header> <mat-card-title>Módulos da organização</mat-card-title> <mat-card-subtitle> Ponto de variação no nível do cliente. Módulos desligados não aparecem no menu e a API bloqueia o acesso. </mat-card-subtitle> </mat-card-header> <mat-card-content class=\"grade-modulos\"> @for (modulo of cfg.modulos; track modulo.modulo) { <div class=\"modulo\"> <div> <strong>{{ modulo.nome }}</strong> <span> {{ modulo.obrigatorio ? 'Núcleo comum obrigatório' : 'Módulo configurável' }} </span> </div> <mat-slide-toggle [attr.aria-label]=\"modulo.nome\" [checked]=\"modulo.ativo\" [disabled]=\"!plataforma() || modulo.obrigatorio || salvando()\" (change)=\"alterarModulo(modulo.modulo, $event.checked)\" /> </div> } </mat-card-content> </mat-card> @if (!plataforma()) { <mat-card class=\"bloco\"> <mat-card-header> <mat-card-title>Permissões por perfil</mat-card-title> <mat-card-subtitle> Ponto de variação no nível do usuário. Ações diferentes podem ser liberadas para o mesmo módulo. </mat-card-subtitle> </mat-card-header> <mat-card-content> <mat-form-field appearance=\"outline\" class=\"perfil-select\"> <mat-label>Perfil"
+    ],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "organizacaoId = org.value.trim(); carregar()"
+      },
+      {
+        "evento": "change",
+        "expressao": "alterarModulo(modulo.modulo, $event.checked)"
+      },
+      {
+        "evento": "ngModelChange",
+        "expressao": "selecionarPerfil($event)"
+      },
+      {
+        "evento": "change",
+        "expressao": "alternarPermissao(modulo.modulo, acaoCodigo, $event.checked)"
+      },
+      {
+        "evento": "click",
+        "expressao": "salvarPermissoes()"
+      }
+    ],
+    "condicoes": [
+      "plataforma()",
+      "erro() && !configuracao()",
+      "carregando()",
+      "mensagem()",
+      "erro()",
+      "!plataforma()",
+      "!modulo.ativo"
+    ]
+  },
+  "frontend/src/app/shared/componentes/dialogo-confirmacao/dialogo-confirmacao.component.html": {
+    "rotulosFonte": [],
+    "validacoesFonteNaoPresumidasComoVistas": [],
+    "acoes": [
+      {
+        "evento": "click",
+        "expressao": "cancelar()"
+      },
+      {
+        "evento": "click",
+        "expressao": "confirmar()"
+      }
+    ],
+    "condicoes": [
+      "dados.detalhe"
+    ]
+  }
+}

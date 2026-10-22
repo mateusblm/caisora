@@ -1,0 +1,47 @@
+{
+  "shaInspecionado": "247c5ef07c49e2ebe8d119770309dabbc4fb8386",
+  "backendRegressao": {
+    "tests": 471,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 5,
+    "aprovados": 466,
+    "fonte": "testes-regressao.json",
+    "comando": "JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -q test",
+    "resultado": "exit 0; opt-ins visual/real ignorados na regressão normal"
+  },
+  "frontend": {
+    "testes": 147,
+    "arquivos": 32,
+    "falhas": 0,
+    "resultado": "exit 0; npm --prefix frontend test -- --watch=false"
+  },
+  "buildProducao": {
+    "resultado": "exit 0; npm --prefix frontend run build",
+    "avisos": [
+      "bundle inicial 687,11 kB > orçamento de aviso 500 kB",
+      "estilo existente dashboard 11,09 kB > orçamento de aviso 8 kB"
+    ]
+  },
+  "visual": {
+    "teste": "AuditoriaVisualApfTest",
+    "execucoesConcluidasColetor": 4,
+    "resultado": "Coletor executado com exit 0; não equivale a aprovação de todos os controles",
+    "capturasNovas": 335,
+    "capturasReutilizadas": 61,
+    "processosInventariados": 72,
+    "idsComCapturas": 67,
+    "comparacoesBanco": 122,
+    "coberturaLinhas": {
+      "coberta": 151,
+      "sem tela": 11,
+      "falhou": 20,
+      "não aplicável": 15
+    },
+    "tentativasColetaResolvidas": 4,
+    "limitacoes": "lacunas-e-divergencias.md",
+    "rotasTelaDeclaradas": 31,
+    "rotasComCaptura": 31
+  },
+  "seguranca": "Sem banco de produção, sem chamadas WorldTides, sem provedores externos na auditoria; dados exclusivamente sintéticos em containers."
+}

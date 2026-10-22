@@ -1,0 +1,394 @@
+[
+  {
+    "name": "br.com.caisora.referencia.aplicacao.ReferenciasServiceTest",
+    "tests": "9",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.relatorio.aplicacao.RelatorioServiceTest",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.usuario.api.UsuarioControllerTest",
+    "tests": "6",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.organizacao.dominio.SlugOrganizacaoTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.organizacao.aplicacao.OrganizacaoServiceTest",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ocupacao.aplicacao.OcupacaoServiceTest",
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.relatorio.visual.PermanenciaVagasVisualTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "1"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.aplicacao.PainelOperacionalServiceTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.vaga.infraestrutura.VagaRepositoryJpaTest",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.contrato.dominio.ContratoTest",
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.referencia.infraestrutura.ClientesReferenciaTest",
+    "tests": "13",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.contrato.dominio.ContratoBuilderTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.api.MovimentacaoControllerTest",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.variabilidade.aplicacao.VariabilidadeServiceTest",
+    "tests": "6",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.vaga.aplicacao.VagaServiceTest",
+    "tests": "16",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.embarcacao.api.EmbarcacaoControllerTest",
+    "tests": "14",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ambiente.api.NovosEndpointsTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.referencia.api.ReferenciasControllerTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.contrato.infraestrutura.SequenciaContratoRepositoryPostgresTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.aplicacao.PosicaoEmbarcacaoServiceTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.contrato.aplicacao.ContratoServiceTest",
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.usuario.aplicacao.UsuarioServiceTest",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.referencia.visual.MaresControladasVisualTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "1"
+  },
+  {
+    "name": "br.com.caisora.contrato.dominio.EstadosContratoTest",
+    "tests": "49",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.embarcacao.infraestrutura.EmbarcacaoRepositoryJpaTest",
+    "tests": "15",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.cliente.infraestrutura.ClienteRepositoryJpaTest",
+    "tests": "11",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.aplicacao.PainelTvOperacionalServiceTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ambiente.aplicacao.AmbienteServiceTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.aplicacao.MovimentacaoServiceTest",
+    "tests": "11",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.autenticacao.api.AutenticacaoControllerTest",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.contrato.dominio.VinculoContratoOcupacaoTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.api.PainelTvOperacionalControllerTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ocupacao.infraestrutura.OcupacaoRepositoryJpaTest",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.auditoria.AuditoriaVisualApfTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "1"
+  },
+  {
+    "name": "br.com.caisora.relatorio.aplicacao.PermanenciaVagasServiceTest",
+    "tests": "9",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ambiente.infraestrutura.openmeteo.OpenMeteoClientTest",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.seguranca.NovasFuncionalidadesSegurancaTest",
+    "tests": "13",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.api.PainelOperacionalControllerTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.variabilidade.aplicacao.PoliticaPadraoVariabilidadeTest",
+    "tests": "18",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.cliente.aplicacao.ClienteServiceTest",
+    "tests": "16",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.dominio.RegrasMovimentacaoTest",
+    "tests": "21",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.organizacao.dominio.CoordenadasTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.vaga.api.VagaControllerTest",
+    "tests": "13",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.relatorio.infraestrutura.DadosRelatorioJpaTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.cliente.api.ClienteControllerTest",
+    "tests": "11",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.ocupacao.api.OcupacaoControllerTest",
+    "tests": "13",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.dominio.EstadosMovimentacaoTest",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.embarcacao.aplicacao.EmbarcacaoServiceTest",
+    "tests": "22",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.organizacao.api.OrganizacaoControllerTest",
+    "tests": "6",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.relatorio.infraestrutura.PermanenciaVagasJpaTest",
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.embarcacao.dominio.EmbarcacaoBuilderTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.autenticacao.aplicacao.AutenticacaoServiceTest",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.movimentacao.dominio.MovimentacaoTest",
+    "tests": "11",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "name": "br.com.caisora.referencia.visual.ReferenciasVisualTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "1"
+  },
+  {
+    "name": "br.com.caisora.referencia.infraestrutura.ReferenciasReaisTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "1"
+  },
+  {
+    "name": "br.com.caisora.CaisoraApplicationTests",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  }
+]
