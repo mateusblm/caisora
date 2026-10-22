@@ -1,0 +1,104 @@
+{
+  "browser": "156.0.8078.4",
+  "backend": "Spring Boot + PostgreSQL Testcontainers",
+  "date": "2026-10-22T13:09:58.522Z",
+  "scenarios": [
+    {
+      "viewport": "desktop",
+      "state": "resultados-painel",
+      "screenshot": "desktop-resultados-painel.png",
+      "captureWidth": 1440,
+      "captureHeight": 1100
+    },
+    {
+      "viewport": "desktop",
+      "state": "resultados",
+      "screenshot": "desktop-resultados.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "desktop",
+      "state": "vazio-painel",
+      "screenshot": "desktop-vazio-painel.png",
+      "captureWidth": 1440,
+      "captureHeight": 1148
+    },
+    {
+      "viewport": "desktop",
+      "state": "vazio",
+      "screenshot": "desktop-vazio.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "desktop",
+      "state": "loading",
+      "screenshot": "desktop-loading.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "desktop",
+      "state": "erro-mensagem",
+      "screenshot": "desktop-erro-mensagem.png"
+    },
+    {
+      "viewport": "desktop",
+      "state": "erro",
+      "screenshot": "desktop-erro.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "mobile",
+      "state": "resultados-painel",
+      "screenshot": "mobile-resultados-painel.png",
+      "captureWidth": 390,
+      "captureHeight": 1846
+    },
+    {
+      "viewport": "mobile",
+      "state": "resultados",
+      "screenshot": "mobile-resultados.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "mobile",
+      "state": "tabela-rolada",
+      "screenshot": "mobile-tabela-rolada.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "mobile",
+      "state": "vazio-painel",
+      "screenshot": "mobile-vazio-painel.png",
+      "captureWidth": 390,
+      "captureHeight": 1914
+    },
+    {
+      "viewport": "mobile",
+      "state": "vazio",
+      "screenshot": "mobile-vazio.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "mobile",
+      "state": "loading",
+      "screenshot": "mobile-loading.png",
+      "pageOverflow": false
+    },
+    {
+      "viewport": "mobile",
+      "state": "erro-mensagem",
+      "screenshot": "mobile-erro-mensagem.png"
+    },
+    {
+      "viewport": "mobile",
+      "state": "erro",
+      "screenshot": "mobile-erro.png",
+      "pageOverflow": false
+    }
+  ],
+  "limitations": [
+    "Mobile validado por emulação de viewport/touch no Chromium, sem aparelho físico.",
+    "Agrupamento usa setor/tipo atuais da vaga, pois não há versionamento desses atributos.",
+    "Dados presentes e vazios são respostas reais da API. Loading e erro usam interceptação de teste para reproduzir latência e indisponibilidade."
+  ]
+}

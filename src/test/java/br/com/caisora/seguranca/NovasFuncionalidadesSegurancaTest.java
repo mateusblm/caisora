@@ -75,6 +75,24 @@ class NovasFuncionalidadesSegurancaTest {
   assertThatThrownBy(()->c.maritimo(hoje,hoje)).isInstanceOf(AccessDeniedException.class);
   liberar(ModuloSistema.AMBIENTE);c.maritimo(hoje,hoje);verify(context.getBean(AmbienteService.class)).consultar(org,true,hoje,hoje);
  }
+ @org.junit.jupiter.params.ParameterizedTest
+ @org.junit.jupiter.params.provider.EnumSource(value=ModuloSistema.class, names={"RELATORIOS","VAGAS","OCUPACOES"})
+ void permanenciaHistoricaExigeOsTresModulos(ModuloSistema bloqueado){
+  autenticar("GERENTE");liberar(ModuloSistema.RELATORIOS);liberar(ModuloSistema.VAGAS);liberar(ModuloSistema.OCUPACOES);
+  when(context.getBean(ModuloOrganizacaoRepositoryJpa.class).findByOrganizacaoIdAndModulo(org,bloqueado))
+   .thenReturn(Optional.of(ModuloOrganizacao.criar(org,bloqueado,false)));
+  var dia=LocalDate.of(2026,10,10);
+  assertThatThrownBy(()->context.getBean(RelatorioController.class).permanenciaVagas(dia,dia,null,null)).isInstanceOf(AccessDeniedException.class);
+  verifyNoInteractions(context.getBean(RelatorioService.class));
+ }
+ @Test void permanenciaUsaTenantDoTokenENegaPerfilSemPermissao(){
+  autenticar("GERENTE");liberar(ModuloSistema.RELATORIOS);
+  var dia=LocalDate.of(2026,10,10);
+  context.getBean(RelatorioController.class).permanenciaVagas(dia,dia,br.com.caisora.vaga.dominio.TipoVaga.SECA,"Norte");
+  verify(context.getBean(RelatorioService.class)).permanenciaVagas(org,dia,dia,"Norte",br.com.caisora.vaga.dominio.TipoVaga.SECA);
+  autenticar("ATENDENTE");
+  assertThatThrownBy(()->context.getBean(RelatorioController.class).permanenciaVagas(dia,dia,null,null)).isInstanceOf(AccessDeniedException.class);
+ }
  private void liberar(ModuloSistema modulo){when(context.getBean(ModuloOrganizacaoRepositoryJpa.class).findByOrganizacaoIdAndModulo(org,modulo)).thenReturn(Optional.of(ModuloOrganizacao.criar(org,modulo,true)));}
  private void autenticar(String perfil){var jwt=Jwt.withTokenValue("teste").header("alg","HS256").subject(UUID.randomUUID().toString())
  .claim("perfil",perfil).claim("organizacaoId",org.toString()).build();

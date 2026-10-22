@@ -30,6 +30,13 @@ class NovosEndpointsTest {
   mvc.perform(get("/api/v1/relatorios/ocupacao").param("tipo","INEXISTENTE")).andExpect(status().isBadRequest());
   mvc.perform(get("/api/v1/relatorios/movimentacoes")).andExpect(status().isBadRequest());verifyNoInteractions(ambiente,relatorios);
  }
+ @Test void permanenciaValidaDatasObrigatoriasEFormatoDosFiltros() throws Exception {
+  mvc.perform(get("/api/v1/relatorios/permanencia-vagas")).andExpect(status().isBadRequest());
+  mvc.perform(get("/api/v1/relatorios/permanencia-vagas").param("inicio","2026-10-10")).andExpect(status().isBadRequest());
+  mvc.perform(get("/api/v1/relatorios/permanencia-vagas").param("inicio","invalido").param("fim","2026-10-10")).andExpect(status().isBadRequest());
+  mvc.perform(get("/api/v1/relatorios/permanencia-vagas").param("inicio","2026-10-10").param("fim","2026-10-10").param("tipo","INEXISTENTE")).andExpect(status().isBadRequest());
+  verifyNoInteractions(relatorios);
+ }
  @Test void coordenadasValidamIntervaloPrecisaoEObrigatoriedade() throws Exception {
   mvc.perform(put("/api/v1/minha-organizacao/coordenadas").contentType(MediaType.APPLICATION_JSON).content("{\"latitude\":91,\"longitude\":-181}")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.codigo").value("ERRO_VALIDACAO"));
   mvc.perform(put("/api/v1/minha-organizacao/coordenadas").contentType(MediaType.APPLICATION_JSON).content("{\"latitude\":0.1234567}")).andExpect(status().isBadRequest());

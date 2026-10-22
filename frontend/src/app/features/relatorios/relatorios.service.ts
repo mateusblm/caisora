@@ -33,6 +33,17 @@ export interface ContratosRelatorio {
   porPeriodicidade: Record<string, number>;
   valoresBasePorPeriodicidade: Record<string, number>;
 }
+export interface IndicadoresPermanencia {
+  quantidadeOcupacoes: number;
+  permanenciaMediaSegundos: number | null;
+  menorPermanenciaSegundos: number | null;
+  maiorPermanenciaSegundos: number | null;
+  totalHorasOcupacao: number;
+}
+export interface PermanenciaVagasRelatorio {
+  resumo: IndicadoresPermanencia;
+  grupos: { setor: string | null; tipo: string; indicadores: IndicadoresPermanencia }[];
+}
 @Injectable({ providedIn: 'root' })
 export class RelatoriosService {
   private readonly http = inject(HttpClient);
@@ -40,6 +51,12 @@ export class RelatoriosService {
     return this.http.get<OcupacaoRelatorio>(`${environment.apiUrl}/relatorios/ocupacao`, {
       params,
     });
+  }
+  permanenciaVagas(params: Record<string, string>) {
+    return this.http.get<PermanenciaVagasRelatorio>(
+      `${environment.apiUrl}/relatorios/permanencia-vagas`,
+      { params },
+    );
   }
   movimentacoes(params: Record<string, string>) {
     return this.http.get<MovimentacoesRelatorio>(`${environment.apiUrl}/relatorios/movimentacoes`, {

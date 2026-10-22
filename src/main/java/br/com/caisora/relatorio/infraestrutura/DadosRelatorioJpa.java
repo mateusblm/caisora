@@ -26,6 +26,32 @@ public class DadosRelatorioJpa implements DadosRelatorio {
         if(tipo!=null) q.setParameter("tipo",tipo);
         return q.getResultList().stream().map(row->new VagaOcupada((String)row[0],(TipoVaga)row[1],(Boolean)row[2])).toList();
     }
+    @Override
+    public List<PermanenciaOcupacao> permanencias(
+            UUID org, Instant inicio, Instant fimExclusivo, String setor, TipoVaga tipo
+    ) {
+        var consulta = em.createQuery("""
+                select o.id, v.setor, v.tipo, o.inicioEm, o.encerradaEm
+                  from Ocupacao o join o.vaga v
+                 where o.organizacao.id = :org
+                   and v.organizacao.id = :org
+                   and o.status = br.com.caisora.ocupacao.dominio.StatusOcupacao.ENCERRADA
+                   and o.encerradaEm >= :inicio
+                   and o.encerradaEm < :fim
+                """
+                + (setor == null ? "" : " and lower(v.setor) = lower(:setor)")
+                + (tipo == null ? "" : " and v.tipo = :tipo"), Object[].class)
+                .setParameter("org", org)
+                .setParameter("inicio", inicio)
+                .setParameter("fim", fimExclusivo);
+        if (setor != null) consulta.setParameter("setor", setor);
+        if (tipo != null) consulta.setParameter("tipo", tipo);
+        return consulta.getResultList().stream()
+                .map(linha -> new PermanenciaOcupacao((UUID) linha[0], (String) linha[1],
+                        (TipoVaga) linha[2], (Instant) linha[3], (Instant) linha[4]))
+                .toList();
+    }
+
     public List<Movimentacao> movimentacoes(UUID org,Instant inicio,Instant fim,TipoMovimentacao tipo) {
         var q=em.createQuery("select m from Movimentacao m where m.organizacao.id=:org and m.agendadaPara>=:inicio and m.agendadaPara<:fim"+
         (tipo==null?"":" and m.tipo=:tipo"),Movimentacao.class).setParameter("org",org).setParameter("inicio",inicio).setParameter("fim",fim);

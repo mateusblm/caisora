@@ -1,6 +1,7 @@
 package br.com.caisora.relatorio.aplicacao;
 
 import br.com.caisora.relatorio.api.RelatoriosResponse.*;
+import br.com.caisora.relatorio.api.PermanenciaVagasResponse;
 import br.com.caisora.relatorio.dominio.DadosRelatorio;
 import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import br.com.caisora.vaga.dominio.*;
@@ -77,6 +78,68 @@ public class RelatorioService {
         situacoes.forEach((s,n)->percentuais.put(s,percentual(n,lista.size())));
         return new Contratos(lista.size(),situacoes,percentuais,periodos,valores);
     }
+    public PermanenciaVagasResponse permanenciaVagas(
+            UUID org, LocalDate inicio, LocalDate fim, String setor, TipoVaga tipo
+    ) {
+        validarPeriodo(inicio, fim, true);
+        if (inicio.getYear() < 1 || fim.getYear() > 9999) {
+            throw new DadosInvalidosException("PERIODO_INVALIDO", "As datas devem estar entre os anos 1 e 9999");
+        }
+        if (setor != null && setor.length() > 100) {
+            throw new DadosInvalidosException("FILTRO_INVALIDO", "Setor deve ter até 100 caracteres");
+        }
+        String setorNormalizado = setor == null || setor.isBlank() ? null : setor.trim();
+        var ocupacoes = dados.permanencias(org, inicio.atStartOfDay(ZoneOffset.UTC).toInstant(),
+                fim.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant(), setorNormalizado, tipo);
+        record Chave(String setor, TipoVaga tipo) {}
+        Map<Chave, AcumuladorPermanencia> grupos = new HashMap<>();
+        var total = new AcumuladorPermanencia();
+        for (var ocupacao : ocupacoes) {
+            if (ocupacao.inicioEm() == null || ocupacao.encerradaEm() == null || ocupacao.tipo() == null
+                    || ocupacao.encerradaEm().isBefore(ocupacao.inicioEm())) {
+                throw new DadosInvalidosException("DADOS_HISTORICOS_INVALIDOS",
+                        "Ocupação encerrada com dados ausentes ou cronologia inválida; revise os registros históricos");
+            }
+            var duracao = Duration.between(ocupacao.inicioEm(), ocupacao.encerradaEm());
+            // Preserva a fração de segundo; arredonda somente os indicadores apresentados.
+            var segundos = BigDecimal.valueOf(duracao.getSeconds())
+                    .add(BigDecimal.valueOf(duracao.getNano(), 9));
+            total.adicionar(segundos);
+            grupos.computeIfAbsent(new Chave(ocupacao.setor(), ocupacao.tipo()),
+                    chave -> new AcumuladorPermanencia()).adicionar(segundos);
+        }
+        var agrupados = grupos.entrySet().stream()
+                .map(entrada -> new PermanenciaVagasResponse.Grupo(entrada.getKey().setor(),
+                        entrada.getKey().tipo(), entrada.getValue().indicadores()))
+                .sorted(Comparator.comparing(PermanenciaVagasResponse.Grupo::setor,
+                        Comparator.nullsFirst(Comparator.naturalOrder()))
+                        .thenComparing(grupo -> grupo.tipo().name()))
+                .toList();
+        return new PermanenciaVagasResponse(total.indicadores(), agrupados);
+    }
+
+    private static final class AcumuladorPermanencia {
+        private long quantidade;
+        private BigDecimal total = BigDecimal.ZERO;
+        private BigDecimal menor;
+        private BigDecimal maior;
+
+        void adicionar(BigDecimal segundos) {
+            quantidade++;
+            total = total.add(segundos);
+            menor = menor == null ? segundos : menor.min(segundos);
+            maior = maior == null ? segundos : maior.max(segundos);
+        }
+
+        PermanenciaVagasResponse.Indicadores indicadores() {
+            return new PermanenciaVagasResponse.Indicadores(quantidade,
+                    quantidade == 0 ? null : total.divide(BigDecimal.valueOf(quantidade), 2, RoundingMode.HALF_UP),
+                    menor == null ? null : menor.setScale(2, RoundingMode.HALF_UP),
+                    maior == null ? null : maior.setScale(2, RoundingMode.HALF_UP),
+                    total.divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP));
+        }
+    }
+
     private void validarPeriodo(LocalDate inicio,LocalDate fim,boolean obrigatorio) {
         if((obrigatorio && (inicio==null||fim==null)) || (inicio!=null&&fim!=null&&fim.isBefore(inicio)) || (fim!=null&&fim.equals(LocalDate.MAX)))
         throw new DadosInvalidosException("PERIODO_INVALIDO","Período inválido: informe datas em ordem cronológica");

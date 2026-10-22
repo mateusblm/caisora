@@ -24,6 +24,17 @@ public class RelatorioController {
     public RelatoriosResponse.Ocupacao ocupacao(@RequestParam(required=false) String setor,@RequestParam(required=false) TipoVaga tipo) {
         return service.ocupacao(leitor.obterUsuarioAutenticado().organizacaoId(),setor,tipo);
     }
+    @GetMapping("/permanencia-vagas")
+    @PreAuthorize("@acesso.permitido(authentication, 'RELATORIOS', 'VISUALIZAR') and @acesso.permitido(authentication, 'VAGAS', 'VISUALIZAR') and @acesso.permitido(authentication, 'OCUPACOES', 'VISUALIZAR')")
+    public PermanenciaVagasResponse permanenciaVagas(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fim,
+            @RequestParam(required = false) TipoVaga tipo,
+            @RequestParam(required = false) String setor
+    ) {
+        return service.permanenciaVagas(leitor.obterUsuarioAutenticado().organizacaoId(), inicio, fim, setor, tipo);
+    }
+
     @GetMapping("/movimentacoes")
     @PreAuthorize("@acesso.permitido(authentication, 'RELATORIOS', 'VISUALIZAR') and @acesso.permitido(authentication, 'MOVIMENTACOES', 'VISUALIZAR')")
     public RelatoriosResponse.Movimentacoes movimentacoes(@RequestParam LocalDate inicio,@RequestParam LocalDate fim,@RequestParam(required=false) TipoMovimentacao tipo) {

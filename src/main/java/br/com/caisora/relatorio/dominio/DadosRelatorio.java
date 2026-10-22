@@ -9,6 +9,9 @@ import br.com.caisora.contrato.dominio.*;
 public interface DadosRelatorio {
     record VagaOcupada(String setor, TipoVaga tipo, boolean ocupada) {
     }
+    record PermanenciaOcupacao(UUID ocupacaoId, String setor, TipoVaga tipo, Instant inicioEm, Instant encerradaEm) {
+    }
+    List<PermanenciaOcupacao> permanencias(UUID org, Instant inicio, Instant fimExclusivo, String setor, TipoVaga tipo);
     List<VagaOcupada> vagas(UUID org, String setor, TipoVaga tipo);
     List<Movimentacao> movimentacoes(UUID org, Instant inicio, Instant fimExclusivo, TipoMovimentacao tipo);
     List<Contrato> contratos(UUID org, StatusContrato status, PeriodicidadeContrato periodicidade, LocalDate inicio, LocalDate fim);

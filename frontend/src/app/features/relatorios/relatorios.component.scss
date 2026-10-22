@@ -55,3 +55,32 @@ th {
     padding: 12px;
   }
 }
+
+.explicacao-filtro {
+  flex-basis: 100%;
+  margin: 0;
+}
+.resumo-permanencia {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 16px;
+  margin: 16px 0 24px;
+  div {
+    padding: 16px;
+    border: 1px solid var(--mat-sys-outline-variant, #ddd);
+    border-radius: 8px;
+  }
+  dt {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant, #555);
+  }
+  dd {
+    margin: 8px 0 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.seletor-relatorio {
+  width: min(100%, 360px);
+}

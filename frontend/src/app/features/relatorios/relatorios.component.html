@@ -1,7 +1,7 @@
 <h1>Relatórios da marina</h1>
 <p>Indicadores calculados a partir dos registros da sua organização.</p>
 <form #form="ngForm" (ngSubmit)="consultar()">
-  <mat-form-field
+  <mat-form-field class="seletor-relatorio"
     ><mat-label>Relatório</mat-label
     ><mat-select
       [disabled]="carregando()"
@@ -11,6 +11,7 @@
     >
       @if (pode('VAGAS') && pode('OCUPACOES')) {
         <mat-option value="ocupacao">Ocupação de vagas</mat-option>
+        <mat-option value="permanencia-vagas">Permanência histórica nas vagas</mat-option>
       }
       @if (pode('MOVIMENTACOES')) {
         <mat-option value="movimentacoes">Desempenho das movimentações</mat-option>
@@ -20,7 +21,37 @@
       }
     </mat-select></mat-form-field
   >
-  @if (tipo === 'ocupacao') {
+  @if (tipo === 'ocupacao' || tipo === 'permanencia-vagas') {
+    @if (tipo === 'permanencia-vagas') {
+      <p class="explicacao-filtro">
+        Selecione ocupações pelo encerramento efetivo. Datas inclusivas em UTC; a duração considera
+        toda a permanência.
+      </p>
+      <mat-form-field>
+        <mat-label>Encerramento inicial (UTC)</mat-label>
+        <input
+          matInput
+          type="date"
+          name="inicio"
+          [(ngModel)]="inicio"
+          required
+          min="0001-01-01"
+          max="9999-12-31"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Encerramento final (UTC)</mat-label>
+        <input
+          matInput
+          type="date"
+          name="fim"
+          [(ngModel)]="fim"
+          required
+          [min]="inicio || '0001-01-01'"
+          max="9999-12-31"
+        />
+      </mat-form-field>
+    }
     <mat-form-field
       ><mat-label>Setor (correspondência exata)</mat-label
       ><input matInput name="setor" maxlength="100" [(ngModel)]="setor"
@@ -224,4 +255,99 @@
       </table>
     </div></mat-card
   >
+}
+
+@if (permanencia(); as r) {
+  <mat-card data-testid="permanencia-resultado" aria-label="Resultado da permanência histórica">
+    <h2>Permanência histórica nas vagas</h2>
+    <p>
+      Somente ocupações encerradas. Duração efetiva entre início e encerramento, sem utilizar a
+      previsão de saída.
+    </p>
+    @if (r.resumo.quantidadeOcupacoes === 0) {
+      <p role="status">Nenhuma ocupação encerrada encontrada para os filtros informados.</p>
+    }
+    <dl class="resumo-permanencia">
+      <div>
+        <dt>Ocupações encerradas</dt>
+        <dd data-testid="quantidade-encerradas">{{ r.resumo.quantidadeOcupacoes }}</dd>
+      </div>
+      <div>
+        <dt>Permanência média (segundos)</dt>
+        <dd>
+          {{
+            r.resumo.permanenciaMediaSegundos == null
+              ? 'Sem dados'
+              : (r.resumo.permanenciaMediaSegundos | number: '1.2-2')
+          }}
+        </dd>
+      </div>
+      <div>
+        <dt>Menor permanência (segundos)</dt>
+        <dd>
+          {{
+            r.resumo.menorPermanenciaSegundos == null
+              ? 'Sem dados'
+              : (r.resumo.menorPermanenciaSegundos | number: '1.2-2')
+          }}
+        </dd>
+      </div>
+      <div>
+        <dt>Maior permanência (segundos)</dt>
+        <dd>
+          {{
+            r.resumo.maiorPermanenciaSegundos == null
+              ? 'Sem dados'
+              : (r.resumo.maiorPermanenciaSegundos | number: '1.2-2')
+          }}
+        </dd>
+      </div>
+      <div>
+        <dt>Total de horas de ocupação</dt>
+        <dd>{{ r.resumo.totalHorasOcupacao | number: '1.4-4' }}</dd>
+      </div>
+    </dl>
+    <h3>Por setor e tipo de vaga</h3>
+    <p>
+      Setor e tipo correspondem ao cadastro atual da vaga, incluindo vagas hoje inativas. Horas são
+      somadas por ocupação, sem remover sobreposições entre vagas.
+    </p>
+    <div
+      class="tabela"
+      tabindex="0"
+      role="region"
+      aria-label="Permanência por setor e tipo, tabela com rolagem horizontal"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Setor</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Encerradas</th>
+            <th scope="col">Média (s)</th>
+            <th scope="col">Mínimo (s)</th>
+            <th scope="col">Máximo (s)</th>
+            <th scope="col">Total (h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (g of r.grupos; track $index) {
+            <tr>
+              <td>{{ g.setor || 'Sem setor' }}</td>
+              <td>{{ rotulo(g.tipo) }}</td>
+              <td>{{ g.indicadores.quantidadeOcupacoes }}</td>
+              <td>{{ g.indicadores.permanenciaMediaSegundos | number: '1.2-2' }}</td>
+              <td>{{ g.indicadores.menorPermanenciaSegundos | number: '1.2-2' }}</td>
+              <td>{{ g.indicadores.maiorPermanenciaSegundos | number: '1.2-2' }}</td>
+              <td>{{ g.indicadores.totalHorasOcupacao | number: '1.4-4' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7">Sem grupos para o período.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-card>
 }

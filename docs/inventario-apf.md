@@ -104,6 +104,75 @@ Rota Angular comum: `/relatorios`, com seleção de objetivo funcional e formul�
 - Não há conversão entre periodicidades, soma financeira geral ou projeção de receitas. Mesmo os valores de periodicidade personalizada são apenas uma soma da categoria, não um fluxo de caixa. Contratos cancelados/encerrados entram se os filtros os incluírem. As somas não representam pagamento recebido nem faturamento realizado.
 - Evidências: RelatorioServiceTest (mensal e anual separados, percentuais e vazio), DadosRelatorioJpaTest (filtros combinados e isolamento), NovasFuncionalidadesSegurancaTest e relatorios.component.spec.ts.
 
+### SE06 — Permanência histórica nas vagas — criada
+
+**Objetivo funcional próprio:** analisar quanto tempo duraram as ocupações efetivamente encerradas no período, apoiando análise histórica de uso. O relatório de ocupação já existente continua apresentando vagas ativas ocupadas/disponíveis no instante da consulta. SE06 seleciona outro conjunto de registros e produz médias, extremos e horas históricas; não deriva seus resultados da fotografia atual nem chama seu endpoint.
+
+A identificação **SE06** é a referência informada pela equipe acadêmica. Não atribui Pontos de Função nem certifica automaticamente classificação/contagem global ou distribuição por integrante. A conferência segue os slides do professor e a avaliação da equipe.
+
+- **Rota/tela:** `/relatorios`, opção **Permanência histórica nas vagas** em `RelatoriosComponent` (`relatorios.component.ts`, `.html`, `.scss`).
+- **Endpoint:** `GET /api/v1/relatorios/permanencia-vagas`.
+- **DTO:** `PermanenciaVagasResponse`, com records internos `Indicadores` e `Grupo`, em `relatorio/api`.
+- **Porta e implementação:** `DadosRelatorio.permanencias(...)` retorna projeções `PermanenciaOcupacao`; `DadosRelatorioJpa` consulta apenas campos de Ocupacao e Vaga; `RelatorioService.permanenciaVagas(...)` calcula todos os indicadores dentro de transação de leitura.
+- **Autorização:** exige simultaneamente `RELATORIOS:VISUALIZAR`, `VAGAS:VISUALIZAR` e `OCUPACOES:VISUALIZAR`, pelos controles existentes de variabilidade. Módulo comercial desligado ou permissão negada impede acesso, inclusive diretamente ao endpoint. A organização é obtida do JWT; não há parâmetro para trocar o tenant. A consulta verifica `o.organizacao.id` **e** `v.organizacao.id`.
+- **Persistência:** nenhuma tabela, coluna ou migration nova necessária. Nenhum indicador ou dado de demonstração é persistido em produção.
+
+**ENTRADA**
+
+| Campo | Tipo/obrigatoriedade | Regra |
+|---|---|---|
+| `inicio` | data ISO `AAAA-MM-DD`, obrigatório | Primeiro dia de encerramento efetivo, inclusivo, 00:00 UTC |
+| `fim` | data ISO `AAAA-MM-DD`, obrigatório | Último dia de encerramento efetivo, inclusivo; consulta usa limite exclusivo às 00:00 UTC do dia seguinte |
+| `tipo` | enum opcional | MOLHADA, SECA, POITA ou OUTRA; igualdade no cadastro da vaga |
+| `setor` | texto opcional, até 100 caracteres | Correspondência exata sem distinguir caixa, espaços externos removidos; texto em branco equivale a filtro ausente |
+
+As datas precisam estar em ordem e entre os anos 1 e 9999. Data ausente, formato inválido, enum inválido, cronologia invertida e setor excessivo retornam HTTP 400. Filtros opcionais são cumulativos. Exemplo: `/api/v1/relatorios/permanencia-vagas?inicio=2026-10-10&fim=2026-10-10&tipo=SECA&setor=Norte`.
+
+**ALIs realmente referenciados para esta análise**
+
+| Arquivo lógico de negócio | Entidade/tabela | Campos efetivamente usados |
+|---|---|---|
+| Ocupações | `Ocupacao` / `ocupacoes` | `id`, `organizacao_id`, `vaga_id`, `status`, `inicio_em`, `encerrada_em` |
+| Vagas | `Vaga` / `vagas` | `id`, `organizacao_id`, `setor`, `tipo` |
+
+A projeção não carrega embarcação, cliente, contrato ou histórico de movimentações. As chaves de organização restringem o tenant; os dados cadastrais de organizações não são consultados para este cálculo. Os dois ALIs de negócio acima são os referenciados nesta evidência, sem atribuição automática de complexidade ou quantidade de PF.
+
+**Seleção e cálculos derivados**
+
+1. Considera somente `status=ENCERRADA` com `encerradaEm` no intervalo solicitado. Ocupações ATIVAS ficam fora, mesmo se a previsão de saída estiver no período.
+2. Para cada ocupação, `duracaoSegundos = encerradaEm − inicioEm`, considerando a duração completa, inclusive a parte anterior à data inicial. `fimPrevistoEm` nunca é usado como encerramento. As frações de segundo são preservadas antes de agregar.
+3. Quantidade = número de ocupações selecionadas; média = soma das durações / quantidade; menor/maior = extremos das durações selecionadas; total de horas = soma das durações / 3600.
+4. Repete os mesmos cinco indicadores para cada combinação de setor/tipo. A média geral é ponderada pela quantidade de ocupações, não uma média simples das médias dos grupos.
+5. Média, mínimo e máximo são apresentados em segundos com duas casas decimais; horas com quatro casas; arredondamento HALF_UP somente na saída. Duração zero válida é incluída.
+6. Sem registros: quantidade 0, total de horas 0, média/mínimo/máximo `null`, grupos `[]`; a tela mostra “Sem dados” e mensagem específica, sem divisão por zero.
+7. Datas ausentes/invertidas ou tipo ausente em projeções inconsistentes geram erro explícito `DADOS_HISTORICOS_INVALIDOS` (HTTP 400); não viram duração zero nem são removidas silenciosamente. As constraints existentes do PostgreSQL já impedem essas inconsistências pelos fluxos normais.
+
+**SAÍDA**
+
+| Campo JSON | Conteúdo |
+|---|---|
+| `resumo.quantidadeOcupacoes` | Quantidade de ocupações encerradas selecionadas |
+| `resumo.permanenciaMediaSegundos` | Média de duração efetiva, ou null sem amostras |
+| `resumo.menorPermanenciaSegundos` | Menor duração efetiva, ou null sem amostras |
+| `resumo.maiorPermanenciaSegundos` | Maior duração efetiva, ou null sem amostras |
+| `resumo.totalHorasOcupacao` | Soma de durações efetivas convertida em horas |
+| `grupos[].setor`, `grupos[].tipo` | Dimensões do agrupamento; setor nulo aparece como “Sem setor” |
+| `grupos[].indicadores` | Os mesmos cinco campos do resumo para o grupo |
+
+**Limitações semânticas:** inclui vagas hoje inativas. Setor e tipo são os valores **atuais** da vaga, pois não existe versionamento desses atributos; não se afirma reconstruir a configuração física antiga. Horas são somadas por ocupação, sem deduplicar simultaneidade entre vagas; não são horas de calendário da marina, taxa de ocupação temporal, receita ou pagamento. Não há corte da duração ao intervalo, pois o período seleciona pelo encerramento.
+
+**Evidências de implementação e teste**
+
+- `PermanenciaVagasServiceTest`: média geral/grupos, ponderação, mínimos/máximos, horas, zero válido, frações de segundo, filtros encaminhados à porta, datas/limites inválidos, dados inconsistentes e conjunto vazio.
+- `PermanenciaVagasJpaTest`: PostgreSQL com todas as migrations; apenas encerradas; encerramento exatamente no início e no último microssegundo do dia; exclusão de registros imediatamente antes/depois; previsão de saída ignorada; duração que começa antes do filtro; vaga inativa; filtros cumulativos por tipo/setor; dois tenants e associação inconsistente entre tenants; vazio e ausência de alteração de registros.
+- `NovasFuncionalidadesSegurancaTest`: nega o novo endpoint com cada um dos três módulos desligado; verifica perfil, tenant do JWT e chamada autorizada.
+- `NovosEndpointsTest`: valida parâmetros obrigatórios, formato das datas e enum HTTP.
+- `relatorios.component.spec.ts` e `relatorios.service.spec.ts`: filtros, requisição GET independente, opção conforme permissões, loading, erro, vazio, médias/extremos/horas recebidos do backend e validação de datas no formulário.
+- `PermanenciaVagasVisualTest` + [`scripts/validar-se06-browser.mjs`](../scripts/validar-se06-browser.mjs): Chromium real com build de produção, login real, JWT, Spring Boot e PostgreSQL descartável. Capturas desktop/mobile de filtros preenchidos, resultados, estado vazio, loading/erro e tabela rolada. Resultados e vazios vêm da API real; apenas latência/falha são induzidas pelo navegador para reprodução controlada.
+- Evidências visuais e instruções: [demonstração SE06](evidencias/se06/README.md), com capturas e `verificacao.json`. Mobile usa emulação de viewport/touch, sem aparelho físico. Não houve validação em Safari/Firefox nem leitor de tela.
+
+**AIEs e contagem:** esta implementação não adiciona AIE nem integração externa. Os dois conjuntos externos já documentados permanecem os mesmos. A eventual reutilização por integrante não deve ser apresentada como quatro novos conjuntos ou somada em duplicidade no total do projeto; a interpretação do requisito “2 por membro” permanece pendente de confirmação com o professor.
+
 ## Manutenção e configurações
 
 ### Localização da marina — criada
@@ -223,11 +292,18 @@ npm --prefix frontend test -- --watch=false
 
 Evidências detalhadas: relatórios JUnit em `target/surefire-reports`, saída Vitest e build Angular. Testes com PostgreSQL executam todas as migrations, incluindo V21, e verificam coordenadas persistidas, filtros combinados, isolamento de organizações e consulta sem mudança de auditoria. Testes de segurança criam proxies reais de method security e JWTs controlados para confirmar a negação à marina, permissão da plataforma, permissões internas e bloqueio dos relatórios por módulo.
 
-Os testes Angular usam DOM em jsdom: verificam renderização de resultados/vazios/erros, filtros, atribuição e bloqueios visuais. A responsividade é implementada por flex-wrap, campos a 100% abaixo de 600 px e tabelas roláveis. Esses testes não substituem inspeção visual em navegador real em diferentes dispositivos; não foi executada uma suíte de navegador real nesta entrega.
+Os testes Angular usam DOM em jsdom: verificam renderização de resultados/vazios/erros, filtros, atribuição e bloqueios visuais. A responsividade é implementada por flex-wrap, campos a 100% abaixo de 600 px e tabelas roláveis. Esses testes não substituem inspeção visual em navegador real em diferentes dispositivos; a entrega inicial não executou uma suíte de navegador real. A extensão SE06 acrescenta inspeção no Chromium com API real, documentada acima.
 
-### Resultado desta execução
+### Resultado da entrega inicial (anterior à SE06)
 
 - Backend: **422 testes**, zero falhas, zero erros, zero ignorados, incluindo PostgreSQL/Testcontainers, migration V21 e HTTP controlado.
 - Frontend: **129 testes** em 29 arquivos, incluindo 14 testes adicionados para as novas telas/serviços e configuração de módulos.
 - Compilação Angular de desenvolvimento aprovada. Build de produção aprovado, com avisos de orçamento do bundle inicial (686,18 kB frente a 500 kB de aviso) e do estilo existente do dashboard (11,09 kB frente a 8 kB de aviso). Nenhum limite de erro foi excedido. O build incorpora as fontes Google já presentes no projeto e precisa de acesso à rede nessa etapa.
 - Nenhuma chamada ao provedor real foi usada como evidência de teste; não houve contratação comercial, publicação ou alteração de dados de produção.
+
+### Resultado da extensão SE06
+
+- Backend: **441 testes**, zero falhas, zero erros e zero ignorados na execução final com `CAISORA_VISUAL=true`, incluindo a demonstração visual opt-in. Sem essa variável, os 440 testes funcionais são executados e apenas a demonstração visual é ignorada.
+- Frontend: 136 testes em 30 arquivos, sem falhas.
+- Build de produção aprovado. Permanecem os avisos de orçamento do bundle inicial e do estilo do dashboard já registrados na entrega inicial.
+- Chromium real: desktop 1440×1100 e mobile 390×844, inspeção de filtros e painéis completos, inclusive vazio e rolagem horizontal contida na tabela. Quinze capturas e relatório de verificação em `docs/evidencias/se06/`; as capturas de painel completo ampliam apenas a altura do viewport, preservando sua largura.
