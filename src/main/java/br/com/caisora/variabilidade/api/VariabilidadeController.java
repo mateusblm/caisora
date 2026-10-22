@@ -44,7 +44,7 @@ public class VariabilidadeController {
     }
 
     @PutMapping("/modulos/{modulo}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR_MARINA','ADMINISTRADOR_PLATAFORMA')")
+    @PreAuthorize("hasRole('ADMINISTRADOR_PLATAFORMA')")
     public ConfiguracaoVariabilidadeResponse atualizarModulo(
             @PathVariable ModuloSistema modulo,
             @Valid @RequestBody AtualizarModuloRequest request

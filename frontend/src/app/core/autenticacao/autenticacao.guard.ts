@@ -86,6 +86,8 @@ const nomeModulo: Record<ModuloSistema, string> = {
   PAINEL_TV: 'Painel TV',
   USUARIOS: 'Usuários',
   CHECKLIST_SAIDA: 'Checklist de saída',
+  AMBIENTE: 'Condições ambientais',
+  RELATORIOS: 'Relatórios',
   CONFIGURACOES: 'Configurações'
 };
 

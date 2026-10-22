@@ -192,6 +192,18 @@ public class TratadorGlobalException {
         ));
     }
 
+    @ExceptionHandler(br.com.caisora.ambiente.aplicacao.ProvedorIndisponivelException.class)
+    public ResponseEntity<ErroResponse> tratarProvedor(RuntimeException exception, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(criarErro(
+            HttpStatus.SERVICE_UNAVAILABLE, "PROVEDOR_INDISPONIVEL", exception.getMessage(), request.getRequestURI(), List.of()));
+    }
+
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    public ResponseEntity<ErroResponse> tratarParametroAusente(Exception exception, HttpServletRequest request) {
+        return ResponseEntity.badRequest().body(criarErro(HttpStatus.BAD_REQUEST, "PARAMETRO_OBRIGATORIO",
+            "Parametro obrigatorio ausente", request.getRequestURI(), List.of()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> tratarInesperado(
             Exception exception,

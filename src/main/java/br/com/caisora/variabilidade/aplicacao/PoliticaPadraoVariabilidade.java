@@ -14,9 +14,10 @@ import org.springframework.stereotype.Component;
 // nao tem configuracao propria salva para aquele modulo ou permissao.
 @Component
 public class PoliticaPadraoVariabilidade {
-    // Checklist de saida e opcional: vem desligado e a marina liga se quiser usar.
+    // Novos módulos e checklist exigem liberação explícita pela plataforma.
     public boolean moduloAtivo(ModuloSistema modulo) {
-        return modulo != ModuloSistema.CHECKLIST_SAIDA;
+        return modulo != ModuloSistema.CHECKLIST_SAIDA
+                && modulo != ModuloSistema.AMBIENTE && modulo != ModuloSistema.RELATORIOS;
     }
 
     public boolean permitido(PerfilUsuario perfil, ModuloSistema modulo, AcaoSistema acao) {

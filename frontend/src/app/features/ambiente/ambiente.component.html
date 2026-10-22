@@ -1,0 +1,86 @@
+<h1>Condições ambientais</h1>
+<p>Previsões são estimativas e não garantem segurança para navegação.</p>
+<form #form="ngForm" (ngSubmit)="consultar()">
+  <mat-form-field
+    ><mat-label>Conjunto de dados</mat-label
+    ><mat-select
+      [disabled]="carregando()"
+      name="tipo"
+      [(ngModel)]="tipo"
+      (ngModelChange)="resultado.set(null)"
+      ><mat-option value="meteorologia">Meteorologia</mat-option
+      ><mat-option value="maritimo">Condições marítimas</mat-option></mat-select
+    ></mat-form-field
+  >
+  <mat-form-field
+    ><mat-label>Data inicial (UTC)</mat-label
+    ><input
+      matInput
+      type="date"
+      name="inicio"
+      [(ngModel)]="inicio"
+      [min]="hoje"
+      [max]="limite"
+      required
+  /></mat-form-field>
+  <mat-form-field
+    ><mat-label>Data final (UTC)</mat-label
+    ><input
+      matInput
+      type="date"
+      name="fim"
+      [(ngModel)]="fim"
+      [min]="inicio"
+      [max]="limite"
+      required
+  /></mat-form-field>
+  <button mat-flat-button [disabled]="form.invalid || fim < inicio || carregando()">
+    {{ carregando() ? 'Consultando…' : 'Consultar' }}
+  </button>
+</form>
+<p class="erro" role="alert">{{ erro() }}</p>
+@if (resultado(); as r) {
+  <mat-card
+    ><h2>
+      {{ tipoResultado() === 'meteorologia' ? 'Previsão meteorológica' : 'Condições marítimas' }}
+    </h2>
+    <p>
+      Fonte: <a [href]="r.fonte" target="_blank" rel="noopener">{{ r.origem }}</a> · Dados sob
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+    </p>
+    <p>
+      Consultado em {{ r.consultadoEm | date: 'dd/MM/yyyy HH:mm:ss' : 'UTC' }} UTC.
+      {{ r.atualizacaoProvedor }}.
+    </p>
+    @if (r.incompleta) {
+      <p role="status">Resposta incompleta: dados ausentes aparecem como “—”.</p>
+    }
+    @if (!r.horas.length) {
+      <p>Não há dados para o período.</p>
+    }
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Data/hora (UTC)</th>
+            @for (c of colunasResultado(); track c.campo) {
+              <th>{{ c.nome }} ({{ r.unidades[c.campo] }})</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (h of r.horas; track h.horario) {
+            <tr>
+              <td>{{ h.horario | date: 'dd/MM/yyyy HH:mm' : 'UTC' }}</td>
+              @for (c of colunasResultado(); track c.campo) {
+                <td>
+                  {{ h.valores[c.campo] == null ? '—' : (h.valores[c.campo] | number: '1.0-2') }}
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div></mat-card
+  >
+}

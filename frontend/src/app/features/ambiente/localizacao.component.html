@@ -1,0 +1,30 @@
+<h1>Localização da marina</h1>
+<p>Coordenadas utilizadas nas consultas ambientais. Até seis casas decimais.</p>
+<form #form="ngForm" (ngSubmit)="salvar()">
+  <mat-form-field
+    ><mat-label>Latitude</mat-label
+    ><input
+      matInput
+      name="latitude"
+      type="number"
+      required
+      min="-90"
+      max="90"
+      step="0.000001"
+      [(ngModel)]="latitude"
+  /></mat-form-field>
+  <mat-form-field
+    ><mat-label>Longitude</mat-label
+    ><input
+      matInput
+      name="longitude"
+      type="number"
+      required
+      min="-180"
+      max="180"
+      step="0.000001"
+      [(ngModel)]="longitude"
+  /></mat-form-field>
+  <button mat-flat-button [disabled]="form.invalid || carregando()">Salvar localização</button>
+</form>
+<p role="status">{{ mensagem() }}</p>

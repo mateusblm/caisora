@@ -5,6 +5,8 @@ import br.com.caisora.compartilhado.excecao.ConflitoDadosException;
 import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import br.com.caisora.organizacao.api.AtualizarOrganizacaoRequest;
 import br.com.caisora.organizacao.api.CriarOrganizacaoRequest;
+import br.com.caisora.organizacao.api.CoordenadasRequest;
+import br.com.caisora.organizacao.api.CoordenadasResponse;
 import br.com.caisora.organizacao.api.OrganizacaoResponse;
 import br.com.caisora.organizacao.dominio.Organizacao;
 import br.com.caisora.organizacao.dominio.OrganizacaoRepository;
@@ -71,6 +73,20 @@ public class OrganizacaoService {
     public void inativar(UUID id) {
         Organizacao organizacao = buscarEntidadePorId(id);
         organizacao.inativar();
+    }
+
+    @Transactional(readOnly = true)
+    public CoordenadasResponse coordenadas(UUID id) {
+        var o = buscarEntidadePorId(id);
+        return new CoordenadasResponse(o.getLatitude(), o.getLongitude());
+    }
+
+    @Transactional
+    public CoordenadasResponse configurarCoordenadas(UUID id,
+            CoordenadasRequest request) {
+        var o = buscarEntidadePorId(id);
+        o.configurarCoordenadas(request.latitude(), request.longitude());
+        return new CoordenadasResponse(o.getLatitude(), o.getLongitude());
     }
 
     private Organizacao buscarEntidadePorId(UUID id) {

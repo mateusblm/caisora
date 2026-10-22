@@ -81,6 +81,9 @@ export class LayoutComponent implements OnInit {
   );
 
   private readonly todosItensMenu: ItemMenu[] = [
+    { rotulo: 'Condições ambientais', icone: 'waves', rota: '/ambiente', modulo: 'AMBIENTE', acao: 'VISUALIZAR' },
+    { rotulo: 'Relatórios', icone: 'assessment', rota: '/relatorios', modulo: 'RELATORIOS', acao: 'VISUALIZAR' },
+    { rotulo: 'Localização da marina', icone: 'place', rota: '/configuracoes/localizacao', modulo: 'CONFIGURACOES', acao: 'CONFIGURAR' },
     {
       rotulo: 'Dashboard',
       icone: 'dashboard',

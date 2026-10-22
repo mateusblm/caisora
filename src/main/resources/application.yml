@@ -26,6 +26,13 @@ server:
   port: ${SERVER_PORT:8080}
 
 caisora:
+  open-meteo:
+    habilitado: ${OPEN_METEO_ENABLED:false}
+    weather-url: ${OPEN_METEO_WEATHER_URL:https://api.open-meteo.com}
+    marine-url: ${OPEN_METEO_MARINE_URL:https://marine-api.open-meteo.com}
+    api-key: ${OPEN_METEO_API_KEY:}
+    connect-timeout-ms: 3000
+    read-timeout-ms: 8000
   seguranca:
     jwt:
       segredo: ${JWT_SECRET:}

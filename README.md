@@ -266,3 +266,7 @@ O modelo planejado usa banco unico, schema unico e isolamento por coluna `organi
 - O modulo financeiro ainda nao possui endpoints.
 - OpenAPI ainda nao foi configurado.
 - O perfil do usuario vai dentro do JWT, entao mudar o perfil ou desativar um usuario so vale depois que o token atual expirar.
+
+## Funcionalidades para análise de Pontos de Função
+
+O [inventário técnico](docs/inventario-apf.md) descreve consultas ambientais Open-Meteo, configuração de coordenadas, relatórios de ocupação/movimentações/contratos, revisão das consultas e manutenções existentes, autorização dos módulos e evidências de testes. A integração externa começa desabilitada; os módulos AMBIENTE/RELATORIOS exigem liberação pela plataforma. O documento inclui configuração acadêmica/comercial e regras dos indicadores. Não há contagem automática de Pontos de Função.

@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  padding: 24px;
+  max-width: 1400px;
+  margin: auto;
+}
+form,
+.filtros {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 20px 0;
+}
+mat-card {
+  padding: 20px;
+  margin: 16px 0;
+}
+.tabela {
+  overflow: auto;
+  max-height: 65vh;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
+th {
+  position: sticky;
+  top: 0;
+  background: var(--mat-sys-surface, #fff);
+}
+.erro {
+  color: var(--mat-sys-error, #b3261e);
+}
+.indicadores {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  :host {
+    padding: 12px;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+  mat-card {
+    padding: 12px;
+  }
+}

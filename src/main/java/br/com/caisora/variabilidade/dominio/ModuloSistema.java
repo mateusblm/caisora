@@ -25,6 +25,8 @@ public enum ModuloSistema {
             AcaoSistema.VISUALIZAR, AcaoSistema.CRIAR, AcaoSistema.EDITAR, AcaoSistema.ALTERAR_STATUS),
     CHECKLIST_SAIDA("Checklist de saida", false,
             AcaoSistema.VISUALIZAR, AcaoSistema.EDITAR, AcaoSistema.CONCLUIR),
+    AMBIENTE("Condições ambientais", false, AcaoSistema.VISUALIZAR),
+    RELATORIOS("Relatórios", false, AcaoSistema.VISUALIZAR),
     CONFIGURACOES("Configuracoes", true, AcaoSistema.CONFIGURAR);
 
     private final String nomeExibicao;

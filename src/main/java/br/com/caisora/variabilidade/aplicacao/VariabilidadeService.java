@@ -130,6 +130,7 @@ public class VariabilidadeService {
     }
 
     @Transactional
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMINISTRADOR_PLATAFORMA')")
     public ConfiguracaoVariabilidadeResponse atualizarModulo(
             UUID organizacaoId,
             ModuloSistema modulo,

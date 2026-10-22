@@ -4,12 +4,33 @@
       <span class="sobrelinha">Linha de Produto de Software</span>
       <h1>Variabilidade da marina</h1>
       <p>
-        Ative módulos para esta organização e defina quais ações cada perfil pode executar.
-        O mesmo Caisora é reutilizado, mas cada marina recebe uma variante configurada.
+        A plataforma define os módulos disponíveis. A marina define quais ações cada perfil pode
+        executar. O mesmo Caisora é reutilizado, mas cada marina recebe uma variante configurada.
       </p>
     </div>
   </header>
 
+  @if (plataforma()) {
+    <mat-form-field appearance="outline"
+      ><mat-label>Organização (UUID)</mat-label
+      ><input
+        matInput
+        [disabled]="salvando() || carregando()"
+        #org
+        [value]="organizacaoId"
+        placeholder="UUID da organização"
+    /></mat-form-field>
+    <button
+      mat-button
+      (click)="organizacaoId = org.value.trim(); carregar()"
+      [disabled]="!org.value.trim() || carregando() || salvando()"
+    >
+      Consultar organização
+    </button>
+  }
+  @if (erro() && !configuracao()) {
+    <p role="alert">{{ erro() }}</p>
+  }
   @if (carregando()) {
     <div class="estado"><mat-spinner diameter="38" /></div>
   } @else if (configuracao(); as cfg) {
@@ -24,7 +45,8 @@
       <mat-card-header>
         <mat-card-title>Módulos da organização</mat-card-title>
         <mat-card-subtitle>
-          Ponto de variação no nível do cliente. Módulos desligados não aparecem no menu e a API bloqueia o acesso.
+          Ponto de variação no nível do cliente. Módulos desligados não aparecem no menu e a API
+          bloqueia o acesso.
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content class="grade-modulos">
@@ -37,8 +59,9 @@
               </span>
             </div>
             <mat-slide-toggle
+              [attr.aria-label]="modulo.nome"
               [checked]="modulo.ativo"
-              [disabled]="modulo.obrigatorio || salvando()"
+              [disabled]="!plataforma() || modulo.obrigatorio || salvando()"
               (change)="alterarModulo(modulo.modulo, $event.checked)"
             />
           </div>
@@ -46,74 +69,75 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="bloco">
-      <mat-card-header>
-        <mat-card-title>Permissões por perfil</mat-card-title>
-        <mat-card-subtitle>
-          Ponto de variação no nível do usuário. Ações diferentes podem ser liberadas para o mesmo módulo.
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="perfil-select">
-          <mat-label>Perfil</mat-label>
-          <mat-select
-            [ngModel]="perfilSelecionado()"
-            (ngModelChange)="selecionarPerfil($event)"
-          >
-            @for (perfil of cfg.perfis; track perfil.perfil) {
-              <mat-option [value]="perfil.perfil">
-                {{ nomePerfil(perfil.perfil) }}
-              </mat-option>
+    @if (!plataforma()) {
+      <mat-card class="bloco">
+        <mat-card-header>
+          <mat-card-title>Permissões por perfil</mat-card-title>
+          <mat-card-subtitle>
+            Ponto de variação no nível do usuário. Ações diferentes podem ser liberadas para o mesmo
+            módulo.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="perfil-select">
+            <mat-label>Perfil</mat-label>
+            <mat-select [ngModel]="perfilSelecionado()" (ngModelChange)="selecionarPerfil($event)">
+              @for (perfil of cfg.perfis; track perfil.perfil) {
+                <mat-option [value]="perfil.perfil">
+                  {{ nomePerfil(perfil.perfil) }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div class="tabela-permissoes">
+            @for (modulo of cfg.modulos; track modulo.modulo) {
+              <div class="linha-permissao">
+                <div class="modulo-permissao">
+                  <strong>{{ modulo.nome }}</strong>
+                  @if (!modulo.ativo) {
+                    <small>módulo desativado</small>
+                  }
+                </div>
+
+                <div class="acoes">
+                  @for (acaoCodigo of modulo.acoes; track acaoCodigo) {
+                    <mat-checkbox
+                      [checked]="possuiPermissao(modulo.modulo, acaoCodigo)"
+                      [disabled]="!modulo.ativo || salvando()"
+                      (change)="alternarPermissao(modulo.modulo, acaoCodigo, $event.checked)"
+                    >
+                      {{ rotuloAcao(acaoCodigo) }}
+                    </mat-checkbox>
+                  }
+                </div>
+              </div>
             }
-          </mat-select>
-        </mat-form-field>
+          </div>
 
-        <div class="tabela-permissoes">
-          @for (modulo of cfg.modulos; track modulo.modulo) {
-            <div class="linha-permissao">
-              <div class="modulo-permissao">
-                <strong>{{ modulo.nome }}</strong>
-                @if (!modulo.ativo) {
-                  <small>módulo desativado</small>
-                }
-              </div>
-
-              <div class="acoes">
-                @for (acaoCodigo of modulo.acoes; track acaoCodigo) {
-                  <mat-checkbox
-                    [checked]="possuiPermissao(modulo.modulo, acaoCodigo)"
-                    [disabled]="!modulo.ativo || salvando()"
-                    (change)="alternarPermissao(modulo.modulo, acaoCodigo, $event.checked)"
-                  >
-                    {{ rotuloAcao(acaoCodigo) }}
-                  </mat-checkbox>
-                }
-              </div>
-            </div>
-          }
-        </div>
-
-        <div class="acoes-rodape">
-          <button
-            mat-flat-button
-            type="button"
-            [disabled]="salvando()"
-            (click)="salvarPermissoes()"
-          >
-            <mat-icon>save</mat-icon>
-            Salvar permissões
-          </button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
+          <div class="acoes-rodape">
+            <button
+              mat-flat-button
+              type="button"
+              [disabled]="salvando()"
+              (click)="salvarPermissoes()"
+            >
+              <mat-icon>save</mat-icon>
+              Salvar permissões
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
     <mat-card class="bloco bloco--destaque">
       <mat-card-content>
         <mat-icon>fact_check</mat-icon>
         <div>
           <strong>Exemplo de função específica</strong>
           <p>
-            O módulo “Checklist de saída” fica desligado por padrão. Ele pode ser ativado apenas para uma marina que contratou esse processo, sem criar outro projeto ou fork do Caisora.
+            O módulo “Checklist de saída” fica desligado por padrão. Ele pode ser ativado pela
+            plataforma para uma marina que contratou esse processo, sem criar outro projeto ou fork
+            do Caisora.
           </p>
         </div>
       </mat-card-content>

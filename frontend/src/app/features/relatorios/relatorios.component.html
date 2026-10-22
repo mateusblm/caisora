@@ -1,0 +1,227 @@
+<h1>Relatórios da marina</h1>
+<p>Indicadores calculados a partir dos registros da sua organização.</p>
+<form #form="ngForm" (ngSubmit)="consultar()">
+  <mat-form-field
+    ><mat-label>Relatório</mat-label
+    ><mat-select
+      [disabled]="carregando()"
+      name="relatorio"
+      [(ngModel)]="tipo"
+      (ngModelChange)="limpar()"
+    >
+      @if (pode('VAGAS') && pode('OCUPACOES')) {
+        <mat-option value="ocupacao">Ocupação de vagas</mat-option>
+      }
+      @if (pode('MOVIMENTACOES')) {
+        <mat-option value="movimentacoes">Desempenho das movimentações</mat-option>
+      }
+      @if (pode('CONTRATOS')) {
+        <mat-option value="contratos">Carteira de contratos</mat-option>
+      }
+    </mat-select></mat-form-field
+  >
+  @if (tipo === 'ocupacao') {
+    <mat-form-field
+      ><mat-label>Setor (correspondência exata)</mat-label
+      ><input matInput name="setor" maxlength="100" [(ngModel)]="setor"
+    /></mat-form-field>
+    <mat-form-field
+      ><mat-label>Tipo de vaga</mat-label
+      ><mat-select name="tipoVaga" [(ngModel)]="tipoVaga"
+        ><mat-option value="">Todos</mat-option>
+        @for (v of tiposVaga; track v) {
+          <mat-option [value]="v">{{ rotulo(v) }}</mat-option>
+        }
+      </mat-select></mat-form-field
+    >
+  } @else {
+    <mat-form-field
+      ><mat-label
+        >Data inicial{{ tipo === 'contratos' ? ' de início' : ' de agendamento (UTC)' }}</mat-label
+      ><input
+        matInput
+        type="date"
+        name="inicio"
+        [(ngModel)]="inicio"
+        [required]="tipo === 'movimentacoes'"
+    /></mat-form-field>
+    <mat-form-field
+      ><mat-label>Data final</mat-label
+      ><input
+        matInput
+        type="date"
+        name="fim"
+        [(ngModel)]="fim"
+        [min]="inicio"
+        [required]="tipo === 'movimentacoes'"
+    /></mat-form-field>
+    @if (tipo === 'movimentacoes') {
+      <mat-form-field
+        ><mat-label>Tipo de movimentação</mat-label
+        ><mat-select name="movTipo" [(ngModel)]="movTipo"
+          ><mat-option value="">Todos</mat-option>
+          @for (v of tiposMov; track v) {
+            <mat-option [value]="v">{{ rotulo(v) }}</mat-option>
+          }
+        </mat-select></mat-form-field
+      >
+    } @else {
+      <mat-form-field
+        ><mat-label>Situação</mat-label
+        ><mat-select name="status" [(ngModel)]="status"
+          ><mat-option value="">Todas</mat-option>
+          @for (v of situacoes; track v) {
+            <mat-option [value]="v">{{ rotulo(v) }}</mat-option>
+          }
+        </mat-select></mat-form-field
+      >
+      <mat-form-field
+        ><mat-label>Periodicidade</mat-label
+        ><mat-select name="periodicidade" [(ngModel)]="periodicidade"
+          ><mat-option value="">Todas</mat-option>
+          @for (v of periodicidades; track v) {
+            <mat-option [value]="v">{{ rotulo(v) }}</mat-option>
+          }
+        </mat-select></mat-form-field
+      >
+    }
+  }
+  <button
+    mat-flat-button
+    [disabled]="form.invalid || (inicio && fim && fim < inicio) || carregando() || !tipo"
+  >
+    {{ carregando() ? 'Calculando…' : 'Gerar relatório' }}
+  </button>
+</form>
+<p class="erro" role="alert">{{ erro() }}</p>
+@if (ocupacao(); as r) {
+  <mat-card
+    ><h2>Utilização das vagas ativas</h2>
+    <div class="indicadores">
+      <p>
+        Total: <strong>{{ r.totalVagasAtivas }}</strong>
+      </p>
+      <p>Ocupadas: {{ r.ocupadas }}</p>
+      <p>Disponíveis: {{ r.disponiveis }}</p>
+      <p>Taxa de ocupação: {{ r.taxaOcupacao | number: '1.2-2' }}%</p>
+    </div>
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Setor</th>
+            <th>Tipo</th>
+            <th>Ativas</th>
+            <th>Ocupadas</th>
+            <th>Disponíveis</th>
+            <th>Ocupação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (g of r.grupos; track $index) {
+            <tr>
+              <td>{{ g.setor || 'Sem setor' }}</td>
+              <td>{{ rotulo(g.tipo) }}</td>
+              <td>{{ g.totalVagasAtivas }}</td>
+              <td>{{ g.ocupadas }}</td>
+              <td>{{ g.disponiveis }}</td>
+              <td>{{ g.taxaOcupacao | number: '1.2-2' }}%</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6">Nenhuma vaga ativa encontrada.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div></mat-card
+  >
+}
+@if (movimentacoes(); as r) {
+  <mat-card
+    ><h2>Desempenho operacional</h2>
+    <div class="indicadores">
+      <p>Total: {{ r.total }}</p>
+      <p>Concluídas: {{ r.concluidas }}</p>
+      <p>Canceladas: {{ r.canceladas }}</p>
+      <p>
+        Tempo médio:
+        {{
+          r.tempoMedioExecucaoSegundos == null
+            ? 'Sem dados suficientes'
+            : (r.tempoMedioExecucaoSegundos | number: '1.2-2') + ' segundos'
+        }}
+      </p>
+      <p>Amostras de duração: {{ r.amostrasDuracao }}</p>
+      <p>No prazo: {{ r.concluidasNoPrazo }} ({{ r.percentualNoPrazo | number: '1.2-2' }}%)</p>
+    </div>
+    <p>{{ r.regraPontualidade }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Situação</th>
+          <th>Quantidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of r.porSituacao | keyvalue; track s.key) {
+          <tr>
+            <td>{{ rotulo(s.key) }}</td>
+            <td>{{ s.value }}</td>
+          </tr>
+        }
+      </tbody>
+    </table></mat-card
+  >
+}
+@if (contratos(); as r) {
+  <mat-card
+    ><h2>Carteira de contratos</h2>
+    <p>
+      Total: {{ r.total }} contratos. Valores-base contratados em reais; não representam pagamentos
+      recebidos ou faturamento realizado.
+    </p>
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Situação</th>
+            <th>Quantidade</th>
+            <th>Percentual</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of r.porSituacao | keyvalue; track s.key) {
+            <tr>
+              <td>{{ rotulo(s.key) }}</td>
+              <td>{{ s.value }}</td>
+              <td>{{ r.percentualPorSituacao[s.key] | number: '1.2-2' }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <h3>Valores-base por periodicidade</h3>
+    <p>As periodicidades são apresentadas separadamente, sem total financeiro geral.</p>
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Periodicidade</th>
+            <th>Quantidade</th>
+            <th>Soma dos valores-base (R$)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of r.porPeriodicidade | keyvalue; track p.key) {
+            <tr>
+              <td>{{ rotulo(p.key) }}</td>
+              <td>{{ p.value }}</td>
+              <td>{{ r.valoresBasePorPeriodicidade[p.key] | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div></mat-card
+  >
+}

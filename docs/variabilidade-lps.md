@@ -12,7 +12,7 @@ O Caisora utiliza uma única base de código para atender marinas com necessidad
 
 ## Módulos
 
-`DASHBOARD`, `CLIENTES`, `EMBARCACOES`, `VAGAS`, `OCUPACOES`, `MOVIMENTACOES`, `CONTRATOS`, `PAINEL_TV`, `USUARIOS`, `CHECKLIST_SAIDA` e `CONFIGURACOES`.
+`DASHBOARD`, `CLIENTES`, `EMBARCACOES`, `VAGAS`, `OCUPACOES`, `MOVIMENTACOES`, `CONTRATOS`, `PAINEL_TV`, `USUARIOS`, `CHECKLIST_SAIDA`, `AMBIENTE`, `RELATORIOS` e `CONFIGURACOES`.
 
 `DASHBOARD` e `CONFIGURACOES` são obrigatórios. `CHECKLIST_SAIDA` é a variante específica de cliente usada na demonstração e começa desabilitada.
 
@@ -45,7 +45,7 @@ As permissões dos perfis de cada organização podem ser alteradas na tela **Co
 
 ## Variante específica: Checklist de saída
 
-A função `CHECKLIST_SAIDA` representa um requisito específico de uma marina que exige conferência formal antes da entrega de uma embarcação. Uma organização pode habilitar o módulo e autorizar somente os perfis que precisam utilizá-lo. Outras marinas continuam usando o mesmo software sem visualizar essa função.
+A função `CHECKLIST_SAIDA` representa um requisito específico de uma marina que exige conferência formal antes da entrega de uma embarcação. A plataforma pode habilitar o módulo para uma organização; o administrador da marina autoriza somente os perfis que precisam utilizá-lo. Outras marinas continuam usando o mesmo software sem visualizar essa função.
 
 ## Testes em Docker
 
@@ -61,3 +61,9 @@ Também é possível executar apenas uma parte:
 docker compose -f docker-compose.test.yml run --rm backend-tests
 docker compose -f docker-compose.test.yml run --rm frontend-tests
 ```
+
+## Responsabilidades administrativas e módulos de APF
+
+A disponibilidade comercial é alterada somente pelo `ADMINISTRADOR_PLATAFORMA`, em `GET/PUT /api/v1/organizacoes/{organizacaoId}/modulos` (PUT acrescenta `/{modulo}`). A tela usa a organização carregada como alvo. O `ADMINISTRADOR_MARINA` consulta a disponibilidade e gerencia permissões internas na própria organização, sem habilitar módulos. O PUT antigo de módulos também exige perfil da plataforma.
+
+`AMBIENTE` e `RELATORIOS` começam desabilitados e precisam ser liberados pela plataforma. Relatórios também verificam os módulos de negócio envolvidos. A integração ambiental exige configuração/licenciamento separados; consulte o [inventário técnico de APF](inventario-apf.md).

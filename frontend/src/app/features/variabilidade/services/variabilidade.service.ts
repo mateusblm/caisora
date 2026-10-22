@@ -2,10 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import {
-  ModuloSistema,
-  PerfilUsuario
-} from '../../../core/autenticacao/autenticacao.model';
+import { ModuloSistema, PerfilUsuario } from '../../../core/autenticacao/autenticacao.model';
 import { ConfiguracaoVariabilidade } from '../models/variabilidade.model';
 
 @Injectable({ providedIn: 'root' })
@@ -15,28 +12,37 @@ export class VariabilidadeService {
   constructor(private readonly http: HttpClient) {}
 
   buscarConfiguracao(): Observable<ConfiguracaoVariabilidade> {
-    return this.http.get<ConfiguracaoVariabilidade>(
-      `${this.endpoint}/configuracao`
-    );
+    return this.http.get<ConfiguracaoVariabilidade>(`${this.endpoint}/configuracao`);
   }
 
-  atualizarModulo(
+  buscarModulosOrganizacao(id: string): Observable<ConfiguracaoVariabilidade> {
+    return this.http.get<ConfiguracaoVariabilidade>(
+      `${environment.apiUrl}/organizacoes/${encodeURIComponent(id)}/modulos`,
+    );
+  }
+  atualizarModuloOrganizacao(
+    id: string,
     modulo: ModuloSistema,
-    ativo: boolean
+    ativo: boolean,
   ): Observable<ConfiguracaoVariabilidade> {
     return this.http.put<ConfiguracaoVariabilidade>(
-      `${this.endpoint}/modulos/${modulo}`,
-      { ativo }
+      `${environment.apiUrl}/organizacoes/${encodeURIComponent(id)}/modulos/${modulo}`,
+      { ativo },
     );
+  }
+  atualizarModulo(modulo: ModuloSistema, ativo: boolean): Observable<ConfiguracaoVariabilidade> {
+    return this.http.put<ConfiguracaoVariabilidade>(`${this.endpoint}/modulos/${modulo}`, {
+      ativo,
+    });
   }
 
   atualizarPermissoes(
     perfil: PerfilUsuario,
-    permissoes: string[]
+    permissoes: string[],
   ): Observable<ConfiguracaoVariabilidade> {
     return this.http.put<ConfiguracaoVariabilidade>(
       `${this.endpoint}/perfis/${perfil}/permissoes`,
-      { permissoes }
+      { permissoes },
     );
   }
 }

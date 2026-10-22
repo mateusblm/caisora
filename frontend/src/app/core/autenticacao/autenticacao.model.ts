@@ -16,6 +16,8 @@ export type ModuloSistema =
   | 'PAINEL_TV'
   | 'USUARIOS'
   | 'CHECKLIST_SAIDA'
+  | 'AMBIENTE'
+  | 'RELATORIOS'
   | 'CONFIGURACOES';
 
 export type AcaoSistema =

@@ -31,6 +31,12 @@ export const routes: Routes = [
     canActivate: [autenticacaoGuard],
     canActivateChild: [autenticacaoFilhosGuard],
     children: [
+      { path: 'ambiente', title: 'Condições ambientais | Caisora', data: { modulo: 'AMBIENTE', acao: 'VISUALIZAR' },
+        loadComponent: () => import('./features/ambiente/ambiente.component').then(m => m.AmbienteComponent) },
+      { path: 'configuracoes/localizacao', title: 'Localização | Caisora', data: { modulo: 'CONFIGURACOES', acao: 'CONFIGURAR' },
+        loadComponent: () => import('./features/ambiente/localizacao.component').then(m => m.LocalizacaoComponent) },
+      { path: 'relatorios', title: 'Relatórios | Caisora', data: { modulo: 'RELATORIOS', acao: 'VISUALIZAR' },
+        loadComponent: () => import('./features/relatorios/relatorios.component').then(m => m.RelatoriosComponent) },
       {
         path: '',
         pathMatch: 'full',

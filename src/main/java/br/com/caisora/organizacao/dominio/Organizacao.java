@@ -7,6 +7,8 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.math.BigDecimal;
+import br.com.caisora.compartilhado.excecao.DadosInvalidosException;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.Getter;
@@ -85,6 +87,20 @@ public class Organizacao {
         this.email = normalizarEmail(email);
         this.telefone = telefone;
         this.ativa = ativa;
+    }
+
+    @Column(precision = 9, scale = 6)
+    private BigDecimal latitude;
+    @Column(precision = 10, scale = 6)
+    private BigDecimal longitude;
+
+    public void configurarCoordenadas(BigDecimal latitude, BigDecimal longitude) {
+        if (latitude == null || longitude == null || latitude.abs().compareTo(BigDecimal.valueOf(90)) > 0
+                || longitude.abs().compareTo(BigDecimal.valueOf(180)) > 0) {
+            throw new DadosInvalidosException("COORDENADAS_INVALIDAS", "Latitude e longitude obrigatorias e dentro dos limites");
+        }
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void inativar() {
