@@ -1,0 +1,113 @@
+{
+  "tool": "MyBatis Generator 1.4.2",
+  "database": "caisora_database_first",
+  "tables": [
+    {
+      "table": "clientes",
+      "model": "Cliente"
+    },
+    {
+      "table": "contratos",
+      "model": "Contrato"
+    },
+    {
+      "table": "embarcacoes",
+      "model": "Embarcacao"
+    },
+    {
+      "table": "historicos_contrato",
+      "model": "HistoricoContrato"
+    },
+    {
+      "table": "historicos_movimentacoes",
+      "model": "HistoricoMovimentacao"
+    },
+    {
+      "table": "movimentacoes",
+      "model": "Movimentacao"
+    },
+    {
+      "table": "ocupacoes",
+      "model": "Ocupacao"
+    },
+    {
+      "table": "organizacao_modulos",
+      "model": "OrganizacaoModulo"
+    },
+    {
+      "table": "organizacoes",
+      "model": "Organizacao"
+    },
+    {
+      "table": "perfil_permissoes",
+      "model": "PerfilPermissao"
+    },
+    {
+      "table": "posicoes_embarcacoes",
+      "model": "PosicaoEmbarcacao"
+    },
+    {
+      "table": "sequencias_contrato",
+      "model": "SequenciaContrato"
+    },
+    {
+      "table": "usuarios",
+      "model": "Usuario"
+    },
+    {
+      "table": "vagas",
+      "model": "Vaga"
+    },
+    {
+      "table": "vinculos_contrato_ocupacao",
+      "model": "VinculoContratoOcupacao"
+    }
+  ],
+  "files": [
+    "java/br/com/caisora/dbfirst/generated/mapper/ClienteMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/ContratoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/EmbarcacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/HistoricoContratoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/HistoricoMovimentacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/MovimentacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/OcupacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/PosicaoEmbarcacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/SequenciaContratoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/UsuarioMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/VagaMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/VinculoContratoOcupacaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/model/Cliente.java",
+    "java/br/com/caisora/dbfirst/generated/model/Contrato.java",
+    "java/br/com/caisora/dbfirst/generated/model/Embarcacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/HistoricoContrato.java",
+    "java/br/com/caisora/dbfirst/generated/model/HistoricoMovimentacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/Movimentacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/Ocupacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/Organizacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java",
+    "java/br/com/caisora/dbfirst/generated/model/PerfilPermissao.java",
+    "java/br/com/caisora/dbfirst/generated/model/PosicaoEmbarcacao.java",
+    "java/br/com/caisora/dbfirst/generated/model/SequenciaContrato.java",
+    "java/br/com/caisora/dbfirst/generated/model/Usuario.java",
+    "java/br/com/caisora/dbfirst/generated/model/Vaga.java",
+    "java/br/com/caisora/dbfirst/generated/model/VinculoContratoOcupacao.java",
+    "resources/br/com/caisora/dbfirst/generated/mapper/ClienteMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/ContratoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/EmbarcacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/HistoricoContratoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/HistoricoMovimentacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/MovimentacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/OcupacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/PosicaoEmbarcacaoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/SequenciaContratoMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/UsuarioMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/VagaMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/VinculoContratoOcupacaoMapper.xml"
+  ]
+}

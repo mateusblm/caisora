@@ -1,0 +1,251 @@
+TABLE clientes -> Cliente
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN tipo_pessoa varchar -> String
+  COLUMN nome varchar -> String
+  COLUMN razao_social varchar -> String
+  COLUMN cpf_cnpj varchar -> String
+  COLUMN email varchar -> String
+  COLUMN telefone varchar -> String
+  COLUMN celular varchar -> String
+  COLUMN observacoes varchar -> String
+  COLUMN ativo bool -> Boolean
+  COLUMN criado_em timestamptz -> OffsetDateTime
+  COLUMN atualizado_em timestamptz -> OffsetDateTime
+  PK id
+  FK organizacao_id -> organizacoes.id
+TABLE contratos -> Contrato
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN numero varchar -> String
+  COLUMN cliente_id uuid -> UUID
+  COLUMN embarcacao_id uuid -> UUID
+  COLUMN status varchar -> String
+  COLUMN tipo_vaga_contratada varchar -> String
+  COLUMN periodicidade varchar -> String
+  COLUMN data_inicio date -> LocalDate
+  COLUMN data_fim date -> LocalDate
+  COLUMN data_assinatura date -> LocalDate
+  COLUMN data_ativacao date -> LocalDate
+  COLUMN data_encerramento date -> LocalDate
+  COLUMN renovacao_automatica bool -> Boolean
+  COLUMN dias_aviso_previo int4 -> Integer
+  COLUMN valor_base numeric -> BigDecimal
+  COLUMN dia_vencimento int4 -> Integer
+  COLUMN observacoes varchar -> String
+  COLUMN criado_por_id uuid -> UUID
+  COLUMN criado_em timestamptz -> OffsetDateTime
+  COLUMN atualizado_em timestamptz -> OffsetDateTime
+  COLUMN versao int8 -> Long
+  PK id
+  FK cliente_id -> clientes.id
+  FK embarcacao_id -> embarcacoes.id
+  FK organizacao_id -> organizacoes.id
+  FK criado_por_id -> usuarios.id
+TABLE embarcacoes -> Embarcacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN proprietario_id uuid -> UUID
+  COLUMN nome varchar -> String
+  COLUMN tipo varchar -> String
+  COLUMN fabricante varchar -> String
+  COLUMN modelo varchar -> String
+  COLUMN ano_fabricacao int4 -> Integer
+  COLUMN numero_inscricao varchar -> String
+  COLUMN numero_casco varchar -> String
+  COLUMN porto_inscricao varchar -> String
+  COLUMN codigo_pais_bandeira varchar -> String
+  COLUMN comprimento_total_metros numeric -> BigDecimal
+  COLUMN boca_metros numeric -> BigDecimal
+  COLUMN calado_metros numeric -> BigDecimal
+  COLUMN pontal_metros numeric -> BigDecimal
+  COLUMN altura_total_metros numeric -> BigDecimal
+  COLUMN peso_kg numeric -> BigDecimal
+  COLUMN capacidade_pessoas int4 -> Integer
+  COLUMN tipo_propulsao varchar -> String
+  COLUMN cor_predominante varchar -> String
+  COLUMN observacoes varchar -> String
+  COLUMN ativa bool -> Boolean
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  PK id
+  FK proprietario_id -> clientes.id
+  FK organizacao_id -> organizacoes.id
+TABLE historicos_contrato -> HistoricoContrato
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN contrato_id uuid -> UUID
+  COLUMN tipo_evento varchar -> String
+  COLUMN status_anterior varchar -> String
+  COLUMN status_novo varchar -> String
+  COLUMN descricao varchar -> String
+  COLUMN realizado_por_id uuid -> UUID
+  COLUMN realizado_em timestamptz -> OffsetDateTime
+  PK id
+  FK contrato_id -> contratos.id
+  FK organizacao_id -> organizacoes.id
+  FK realizado_por_id -> usuarios.id
+TABLE historicos_movimentacoes -> HistoricoMovimentacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN movimentacao_id uuid -> UUID
+  COLUMN tipo_evento varchar -> String
+  COLUMN status_anterior varchar -> String
+  COLUMN status_novo varchar -> String
+  COLUMN agendada_para_anterior timestamptz -> OffsetDateTime
+  COLUMN agendada_para_nova timestamptz -> OffsetDateTime
+  COLUMN usuario_id uuid -> UUID
+  COLUMN observacao varchar -> String
+  COLUMN dados_anteriores jsonb -> String
+  COLUMN dados_novos jsonb -> String
+  COLUMN ocorrido_em timestamptz -> OffsetDateTime
+  PK id
+  FK movimentacao_id -> movimentacoes.id
+  FK organizacao_id -> organizacoes.id
+  FK usuario_id -> usuarios.id
+TABLE movimentacoes -> Movimentacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN embarcacao_id uuid -> UUID
+  COLUMN tipo varchar -> String
+  COLUMN status varchar -> String
+  COLUMN prioridade varchar -> String
+  COLUMN tipo_posicao_origem varchar -> String
+  COLUMN vaga_origem_id uuid -> UUID
+  COLUMN descricao_origem varchar -> String
+  COLUMN tipo_posicao_destino varchar -> String
+  COLUMN vaga_destino_id uuid -> UUID
+  COLUMN descricao_destino varchar -> String
+  COLUMN agendada_para timestamptz -> OffsetDateTime
+  COLUMN iniciada_em timestamptz -> OffsetDateTime
+  COLUMN concluida_em timestamptz -> OffsetDateTime
+  COLUMN cancelada_em timestamptz -> OffsetDateTime
+  COLUMN solicitada_por_id uuid -> UUID
+  COLUMN operador_responsavel_id uuid -> UUID
+  COLUMN observacoes varchar -> String
+  COLUMN motivo_cancelamento varchar -> String
+  COLUMN versao int8 -> Long
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  PK id
+  FK embarcacao_id -> embarcacoes.id
+  FK organizacao_id -> organizacoes.id
+  FK operador_responsavel_id -> usuarios.id
+  FK solicitada_por_id -> usuarios.id
+  FK vaga_destino_id -> vagas.id
+  FK vaga_origem_id -> vagas.id
+TABLE ocupacoes -> Ocupacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN embarcacao_id uuid -> UUID
+  COLUMN vaga_id uuid -> UUID
+  COLUMN status varchar -> String
+  COLUMN inicio_em timestamptz -> OffsetDateTime
+  COLUMN fim_previsto_em timestamptz -> OffsetDateTime
+  COLUMN encerrada_em timestamptz -> OffsetDateTime
+  COLUMN observacoes varchar -> String
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  PK id
+  FK embarcacao_id -> embarcacoes.id
+  FK organizacao_id -> organizacoes.id
+  FK vaga_id -> vagas.id
+TABLE organizacao_modulos -> OrganizacaoModulo
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN modulo varchar -> String
+  COLUMN ativo bool -> Boolean
+  PK id
+  FK organizacao_id -> organizacoes.id
+TABLE organizacoes -> Organizacao
+  COLUMN id uuid -> UUID
+  COLUMN nome varchar -> String
+  COLUMN razao_social varchar -> String
+  COLUMN documento varchar -> String
+  COLUMN email varchar -> String
+  COLUMN telefone varchar -> String
+  COLUMN ativa bool -> Boolean
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  COLUMN slug varchar -> String
+  COLUMN latitude numeric -> BigDecimal
+  COLUMN longitude numeric -> BigDecimal
+  PK id
+TABLE perfil_permissoes -> PerfilPermissao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN perfil varchar -> String
+  COLUMN modulo varchar -> String
+  COLUMN acao varchar -> String
+  COLUMN permitido bool -> Boolean
+  PK id
+  FK organizacao_id -> organizacoes.id
+TABLE posicoes_embarcacoes -> PosicaoEmbarcacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN embarcacao_id uuid -> UUID
+  COLUMN tipo varchar -> String
+  COLUMN vaga_id uuid -> UUID
+  COLUMN descricao_local varchar -> String
+  COLUMN versao int8 -> Long
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  COLUMN movimentacao_origem_id uuid -> UUID
+  PK id
+  FK embarcacao_id -> embarcacoes.id
+  FK movimentacao_origem_id -> movimentacoes.id
+  FK organizacao_id -> organizacoes.id
+  FK vaga_id -> vagas.id
+TABLE sequencias_contrato -> SequenciaContrato
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN ano int4 -> Integer
+  COLUMN ultimo_numero int8 -> Long
+  COLUMN atualizado_em timestamptz -> OffsetDateTime
+  PK organizacao_id
+  PK ano
+  FK organizacao_id -> organizacoes.id
+TABLE usuarios -> Usuario
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN nome varchar -> String
+  COLUMN email varchar -> String
+  COLUMN senha_hash varchar -> String
+  COLUMN perfil varchar -> String
+  COLUMN ativo bool -> Boolean
+  COLUMN criado_em timestamptz -> OffsetDateTime
+  COLUMN atualizado_em timestamptz -> OffsetDateTime
+  PK id
+  FK organizacao_id -> organizacoes.id
+TABLE vagas -> Vaga
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN codigo varchar -> String
+  COLUMN tipo varchar -> String
+  COLUMN setor varchar -> String
+  COLUMN localizacao varchar -> String
+  COLUMN comprimento_maximo_metros numeric -> BigDecimal
+  COLUMN boca_maxima_metros numeric -> BigDecimal
+  COLUMN calado_maximo_metros numeric -> BigDecimal
+  COLUMN altura_maxima_metros numeric -> BigDecimal
+  COLUMN peso_maximo_kg numeric -> BigDecimal
+  COLUMN possui_agua bool -> Boolean
+  COLUMN possui_energia bool -> Boolean
+  COLUMN observacoes varchar -> String
+  COLUMN ativa bool -> Boolean
+  COLUMN criada_em timestamptz -> OffsetDateTime
+  COLUMN atualizada_em timestamptz -> OffsetDateTime
+  PK id
+  FK organizacao_id -> organizacoes.id
+TABLE vinculos_contrato_ocupacao -> VinculoContratoOcupacao
+  COLUMN id uuid -> UUID
+  COLUMN organizacao_id uuid -> UUID
+  COLUMN contrato_id uuid -> UUID
+  COLUMN ocupacao_id uuid -> UUID
+  COLUMN inicio_em timestamptz -> OffsetDateTime
+  COLUMN fim_em timestamptz -> OffsetDateTime
+  COLUMN motivo_fim varchar -> String
+  COLUMN criado_em timestamptz -> OffsetDateTime
+  PK id
+  FK contrato_id -> contratos.id
+  FK ocupacao_id -> ocupacoes.id
+  FK organizacao_id -> organizacoes.id

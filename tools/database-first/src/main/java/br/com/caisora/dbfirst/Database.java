@@ -1,7 +1,5 @@
 package br.com.caisora.dbfirst;
 
-import br.com.caisora.dbfirst.generated.mapper.OrganizacaoModuloMapper;
-import br.com.caisora.dbfirst.generated.mapper.PerfilPermissaoMapper;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -53,8 +51,7 @@ public final class Database {
         try (var connection = source.getConnection()) { guard(connection); }
         var config = new Configuration(new Environment("database-first-local", new JdbcTransactionFactory(), source));
         config.getTypeHandlerRegistry().register(UUID.class, UuidTypeHandler.class);
-        config.addMapper(OrganizacaoModuloMapper.class);
-        config.addMapper(PerfilPermissaoMapper.class);
+        config.addMappers("br.com.caisora.dbfirst.generated.mapper");
         return new SqlSessionFactoryBuilder().build(config);
     }
 }

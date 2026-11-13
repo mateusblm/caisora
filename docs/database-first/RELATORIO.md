@@ -6,7 +6,7 @@ Foi desenvolvido um módulo independente de configurações do Caisora para demo
 
 As tabelas utilizadas são `organizacao_modulos` e `perfil_permissoes`, definidas na migration V20. Ambas possuem chave primária UUID, vínculo com `organizacoes` e restrições de unicidade. A primeira armazena a disponibilidade dos módulos de uma marina; a segunda define o acesso de cada perfil às ações de um módulo.
 
-O MyBatis Generator consulta os metadados do PostgreSQL e produz duas classes de modelo, duas interfaces Mapper e dois arquivos XML com SQL de inserção, consulta, atualização e exclusão. A configuração é executada pelo comando abaixo, na raiz do repositório:
+O MyBatis Generator consulta os metadados do PostgreSQL e produz modelos, interfaces Mapper e arquivos XML com SQL de inserção, consulta, atualização e exclusão. A configuração foi ampliada para as 15 tabelas de negócio do Caisora: 15 modelos, 15 interfaces e 15 XML. As telas continuam demonstrando as duas tabelas da V20. O inventário e as evidências dessa ampliação estão em [GERACAO_COMPLETA.md](GERACAO_COMPLETA.md). A configuração é executada pelo comando abaixo, na raiz do repositório:
 
 ```sh
 node tools/database-first/demo.mjs generate
@@ -74,7 +74,7 @@ Após salvar, a permissão aparece como Bloqueado. Durante esse fluxo, a listage
 
 ## Validação
 
-Os testes automatizados executaram conexão ao PostgreSQL, geração, compilação e CRUD completo nas duas tabelas. Também verificaram dados inválidos, chaves primárias e estrangeiras, campos obrigatórios, tamanho de texto, unicidade, autenticação e isolamento entre organizações. A suíte específica possui dez testes, sem falhas ou testes ignorados.
+Os testes automatizados executaram conexão ao PostgreSQL, geração, compilação e CRUD completo nas duas tabelas das telas. Também verificaram dados inválidos, chaves primárias e estrangeiras, campos obrigatórios, tamanho de texto, unicidade, autenticação e isolamento entre organizações. A suíte original de dez testes foi ampliada para 26, incluindo persistência nas 15 tabelas, sem falhas ou testes ignorados. Alteração e exclusão do histórico imutável são corretamente recusadas pelo banco.
 
 As capturas foram obtidas pelo Playwright durante as operações. Para os mesmos registros mostrados nas figuras, foram realizadas consultas independentes pelo `psql` após inserir, atualizar e remover. Os resultados estão em [capturas-persistencia.json](evidence/capturas-persistencia.json): situação inicialmente verdadeira, posteriormente falsa e registro ausente após exclusão.
 
@@ -82,6 +82,7 @@ As capturas foram obtidas pelo Playwright durante as operações. Para os mesmos
 | --- | --- |
 | Geração de Java e SQL a partir do banco | [generation.log](evidence/generation.log) |
 | Compilação e dez testes automatizados | [verify.log](evidence/verify.log) |
+| Ampliação: 15 tabelas e 26 testes automatizados | [verify-all.log](evidence/verify-all.log) |
 | CRUD HTTP e consultas independentes ao PostgreSQL | [crud-http-postgres.log](evidence/crud-http-postgres.log) |
 | Banco recriado, geração e testes repetidos | [reproduce.log](evidence/reproduce.log) |
 | Nova coluna SQL refletida no Java gerado | [schema-change.log](evidence/schema-change.log) |

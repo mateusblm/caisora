@@ -7,16 +7,125 @@
     <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="${db.url}" userId="caisora_demo" password="${db.password}">
       <property name="nullCatalogMeansCurrent" value="true"/>
     </jdbcConnection>
+    <javaTypeResolver>
+      <property name="useJSR310Types" value="true"/>
+      <property name="forceBigDecimals" value="true"/>
+    </javaTypeResolver>
     <javaModelGenerator targetPackage="br.com.caisora.dbfirst.generated.model" targetProject="generated/java"/>
     <sqlMapGenerator targetPackage="br.com.caisora.dbfirst.generated.mapper" targetProject="generated/resources"/>
     <javaClientGenerator type="XMLMAPPER" targetPackage="br.com.caisora.dbfirst.generated.mapper" targetProject="generated/java"/>
+    <table schema="public" tableName="clientes" domainObjectName="Cliente">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="contratos" domainObjectName="Contrato">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="cliente_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="embarcacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criado_por_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="embarcacoes" domainObjectName="Embarcacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="proprietario_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="historicos_contrato" domainObjectName="HistoricoContrato">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="contrato_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="realizado_por_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="realizado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="historicos_movimentacoes" domainObjectName="HistoricoMovimentacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="movimentacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="agendada_para_anterior" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="agendada_para_nova" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="usuario_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="dados_anteriores" javaType="java.lang.String" jdbcType="OTHER" typeHandler="br.com.caisora.dbfirst.JsonbTypeHandler"/>
+      <columnOverride column="dados_novos" javaType="java.lang.String" jdbcType="OTHER" typeHandler="br.com.caisora.dbfirst.JsonbTypeHandler"/>
+      <columnOverride column="ocorrido_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="movimentacoes" domainObjectName="Movimentacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="embarcacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="vaga_origem_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="vaga_destino_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="agendada_para" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="iniciada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="concluida_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="cancelada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="solicitada_por_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="operador_responsavel_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="ocupacoes" domainObjectName="Ocupacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="embarcacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="vaga_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="inicio_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="fim_previsto_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="encerrada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
     <table schema="public" tableName="organizacao_modulos" domainObjectName="OrganizacaoModulo">
       <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
       <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
     </table>
+    <table schema="public" tableName="organizacoes" domainObjectName="Organizacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
     <table schema="public" tableName="perfil_permissoes" domainObjectName="PerfilPermissao">
       <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
       <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+    </table>
+    <table schema="public" tableName="posicoes_embarcacoes" domainObjectName="PosicaoEmbarcacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="embarcacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="vaga_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="movimentacao_origem_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+    </table>
+    <table schema="public" tableName="sequencias_contrato" domainObjectName="SequenciaContrato">
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="atualizado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="usuarios" domainObjectName="Usuario">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="vagas" domainObjectName="Vaga">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="criada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="atualizada_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+    </table>
+    <table schema="public" tableName="vinculos_contrato_ocupacao" domainObjectName="VinculoContratoOcupacao">
+      <columnOverride column="id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="organizacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="contrato_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="ocupacao_id" javaType="java.util.UUID" jdbcType="OTHER"/>
+      <columnOverride column="inicio_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="fim_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
+      <columnOverride column="criado_em" javaType="java.time.OffsetDateTime" jdbcType="TIMESTAMP_WITH_TIMEZONE"/>
     </table>
   </context>
 </generatorConfiguration>

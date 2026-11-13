@@ -1,5 +1,7 @@
 # Parte III — Database First executado no Caisora
 
+**Escopo atual:** geração para todas as 15 tabelas de negócio, totalizando 45 arquivos, com 26 testes passando. As telas e capturas permanecem concentradas na V20. Consulte [GERACAO_COMPLETA.md](GERACAO_COMPLETA.md) para inventário e evidências da ampliação. Os logs iniciais abaixo documentam a primeira etapa, com duas tabelas.
+
 Implementação e evidências locais de 13/11/2026. O checkout foi comparado com o remoto usando `git fetch origin` e `git rev-list --left-right --count HEAD...origin/main`: resultado `0 0`, base `82cbc96`. Não precisou de atualização. A árvore estava limpa; o trabalho foi criado na branch `feat/database-first-parte-iii`.
 
 ## Estudo do projeto
@@ -63,7 +65,7 @@ node tools/database-first/demo.mjs generate
 
 O script chama `mvn -B -ntp mybatis-generator:generate` no runner. O objetivo Maven oficial é documentado em [Running MBG with Maven](https://mybatis.org/generator/running/runningWithMaven.html). O log real registra `Connecting to the Database`, `Introspecting table public...`, geração e `BUILD SUCCESS`: [generation.log](evidence/generation.log).
 
-Arquivos **gerados pelo MBG**, relativos a `tools/database-first/`:
+Exemplos de arquivos **gerados pelo MBG** usados pelas duas telas, relativos a `tools/database-first/` (o inventário completo atual está em [GERACAO_COMPLETA.md](GERACAO_COMPLETA.md)):
 
 ```text
 generated/java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java
@@ -74,9 +76,9 @@ generated/resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMap
 generated/resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
 ```
 
-Cada mapper contém `insert`, `selectAll`, `selectByPrimaryKey`, `updateByPrimaryKey`, `deleteByPrimaryKey`. O SQL executável está dentro dos XML, com parâmetros `#{...}` vinculados pelo MyBatis; não é um script `.sql` para colar no `psql`. Nenhum desses seis arquivos foi escrito ou corrigido manualmente. `generated/manifest.json` é um inventário manual automatizado pelo script. Os [hashes SHA-256](evidence/generated-sha256.json) identificam as saídas desta execução.
+Cada mapper contém `insert`, `selectAll`, `selectByPrimaryKey`, `updateByPrimaryKey`, `deleteByPrimaryKey`. O SQL executável está dentro dos XML, com parâmetros `#{...}` vinculados pelo MyBatis; não é um script `.sql` para colar no `psql`. Nenhum dos arquivos gerados foi escrito ou corrigido manualmente. `generated/manifest.json` é um inventário escrito pelo script. Os [hashes iniciais](evidence/generated-sha256.json) identificam a geração original de duas tabelas; o [manifesto completo](evidence/all-tables-manifest.json) registra os 45 arquivos atuais. A imutabilidade do histórico de movimentações continua bloqueando alterações e exclusões, mesmo com os métodos gerados.
 
-**Manuais:** configuração do MBG/Maven/Compose, scripts de orquestração, seed local, `Database`, `UuidTypeHandler`, `CrudService`, `DemoServer`, DTO `Input`, HTML/CSS/JS, testes e documentação. O serviço usa exclusivamente os mappers gerados para o CRUD das duas tabelas; JDBC direto é usado para marcador, metadados e verificações independentes nos testes. A interface apresenta listagem, busca, inclusão e edição em formulário, exclusão com confirmação e mensagens de sucesso/erro. Marca, menu lateral e cabeçalho seguem o frontend Caisora. A separação entre geração e integração é documentada aqui, sem explicações técnicas nas telas operacionais.
+**Manuais:** configuração do MBG/Maven/Compose, scripts de orquestração, seed local, `Database`, `UuidTypeHandler`, `JsonbTypeHandler`, `CrudService`, `DemoServer`, DTO `Input`, HTML/CSS/JS, testes e documentação. O serviço usa exclusivamente os mappers gerados para o CRUD das duas tabelas; JDBC direto é usado para marcador, metadados e verificações independentes nos testes. A interface apresenta listagem, busca, inclusão e edição em formulário, exclusão com confirmação e mensagens de sucesso/erro. Marca, menu lateral e cabeçalho seguem o frontend Caisora. A separação entre geração e integração é documentada aqui, sem explicações técnicas nas telas operacionais.
 
 ## Diferença em relação ao Caisora atual
 

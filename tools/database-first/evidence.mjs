@@ -27,6 +27,7 @@ for (const file of readdirSync(path.join(root, 'target/surefire-reports')).filte
   copyFileSync(path.join(root, 'target/surefire-reports', file), path.join(evidence, file));
 }
 copyFileSync(path.join(root, 'target/schema-metadata.txt'), path.join(evidence, 'schema-metadata.txt'));
+copyFileSync(path.join(root, 'target/all-tables-metadata.txt'), path.join(evidence, 'all-tables-metadata.txt'));
 copyFileSync(path.join(root, 'target/playwright-results.json'), path.join(evidence, 'playwright-results.json'));
 const files = readdirSync(path.join(root, 'generated'), { recursive: true }).filter(file => /\.(java|xml)$/.test(file)).sort();
 const hashes = Object.fromEntries(files.map(file => [file.split(path.sep).join('/'), createHash('sha256').update(readFileSync(path.join(root, 'generated', file))).digest('hex')]));

@@ -1,5 +1,11 @@
 # Resultados reais e matriz de validação
 
+## Ampliação para todas as tabelas
+
+A geração atual cobre **15 tabelas de negócio**, produzindo **30 arquivos Java e 15 XML SQL**. Foram compiladas 35 fontes (30 geradas e cinco de integração) e executados **26 testes, sem falhas, erros ou ignorados**. As 15 persistências foram exercitadas com PostgreSQL real, incluindo chave composta, UUID, datas com fuso, valores decimais e JSONB. A regra de imutabilidade do histórico de movimentações foi confirmada, sem desativar triggers. Evidências: [geração](evidence/generation-all.log), [compilação/testes](evidence/verify-all.log), [metadados e relacionamentos](evidence/all-tables-metadata.txt), [manifesto](evidence/all-tables-manifest.json). Veja [GERACAO_COMPLETA.md](GERACAO_COMPLETA.md).
+
+Os resultados e capturas a seguir registram a validação anterior de duas tabelas; os testes anteriores continuam incluídos na suíte atual. Não foram criadas novas telas para as demais tabelas.
+
 Execução em Windows, Docker Desktop Linux, Node 24.18.0, Chromium 141 via Playwright 1.56.1. O runner usa Maven 3.9.11/Temurin 21 e PostgreSQL **16.14**, obtido pela imagem `postgres:16-alpine`. Logs registram os horários UTC de 13/11/2026. Não foram usados H2, mocks de banco ou produção para validar o CRUD.
 
 ## Demo — critérios obrigatórios

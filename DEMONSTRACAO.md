@@ -10,7 +10,7 @@ Baixe dependências e valide fora dos cinco minutos:
 node tools/database-first/demo.mjs verify
 ```
 
-Confirme `Tests run: 10, Failures: 0, Errors: 0, Skipped: 0` e `BUILD SUCCESS`. Prepare o cenário com tabelas existentes e código gerado ausente:
+Confirme `Tests run: 26, Failures: 0, Errors: 0, Skipped: 0` e `BUILD SUCCESS`. A geração agora cobre as 15 tabelas de negócio. Prepare o cenário com tabelas existentes e código gerado ausente:
 
 ```sh
 node tools/database-first/demo.mjs prepare
@@ -37,7 +37,9 @@ node tools/database-first/demo.mjs inspect
 node tools/database-first/demo.mjs generate
 ```
 
-**Resultado esperado:** `Connecting to the Database`, `Introspecting table public.organizacao_modulos`, `Introspecting table public.perfil_permissoes`, `Saving file ...` e `BUILD SUCCESS`. Surgem quatro Java e dois XML.
+**Resultado esperado:** `Connecting to the Database`, `Introspecting table public...` para as 15 tabelas, `Saving file ...` e `BUILD SUCCESS`. Surgem 30 Java (15 modelos + 15 mappers) e 15 XML SQL.
+
+**Fala adicional:** “A geração cobre todas as tabelas de negócio: organizações, usuários, clientes, embarcações, vagas, ocupações, movimentações e posições, contratos e históricos, módulos e permissões. As telas demonstram módulos e permissões; as demais persistências foram verificadas em testes. O histórico de movimentações permanece imutável, conforme a regra original do banco.”
 
 **Fala:** “O comando executa MyBatis Generator de verdade. A ferramenta se conecta pelo JDBC e consulta os metadados das tabelas. Não está lendo nossas entidades JPA e não estamos copiando classes à mão.”
 

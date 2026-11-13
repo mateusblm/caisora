@@ -29,8 +29,17 @@ function generate() {
   clearGenerated();
   maven('mybatis-generator:generate');
   const files = readdirSync(path.join(root, 'generated'), { recursive: true }).filter(f => /\.(java|xml)$/.test(f)).map(f => f.split(path.sep).join('/')).sort();
-  if (files.length !== 6) throw new Error(`Esperados 6 arquivos MBG, encontrados ${files.length}`);
-  writeFileSync(path.join(root, 'generated/manifest.json'), JSON.stringify({ tool: 'MyBatis Generator 1.4.2', database: 'caisora_database_first', files }, null, 2) + '\n');
+  const config = readFileSync(path.join(root, 'generatorConfig.xml'), 'utf8');
+  const tables = [...config.matchAll(/<table\s+schema="public"\s+tableName="([^"]+)"\s+domainObjectName="([^"]+)"/g)].map(([, table, model]) => ({ table, model }));
+  if (!tables.length) throw new Error('Nenhuma tabela configurada para geracao.');
+  const expected = tables.flatMap(({ model }) => [
+    `java/br/com/caisora/dbfirst/generated/model/${model}.java`,
+    `java/br/com/caisora/dbfirst/generated/mapper/${model}Mapper.java`,
+    `resources/br/com/caisora/dbfirst/generated/mapper/${model}Mapper.xml`
+  ]).sort();
+  if (JSON.stringify(files) !== JSON.stringify(expected)) throw new Error('Os arquivos gerados nao correspondem as tabelas configuradas.');
+  writeFileSync(path.join(root, 'generated/manifest.json'), JSON.stringify({ tool: 'MyBatis Generator 1.4.2', database: 'caisora_database_first', tables, files }, null, 2) + '\n');
+  console.log(`Geracao concluida: ${tables.length} modelos, ${tables.length} mappers e ${tables.length} XML SQL.`);
   console.log('Gerados pelo MBG:\n' + files.join('\n'));
 }
 const action = process.argv[2] || 'help';

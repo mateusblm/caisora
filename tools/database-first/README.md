@@ -2,6 +2,8 @@
 
 Projeto Java 21 independente do backend e do frontend do Caisora. PostgreSQL exclusivo via Compose, migrations reais V1–V21, MyBatis Generator 1.4.2, CRUD HTTP e tela manual. Não é um módulo do ERP nem uma configuração de produção.
 
+A geração abrange as **15 tabelas de negócio**: são **15 modelos Java, 15 interfaces Mapper e 15 XML SQL**. A tela continua limitada a módulos e permissões. Inventário, tipos especiais e testes: [geração completa](../../docs/database-first/GERACAO_COMPLETA.md).
+
 ## Executar
 
 Requisitos: Git, Docker com engine Linux/Compose v2 em execução e Node.js 22 ou superior. Java 21 e Maven são fornecidos pela imagem do runner; não precisam estar no PATH do host. A primeira execução baixa imagens/dependências e precisa de internet. Portas locais padrão: PostgreSQL `55432`, HTTP `8095`.
@@ -88,7 +90,7 @@ Esse comando inclui `reproduce`: recria **o volume da demo**. Grava stdout/stder
 | `generated/java/.../mapper/*Mapper.java` | MBG: contratos CRUD |
 | `generated/resources/.../mapper/*Mapper.xml` | MBG: mapeamento e SQL executável CRUD parametrizado |
 | `generatorConfig.xml`, `pom.xml` | Configuração manual da geração/build |
-| `src/main/java/.../{Database,UuidTypeHandler,CrudService,DemoServer}.java` | Integração manual, transações, validação, autenticação e HTTP |
+| `src/main/java/.../{Database,UuidTypeHandler,JsonbTypeHandler,CrudService,DemoServer}.java` | Integração manual, tipos PostgreSQL, transações, validação, autenticação e HTTP |
 | `src/main/resources/web/` | Tela HTML/CSS/JS manual |
 | `src/test/`, `tests/`, `smoke.mjs` | Testes manuais automatizados |
 | `db/seed.sql` | Somente duas organizações locais e marcador de segurança |

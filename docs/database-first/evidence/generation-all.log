@@ -1,0 +1,172 @@
+ Container caisora-database-first-postgres-1 Running 
+ Container caisora-database-first-postgres-1 Waiting 
+ Container caisora-database-first-postgres-1 Healthy 
+ Container caisora-database-first-runner-run-e5b487c12b0b Creating 
+ Container caisora-database-first-runner-run-e5b487c12b0b Created 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< br.com.caisora.demo:database-first >-----------------
+[INFO] Building database-first 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- mybatis-generator:1.4.2:generate (default-cli) @ database-first ---
+[INFO] Connecting to the Database
+[INFO] Introspecting table public.clientes
+[INFO] Introspecting table public.contratos
+[INFO] Introspecting table public.embarcacoes
+[INFO] Introspecting table public.historicos_contrato
+[INFO] Introspecting table public.historicos_movimentacoes
+[INFO] Introspecting table public.movimentacoes
+[INFO] Introspecting table public.ocupacoes
+[INFO] Introspecting table public.organizacao_modulos
+[INFO] Introspecting table public.organizacoes
+[INFO] Introspecting table public.perfil_permissoes
+[INFO] Introspecting table public.posicoes_embarcacoes
+[INFO] Introspecting table public.sequencias_contrato
+[INFO] Introspecting table public.usuarios
+[INFO] Introspecting table public.vagas
+[INFO] Introspecting table public.vinculos_contrato_ocupacao
+[INFO] Generating Record class for table public.clientes
+[INFO] Generating Mapper Interface for table public.clientes
+[INFO] Generating SQL Map for table public.clientes
+[INFO] Generating Record class for table public.contratos
+[INFO] Generating Mapper Interface for table public.contratos
+[INFO] Generating SQL Map for table public.contratos
+[INFO] Generating Record class for table public.embarcacoes
+[INFO] Generating Mapper Interface for table public.embarcacoes
+[INFO] Generating SQL Map for table public.embarcacoes
+[INFO] Generating Record class for table public.historicos_contrato
+[INFO] Generating Mapper Interface for table public.historicos_contrato
+[INFO] Generating SQL Map for table public.historicos_contrato
+[INFO] Generating Record class for table public.historicos_movimentacoes
+[INFO] Generating Mapper Interface for table public.historicos_movimentacoes
+[INFO] Generating SQL Map for table public.historicos_movimentacoes
+[INFO] Generating Record class for table public.movimentacoes
+[INFO] Generating Mapper Interface for table public.movimentacoes
+[INFO] Generating SQL Map for table public.movimentacoes
+[INFO] Generating Record class for table public.ocupacoes
+[INFO] Generating Mapper Interface for table public.ocupacoes
+[INFO] Generating SQL Map for table public.ocupacoes
+[INFO] Generating Record class for table public.organizacao_modulos
+[INFO] Generating Mapper Interface for table public.organizacao_modulos
+[INFO] Generating SQL Map for table public.organizacao_modulos
+[INFO] Generating Record class for table public.organizacoes
+[INFO] Generating Mapper Interface for table public.organizacoes
+[INFO] Generating SQL Map for table public.organizacoes
+[INFO] Generating Record class for table public.perfil_permissoes
+[INFO] Generating Mapper Interface for table public.perfil_permissoes
+[INFO] Generating SQL Map for table public.perfil_permissoes
+[INFO] Generating Record class for table public.posicoes_embarcacoes
+[INFO] Generating Mapper Interface for table public.posicoes_embarcacoes
+[INFO] Generating SQL Map for table public.posicoes_embarcacoes
+[INFO] Generating Record class for table public.sequencias_contrato
+[INFO] Generating Mapper Interface for table public.sequencias_contrato
+[INFO] Generating SQL Map for table public.sequencias_contrato
+[INFO] Generating Record class for table public.usuarios
+[INFO] Generating Mapper Interface for table public.usuarios
+[INFO] Generating SQL Map for table public.usuarios
+[INFO] Generating Record class for table public.vagas
+[INFO] Generating Mapper Interface for table public.vagas
+[INFO] Generating SQL Map for table public.vagas
+[INFO] Generating Record class for table public.vinculos_contrato_ocupacao
+[INFO] Generating Mapper Interface for table public.vinculos_contrato_ocupacao
+[INFO] Generating SQL Map for table public.vinculos_contrato_ocupacao
+[INFO] Saving file ClienteMapper.xml
+[INFO] Saving file ContratoMapper.xml
+[INFO] Saving file EmbarcacaoMapper.xml
+[INFO] Saving file HistoricoContratoMapper.xml
+[INFO] Saving file HistoricoMovimentacaoMapper.xml
+[INFO] Saving file MovimentacaoMapper.xml
+[INFO] Saving file OcupacaoMapper.xml
+[INFO] Saving file OrganizacaoModuloMapper.xml
+[INFO] Saving file OrganizacaoMapper.xml
+[INFO] Saving file PerfilPermissaoMapper.xml
+[INFO] Saving file PosicaoEmbarcacaoMapper.xml
+[INFO] Saving file SequenciaContratoMapper.xml
+[INFO] Saving file UsuarioMapper.xml
+[INFO] Saving file VagaMapper.xml
+[INFO] Saving file VinculoContratoOcupacaoMapper.xml
+[INFO] Saving file Cliente.java
+[INFO] Saving file ClienteMapper.java
+[INFO] Saving file Contrato.java
+[INFO] Saving file ContratoMapper.java
+[INFO] Saving file Embarcacao.java
+[INFO] Saving file EmbarcacaoMapper.java
+[INFO] Saving file HistoricoContrato.java
+[INFO] Saving file HistoricoContratoMapper.java
+[INFO] Saving file HistoricoMovimentacao.java
+[INFO] Saving file HistoricoMovimentacaoMapper.java
+[INFO] Saving file Movimentacao.java
+[INFO] Saving file MovimentacaoMapper.java
+[INFO] Saving file Ocupacao.java
+[INFO] Saving file OcupacaoMapper.java
+[INFO] Saving file OrganizacaoModulo.java
+[INFO] Saving file OrganizacaoModuloMapper.java
+[INFO] Saving file Organizacao.java
+[INFO] Saving file OrganizacaoMapper.java
+[INFO] Saving file PerfilPermissao.java
+[INFO] Saving file PerfilPermissaoMapper.java
+[INFO] Saving file PosicaoEmbarcacao.java
+[INFO] Saving file PosicaoEmbarcacaoMapper.java
+[INFO] Saving file SequenciaContrato.java
+[INFO] Saving file SequenciaContratoMapper.java
+[INFO] Saving file Usuario.java
+[INFO] Saving file UsuarioMapper.java
+[INFO] Saving file Vaga.java
+[INFO] Saving file VagaMapper.java
+[INFO] Saving file VinculoContratoOcupacao.java
+[INFO] Saving file VinculoContratoOcupacaoMapper.java
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.595 s
+[INFO] Finished at: 2026-11-13T20:18:42Z
+[INFO] ------------------------------------------------------------------------
+Geracao concluida: 15 modelos, 15 mappers e 15 XML SQL.
+Gerados pelo MBG:
+java/br/com/caisora/dbfirst/generated/mapper/ClienteMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/ContratoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/EmbarcacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/HistoricoContratoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/HistoricoMovimentacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/MovimentacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/OcupacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/PosicaoEmbarcacaoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/SequenciaContratoMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/UsuarioMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/VagaMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/VinculoContratoOcupacaoMapper.java
+java/br/com/caisora/dbfirst/generated/model/Cliente.java
+java/br/com/caisora/dbfirst/generated/model/Contrato.java
+java/br/com/caisora/dbfirst/generated/model/Embarcacao.java
+java/br/com/caisora/dbfirst/generated/model/HistoricoContrato.java
+java/br/com/caisora/dbfirst/generated/model/HistoricoMovimentacao.java
+java/br/com/caisora/dbfirst/generated/model/Movimentacao.java
+java/br/com/caisora/dbfirst/generated/model/Ocupacao.java
+java/br/com/caisora/dbfirst/generated/model/Organizacao.java
+java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java
+java/br/com/caisora/dbfirst/generated/model/PerfilPermissao.java
+java/br/com/caisora/dbfirst/generated/model/PosicaoEmbarcacao.java
+java/br/com/caisora/dbfirst/generated/model/SequenciaContrato.java
+java/br/com/caisora/dbfirst/generated/model/Usuario.java
+java/br/com/caisora/dbfirst/generated/model/Vaga.java
+java/br/com/caisora/dbfirst/generated/model/VinculoContratoOcupacao.java
+resources/br/com/caisora/dbfirst/generated/mapper/ClienteMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/ContratoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/EmbarcacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/HistoricoContratoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/HistoricoMovimentacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/MovimentacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/OcupacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/PosicaoEmbarcacaoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/SequenciaContratoMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/UsuarioMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/VagaMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/VinculoContratoOcupacaoMapper.xml
