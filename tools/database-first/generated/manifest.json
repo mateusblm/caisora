@@ -1,0 +1,12 @@
+{
+  "tool": "MyBatis Generator 1.4.2",
+  "database": "caisora_database_first",
+  "files": [
+    "java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java",
+    "java/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.java",
+    "java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java",
+    "java/br/com/caisora/dbfirst/generated/model/PerfilPermissao.java",
+    "resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.xml",
+    "resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml"
+  ]
+}

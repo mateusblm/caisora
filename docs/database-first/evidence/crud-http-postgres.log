@@ -1,0 +1,21 @@
+HTTP POST /api/modulos -> 201 {"id":"c440fe9b-2ee0-4638-8164-db49dbb0e4cd","organizacaoId":"11111111-1111-4111-8111-111111111111","modulo":"DEMO-1794594728349","ativo":true}
+PostgreSQL (conexao psql independente): {"id":"c440fe9b-2ee0-4638-8164-db49dbb0e4cd","organizacao_id":"11111111-1111-4111-8111-111111111111","modulo":"DEMO-1794594728349","ativo":true}
+HTTP GET /api/modulos -> 200 [{"id":"c440fe9b-2ee0-4638-8164-db49dbb0e4cd","organizacaoId":"11111111-1111-4111-8111-111111111111","modulo":"DEMO-1794594728349","ativo":true}]
+HTTP POST /api/modulos -> 409 {"erro":"Ja existe uma configuracao com essa combinacao de campos."}
+HTTP PUT /api/modulos/c440fe9b-2ee0-4638-8164-db49dbb0e4cd -> 200 {"id":"c440fe9b-2ee0-4638-8164-db49dbb0e4cd","organizacaoId":"11111111-1111-4111-8111-111111111111","modulo":"DEMO-1794594728349","ativo":false}
+PostgreSQL (conexao psql independente): {"id":"c440fe9b-2ee0-4638-8164-db49dbb0e4cd","organizacao_id":"11111111-1111-4111-8111-111111111111","modulo":"DEMO-1794594728349","ativo":false}
+HTTP DELETE /api/modulos/c440fe9b-2ee0-4638-8164-db49dbb0e4cd -> 204 null
+PostgreSQL (conexao psql independente): (0 registros)
+HTTP GET /api/modulos/c440fe9b-2ee0-4638-8164-db49dbb0e4cd -> 404 {"erro":"Registro nao encontrado nesta organizacao."}
+HTTP DELETE /api/modulos/c440fe9b-2ee0-4638-8164-db49dbb0e4cd -> 404 {"erro":"Registro nao encontrado nesta organizacao."}
+HTTP POST /api/permissoes -> 201 {"id":"c38ee53f-982c-40b0-a15f-75998aa9d1cf","organizacaoId":"11111111-1111-4111-8111-111111111111","perfil":"ATENDENTE","modulo":"DEMO-1794594729362","acao":"CONSULTAR","permitido":true}
+PostgreSQL (conexao psql independente): {"id":"c38ee53f-982c-40b0-a15f-75998aa9d1cf","organizacao_id":"11111111-1111-4111-8111-111111111111","perfil":"ATENDENTE","modulo":"DEMO-1794594729362","acao":"CONSULTAR","permitido":true}
+HTTP GET /api/permissoes -> 200 [{"id":"c38ee53f-982c-40b0-a15f-75998aa9d1cf","organizacaoId":"11111111-1111-4111-8111-111111111111","perfil":"ATENDENTE","modulo":"DEMO-1794594729362","acao":"CONSULTAR","permitido":true}]
+HTTP POST /api/permissoes -> 409 {"erro":"Ja existe uma configuracao com essa combinacao de campos."}
+HTTP PUT /api/permissoes/c38ee53f-982c-40b0-a15f-75998aa9d1cf -> 200 {"id":"c38ee53f-982c-40b0-a15f-75998aa9d1cf","organizacaoId":"11111111-1111-4111-8111-111111111111","perfil":"ATENDENTE","modulo":"DEMO-1794594729362","acao":"CONSULTAR","permitido":false}
+PostgreSQL (conexao psql independente): {"id":"c38ee53f-982c-40b0-a15f-75998aa9d1cf","organizacao_id":"11111111-1111-4111-8111-111111111111","perfil":"ATENDENTE","modulo":"DEMO-1794594729362","acao":"CONSULTAR","permitido":false}
+HTTP DELETE /api/permissoes/c38ee53f-982c-40b0-a15f-75998aa9d1cf -> 204 null
+PostgreSQL (conexao psql independente): (0 registros)
+HTTP GET /api/permissoes/c38ee53f-982c-40b0-a15f-75998aa9d1cf -> 404 {"erro":"Registro nao encontrado nesta organizacao."}
+HTTP DELETE /api/permissoes/c38ee53f-982c-40b0-a15f-75998aa9d1cf -> 404 {"erro":"Registro nao encontrado nesta organizacao."}
+PASS: CRUD nas duas tabelas confirmado por HTTP e PostgreSQL independente.

@@ -1,0 +1,17 @@
+
+> caisora-web@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Application bundle generation complete. [4.401 seconds] - 2026-11-13T18:30:38.480Z
+
+
+ RUN  v4.1.9 C:/DEV/Caisora/caisora/frontend
+
+
+ Test Files  32 passed (32)
+      Tests  147 passed (147)
+   Start at  15:30:39
+   Duration  9.03s (transform 6.54s, setup 18.08s, import 20.90s, tests 28.87s, environment 111.46s)
+

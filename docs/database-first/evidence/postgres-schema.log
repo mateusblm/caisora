@@ -1,0 +1,38 @@
+                   Table "public.organizacao_modulos"
+     Column     |         Type          | Collation | Nullable | Default 
+----------------+-----------------------+-----------+----------+---------
+ id             | uuid                  |           | not null | 
+ organizacao_id | uuid                  |           | not null | 
+ modulo         | character varying(50) |           | not null | 
+ ativo          | boolean               |           | not null | 
+Indexes:
+    "organizacao_modulos_pkey" PRIMARY KEY, btree (id)
+    "idx_organizacao_modulos_organizacao" btree (organizacao_id)
+    "uk_organizacao_modulo" UNIQUE CONSTRAINT, btree (organizacao_id, modulo)
+Foreign-key constraints:
+    "fk_organizacao_modulos_organizacao" FOREIGN KEY (organizacao_id) REFERENCES organizacoes(id)
+
+                    Table "public.perfil_permissoes"
+     Column     |         Type          | Collation | Nullable | Default 
+----------------+-----------------------+-----------+----------+---------
+ id             | uuid                  |           | not null | 
+ organizacao_id | uuid                  |           | not null | 
+ perfil         | character varying(50) |           | not null | 
+ modulo         | character varying(50) |           | not null | 
+ acao           | character varying(50) |           | not null | 
+ permitido      | boolean               |           | not null | 
+Indexes:
+    "perfil_permissoes_pkey" PRIMARY KEY, btree (id)
+    "idx_perfil_permissoes_consulta" btree (organizacao_id, perfil, modulo, acao)
+    "uk_perfil_permissao" UNIQUE CONSTRAINT, btree (organizacao_id, perfil, modulo, acao)
+Foreign-key constraints:
+    "fk_perfil_permissoes_organizacao" FOREIGN KEY (organizacao_id) REFERENCES organizacoes(id)
+
+ id | organizacao_id | modulo | ativo 
+----+----------------+--------+-------
+(0 rows)
+
+ id | organizacao_id | perfil | modulo | acao | permitido 
+----+----------------+--------+--------+------+-----------
+(0 rows)
+

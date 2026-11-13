@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Caisora · Database First</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<body>
+  <header><strong>Caisora</strong><span>Laboratório Database First</span><span class="local">Banco exclusivo local</span></header>
+  <main>
+    <h1>Do PostgreSQL ao CRUD</h1>
+    <p class="intro">As estruturas de persistência desta demonstração foram geradas pelo MyBatis Generator a partir das tabelas reais da migration V20.</p>
+    <section id="login-section" aria-labelledby="access-title">
+      <h2 id="access-title">Acessar a demonstração</h2>
+      <p>Usuário <code>demo</code>. A senha padrão local é <code>demo-local-123</code>; se configurada, use <code>DBF_TOKEN</code>.</p>
+      <form id="login-form"><label for="password">Senha local</label><div class="login-row"><input id="password" type="password" autocomplete="current-password" required><button type="submit">Entrar na demo</button></div></form>
+    </section>
+    <p id="message" role="status" aria-live="polite" hidden></p>
+    <div id="workspace" hidden>
+      <div class="toolbar"><label for="table">Tabela da demonstração<select id="table"><option value="modulos">organizacao_modulos</option><option value="permissoes">perfil_permissoes</option></select></label><button id="refresh" class="secondary" type="button">Atualizar listagem</button><button id="logout" class="secondary" type="button">Sair</button></div>
+      <p class="tenant">Organização fixa: Marina da demonstração (local) · <code>11111111-1111-4111-8111-111111111111</code></p>
+      <div class="layout">
+        <section aria-labelledby="list-title"><h2 id="list-title">Registros no banco</h2><p id="count"></p><div class="table-scroll"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><p id="empty" hidden>Nenhum registro. Cadastre o primeiro para iniciar o CRUD.</p></section>
+        <section aria-labelledby="form-title"><h2 id="form-title">Cadastrar registro</h2><p id="editing" class="record-id" hidden></p>
+          <form id="record-form">
+            <label for="modulo">Módulo</label><input id="modulo" name="modulo" maxlength="50" required placeholder="Ex.: CLIENTES">
+            <div id="permission-fields" hidden><label for="perfil">Perfil</label><input id="perfil" name="perfil" maxlength="50" placeholder="Ex.: ATENDENTE"><label for="acao">Ação</label><input id="acao" name="acao" maxlength="50" placeholder="Ex.: CONSULTAR"></div>
+            <label for="enabled" id="enabled-label">Ativo</label><select id="enabled" name="enabled"><option value="true">Sim</option><option value="false">Não</option></select>
+            <div class="form-actions"><button id="save" type="submit">Cadastrar</button><button id="cancel" class="secondary" type="button" hidden>Cancelar edição</button></div>
+          </form>
+        </section>
+      </div>
+      <aside><h2>O que está sendo demonstrado</h2><p><strong>Automático:</strong> modelos Java, interfaces Mapper e SQL de inserção, consulta, atualização e exclusão. <strong>Manual:</strong> integração UUID, autenticação local, validação, HTTP e esta tela.</p><p>Os campos de texto refletem o banco: a V20 usa <code>varchar(50)</code>, sem enums SQL. Esta tela não configura o Caisora de produção.</p></aside>
+    </div>
+  </main>
+  <dialog id="delete-dialog" aria-labelledby="delete-title"><h2 id="delete-title">Excluir este registro?</h2><p>A exclusão será aplicada ao PostgreSQL de demonstração.</p><p id="delete-detail" class="record-id"></p><div class="form-actions"><button id="confirm-delete" class="danger" type="button">Excluir registro</button><button id="cancel-delete" class="secondary" type="button">Manter registro</button></div></dialog>
+</body></html>

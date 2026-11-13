@@ -1,0 +1,8 @@
+{
+  "java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java": "f0373c9fe6aaadbfb6a74cef623b1215f5ed5107a10b558e751f7e07aca7eaf8",
+  "java/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.java": "053b0cb285d4f471234e2ca692f16ad56d8f8d9b733b1245551bfc8d5cf3680b",
+  "java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java": "ae4c62b5cc38b2e8963998660ba581baa7a8afa30ac019a5a4882bbb21edc780",
+  "java/br/com/caisora/dbfirst/generated/model/PerfilPermissao.java": "b7dabf9242f37dab756bb0ee74a697f52ca0ea047c00d045a91c578fc5208295",
+  "resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.xml": "dee49c9bbcfb5ca0e4abec94ef2310785bfd5ddb70377136a9711d8154f889ab",
+  "resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml": "43dda7ba9609ff8faaef412b04c832b7e1dbe92a244915b56608d60111bf45f4"
+}

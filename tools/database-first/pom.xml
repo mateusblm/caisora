@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <!-- Projeto independente: deliberadamente sem parent/modulo no POM do produto. -->
+  <groupId>br.com.caisora.demo</groupId><artifactId>database-first</artifactId><version>1.0.0</version>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <db.url>jdbc:postgresql://${env.DBF_HOST}:${env.DBF_PORT}/caisora_database_first</db.url>
+    <db.password>${env.DBF_PASSWORD}</db.password>
+    <postgres.version>42.7.8</postgres.version><flyway.version>11.15.0</flyway.version>
+  </properties>
+  <dependencies>
+    <dependency><groupId>org.mybatis</groupId><artifactId>mybatis</artifactId><version>3.5.19</version></dependency>
+    <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>${postgres.version}</version></dependency>
+    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.20.1</version></dependency>
+    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>5.13.4</version><scope>test</scope></dependency>
+  </dependencies>
+  <build>
+    <resources>
+      <resource><directory>src/main/resources</directory></resource>
+      <resource><directory>generated/resources</directory></resource>
+    </resources>
+    <plugins>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.4</version></plugin>
+      <plugin><groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId><version>3.6.1</version>
+        <executions><execution><id>generated</id><phase>generate-sources</phase><goals><goal>add-source</goal></goals><configuration><sources><source>generated/java</source></sources></configuration></execution></executions>
+      </plugin>
+      <plugin><groupId>org.mybatis.generator</groupId><artifactId>mybatis-generator-maven-plugin</artifactId><version>1.4.2</version>
+        <configuration><configurationFile>${project.basedir}/generatorConfig.xml</configurationFile><overwrite>true</overwrite><verbose>true</verbose></configuration>
+        <dependencies><dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>${postgres.version}</version></dependency></dependencies>
+      </plugin>
+      <plugin><groupId>org.flywaydb</groupId><artifactId>flyway-maven-plugin</artifactId><version>${flyway.version}</version>
+        <configuration><url>${db.url}</url><user>caisora_demo</user><password>${env.DBF_PASSWORD}</password><cleanDisabled>true</cleanDisabled><locations><location>filesystem:${project.basedir}/../../src/main/resources/db/migration</location></locations></configuration>
+        <dependencies>
+          <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-database-postgresql</artifactId><version>${flyway.version}</version></dependency>
+          <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>${postgres.version}</version></dependency>
+        </dependencies>
+      </plugin>
+      <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.6.2</version><configuration><mainClass>br.com.caisora.dbfirst.DemoServer</mainClass></configuration></plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,40 @@
+
+> caisora-web@0.0.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                                |  Raw size | Estimated transfer size
+main-DXPP5W27.js    | main                                 | 677.60 kB |               155.17 kB
+styles-OX2VCLPB.css | styles                               |   9.51 kB |                 1.79 kB
+
+                    | Initial total                        | 687.11 kB |               156.96 kB
+
+Lazy chunk files    | Names                                |  Raw size | Estimated transfer size
+chunk-BDoqc8-_.js   | -                                    |  61.22 kB |                 9.94 kB
+chunk-D7TpIfuK.js   | embarcacao-formulario-component      |  53.88 kB |                12.87 kB
+chunk-CRdurJQT.js   | dashboard-component                  |  49.44 kB |                 9.64 kB
+chunk-W7wlBeoZ.js   | movimentacao-formulario-component    |  40.58 kB |                 9.37 kB
+chunk-D72qHz5R.js   | configuracao-variabilidade-component |  37.58 kB |                 7.88 kB
+chunk-DP2hzail.js   | contrato-detalhe-component           |  36.12 kB |                 8.10 kB
+chunk-B0H4YcRj.js   | -                                    |  35.72 kB |                 8.75 kB
+chunk-xU3YR2Lz.js   | movimentacao-listagem-component      |  32.45 kB |                 7.70 kB
+chunk-D8fMaJHW.js   | painel-tv-component                  |  31.54 kB |                 7.13 kB
+chunk-CZEDzuTS.js   | -                                    |  30.10 kB |                 5.07 kB
+chunk-BY92XZtP.js   | -                                    |  28.98 kB |                 6.85 kB
+chunk-DGLHKFa5.js   | ocupacao-formulario-component        |  26.87 kB |                 6.71 kB
+chunk-DlS4Q7Oa.js   | -                                    |  24.73 kB |                 6.69 kB
+chunk-CpD8nE2K.js   | ocupacao-listagem-component          |  22.76 kB |                 5.79 kB
+chunk-zSVM469o.js   | embarcacao-listagem-component        |  22.61 kB |                 5.86 kB
+...and 23 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [9.291 seconds] - 2026-11-13T18:27:30.114Z
+
+▲ [WARNING] bundle initial exceeded maximum budget. Budget 500.00 kB was not met by 187.11 kB with a total of 687.11 kB.
+
+
+▲ [WARNING] src/app/features/dashboard/pages/dashboard/dashboard.component.scss exceeded maximum budget. Budget 8.00 kB was not met by 3.09 kB with a total of 11.09 kB.
+
+
+Output location: C:\DEV\Caisora\caisora\frontend\dist\caisora-web
+

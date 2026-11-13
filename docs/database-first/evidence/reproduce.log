@@ -1,0 +1,181 @@
+ Container caisora-database-first-runner-1 Stopping 
+ Container caisora-database-first-runner-1 Stopped 
+Going to remove caisora-database-first-runner-1
+ Container caisora-database-first-runner-1 Removing 
+ Container caisora-database-first-runner-1 Removed 
+ Container caisora-database-first-postgres-1 Stopping 
+ Container caisora-database-first-postgres-1 Stopped 
+ Container caisora-database-first-postgres-1 Removing 
+ Container caisora-database-first-postgres-1 Removed 
+ Network caisora-database-first_default Removing 
+ Network caisora-database-first_default Removed 
+caisora-database-first_database-first-data
+ Network caisora-database-first_default Creating 
+ Volume caisora-database-first_database-first-data Creating 
+ Volume caisora-database-first_database-first-data Creating 
+ Network caisora-database-first_default Creating 
+ Volume caisora-database-first_database-first-data Created 
+ Volume caisora-database-first_database-first-data Created 
+ Network caisora-database-first_default Created 
+ Network caisora-database-first_default Created 
+ Container caisora-database-first-postgres-1 Creating 
+ Container caisora-database-first-postgres-1 Created 
+ Container caisora-database-first-postgres-1 Starting 
+ Container caisora-database-first-postgres-1 Started 
+ Container caisora-database-first-postgres-1 Waiting 
+ Container caisora-database-first-postgres-1 Healthy 
+ Container caisora-database-first-postgres-1 Running 
+ Container caisora-database-first-postgres-1 Waiting 
+ Container caisora-database-first-postgres-1 Healthy 
+ Container caisora-database-first-runner-run-e2f936ebb612 Creating 
+ Container caisora-database-first-runner-run-e2f936ebb612 Created 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< br.com.caisora.demo:database-first >-----------------
+[INFO] Building database-first 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- flyway:11.15.0:migrate (default-cli) @ database-first ---
+[INFO] Database: jdbc:postgresql://postgres:5432/caisora_database_first (PostgreSQL 16.14)
+[INFO] Schema history table "public"."flyway_schema_history" does not exist yet
+[INFO] Successfully validated 21 migrations (execution time 00:00.051s)
+[INFO] Creating Schema History table "public"."flyway_schema_history" ...
+[INFO] Current version of schema "public": << Empty Schema >>
+[INFO] Migrating schema "public" to version "1 - criar tabela organizacoes"
+[INFO] Migrating schema "public" to version "2 - criar tabela usuarios"
+[INFO] Migrating schema "public" to version "3 - criar restricoes e indices usuarios"
+[INFO] Migrating schema "public" to version "4 - criar tabela clientes"
+[INFO] Migrating schema "public" to version "5 - criar tabela clientes"
+[INFO] Migrating schema "public" to version "6 - criar tabela embarcacoes"
+[INFO] Migrating schema "public" to version "7 - criar tabela vagas"
+[INFO] Migrating schema "public" to version "8 - criar tabela vagas"
+[INFO] Migrating schema "public" to version "9 - criar tabela ocupacoes"
+[INFO] Migrating schema "public" to version "10 - adicionar slug organizacoes"
+[INFO] Migrating schema "public" to version "11 - criar posicoes embarcacoes"
+[INFO] Migrating schema "public" to version "12 - criar posicoes embarcacoes"
+[INFO] Migrating schema "public" to version "13 - criar movimentacoes"
+[INFO] Migrating schema "public" to version "14 - criar movimentacoes"
+[INFO] Migrating schema "public" to version "15 - criar movimentacoes"
+[INFO] Migrating schema "public" to version "16 - criar historico movimentacoes"
+[INFO] Migrating schema "public" to version "17 - adicionar retorno para vaga"
+[INFO] DB: constraint "ck_movimentacao_retorno_para_vaga" of relation "movimentacoes" does not exist, skipping
+[INFO] Migrating schema "public" to version "18 - ajustar regras retirada deslocamento"
+[INFO] DB: constraint "ck_movimentacao_deslocamento_interno" of relation "movimentacoes" does not exist, skipping
+[INFO] Migrating schema "public" to version "19 - criar modulo contratos"
+[INFO] Migrating schema "public" to version "20 - criar gerenciamento variabilidade"
+[INFO] Migrating schema "public" to version "21 - coordenadas organizacao"
+[INFO] Successfully applied 21 migrations to schema "public", now at version v21 (execution time 00:00.451s)
+[INFO] 
+[INFO] --- flyway:11.15.0:validate (default-cli) @ database-first ---
+[INFO] Database: jdbc:postgresql://postgres:5432/caisora_database_first (PostgreSQL 16.14)
+[INFO] Successfully validated 21 migrations (execution time 00:00.037s)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.367 s
+[INFO] Finished at: 2026-11-13T18:31:16Z
+[INFO] ------------------------------------------------------------------------
+DO
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ Container caisora-database-first-postgres-1 Running 
+ Container caisora-database-first-postgres-1 Waiting 
+ Container caisora-database-first-postgres-1 Healthy 
+ Container caisora-database-first-runner-run-73bb3792fab0 Creating 
+ Container caisora-database-first-runner-run-73bb3792fab0 Created 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< br.com.caisora.demo:database-first >-----------------
+[INFO] Building database-first 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- mybatis-generator:1.4.2:generate (default-cli) @ database-first ---
+[INFO] Connecting to the Database
+[INFO] Introspecting table public.organizacao_modulos
+[INFO] Introspecting table public.perfil_permissoes
+[INFO] Generating Record class for table public.organizacao_modulos
+[INFO] Generating Mapper Interface for table public.organizacao_modulos
+[INFO] Generating SQL Map for table public.organizacao_modulos
+[INFO] Generating Record class for table public.perfil_permissoes
+[INFO] Generating Mapper Interface for table public.perfil_permissoes
+[INFO] Generating SQL Map for table public.perfil_permissoes
+[INFO] Saving file OrganizacaoModuloMapper.xml
+[INFO] Saving file PerfilPermissaoMapper.xml
+[INFO] Saving file OrganizacaoModulo.java
+[INFO] Saving file OrganizacaoModuloMapper.java
+[INFO] Saving file PerfilPermissao.java
+[INFO] Saving file PerfilPermissaoMapper.java
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.784 s
+[INFO] Finished at: 2026-11-13T18:31:20Z
+[INFO] ------------------------------------------------------------------------
+Gerados pelo MBG:
+java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java
+java/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.java
+java/br/com/caisora/dbfirst/generated/model/OrganizacaoModulo.java
+java/br/com/caisora/dbfirst/generated/model/PerfilPermissao.java
+resources/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.xml
+resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
+ Container caisora-database-first-postgres-1 Running 
+ Container caisora-database-first-postgres-1 Waiting 
+ Container caisora-database-first-postgres-1 Healthy 
+ Container caisora-database-first-runner-run-98d143ff0db6 Creating 
+ Container caisora-database-first-runner-run-98d143ff0db6 Created 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< br.com.caisora.demo:database-first >-----------------
+[INFO] Building database-first 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ database-first ---
+[INFO] Deleting /workspace/tools/database-first/target
+[INFO] 
+[INFO] --- build-helper:3.6.1:add-source (generated) @ database-first ---
+[INFO] Source directory: /workspace/tools/database-first/generated/java added.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ database-first ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 2 resources from generated/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ database-first ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 8 source files with javac [debug release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ database-first ---
+[INFO] skip non existing resourceDirectory /workspace/tools/database-first/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ database-first ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug release 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ database-first ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running br.com.caisora.dbfirst.DatabaseFirstTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.805 s -- in br.com.caisora.dbfirst.DatabaseFirstTest
+[INFO] Running br.com.caisora.dbfirst.HttpCrudTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.595 s -- in br.com.caisora.dbfirst.HttpCrudTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ database-first ---
+[INFO] Building jar: /workspace/tools/database-first/target/database-first-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.636 s
+[INFO] Finished at: 2026-11-13T18:31:33Z
+[INFO] ------------------------------------------------------------------------

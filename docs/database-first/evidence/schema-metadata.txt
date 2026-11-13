@@ -1,0 +1,17 @@
+PostgreSQL 16.14
+TABLE organizacao_modulos
+COLUMN id uuid nullable=0
+COLUMN organizacao_id uuid nullable=0
+COLUMN modulo varchar nullable=0
+COLUMN ativo bool nullable=0
+PK id
+FK organizacao_id -> organizacoes.id
+TABLE perfil_permissoes
+COLUMN id uuid nullable=0
+COLUMN organizacao_id uuid nullable=0
+COLUMN perfil varchar nullable=0
+COLUMN modulo varchar nullable=0
+COLUMN acao varchar nullable=0
+COLUMN permitido bool nullable=0
+PK id
+FK organizacao_id -> organizacoes.id

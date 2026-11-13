@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Logs sao stdout/stderr reais; nao remover espacos emitidos pelas ferramentas.
+evidence/*.log -whitespace

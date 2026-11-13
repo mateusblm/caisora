@@ -1,0 +1,42 @@
+name: caisora-database-first
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: caisora_database_first
+      POSTGRES_USER: caisora_demo
+      POSTGRES_PASSWORD: ${DBF_PASSWORD:-somente-demo-local}
+    ports:
+      - "127.0.0.1:${DBF_PG_PORT:-55432}:5432"
+    volumes:
+      - database-first-data:/var/lib/postgresql/data
+      - ./db:/demo:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U caisora_demo -d caisora_database_first"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  runner:
+    image: maven:3.9.11-eclipse-temurin-21
+    profiles: [tools]
+    working_dir: /workspace/tools/database-first
+    environment:
+      DBF_HOST: postgres
+      DBF_PORT: 5432
+      DBF_PASSWORD: ${DBF_PASSWORD:-somente-demo-local}
+      DBF_BIND: 0.0.0.0
+      DBF_HTTP_PORT: 8095
+      DBF_TOKEN: ${DBF_TOKEN:-demo-local-123}
+    volumes:
+      - ./:/workspace/tools/database-first
+      - ../../src/main/resources/db/migration:/workspace/src/main/resources/db/migration:ro
+      - database-first-maven:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${DBF_HTTP_PORT:-8095}:8095"
+    command: [mvn, -B, -ntp, compile, exec:java]
+volumes:
+  database-first-data:
+  database-first-maven:
