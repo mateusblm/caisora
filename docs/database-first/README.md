@@ -76,7 +76,7 @@ generated/resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMappe
 
 Cada mapper contém `insert`, `selectAll`, `selectByPrimaryKey`, `updateByPrimaryKey`, `deleteByPrimaryKey`. O SQL executável está dentro dos XML, com parâmetros `#{...}` vinculados pelo MyBatis; não é um script `.sql` para colar no `psql`. Nenhum desses seis arquivos foi escrito ou corrigido manualmente. `generated/manifest.json` é um inventário manual automatizado pelo script. Os [hashes SHA-256](evidence/generated-sha256.json) identificam as saídas desta execução.
 
-**Manuais:** configuração do MBG/Maven/Compose, scripts de orquestração, seed local, `Database`, `UuidTypeHandler`, `CrudService`, `DemoServer`, DTO `Input`, HTML/CSS/JS, testes e documentação. O serviço usa exclusivamente os mappers gerados para o CRUD das duas tabelas; JDBC direto é usado para marcador, metadados e verificações independentes nos testes. A interface apresenta listagem, inclusão, edição, exclusão com confirmação, estados vazios/carregamento e mensagens de sucesso/erro.
+**Manuais:** configuração do MBG/Maven/Compose, scripts de orquestração, seed local, `Database`, `UuidTypeHandler`, `CrudService`, `DemoServer`, DTO `Input`, HTML/CSS/JS, testes e documentação. O serviço usa exclusivamente os mappers gerados para o CRUD das duas tabelas; JDBC direto é usado para marcador, metadados e verificações independentes nos testes. A interface apresenta listagem, busca, inclusão e edição em formulário, exclusão com confirmação e mensagens de sucesso/erro. Marca, menu lateral e cabeçalho seguem o frontend Caisora. A separação entre geração e integração é documentada aqui, sem explicações técnicas nas telas operacionais.
 
 ## Diferença em relação ao Caisora atual
 
@@ -99,5 +99,7 @@ Abra <http://localhost:8095>, usuário `demo`, senha local padrão `demo-local-1
 ## Evidências e limitações
 
 Veja [RESULTADOS.md](RESULTADOS.md) para matriz de critérios, resultados reais, avisos e testes opcionais do produto não executados. As capturas em `evidence/` foram feitas pelo Playwright contra esta aplicação e este PostgreSQL, não são mockups. O comando `node tools/database-first/evidence.mjs` refaz banco/geração/testes/HTTP/telas e captura novamente os resultados reais.
+
+Para inclusão no trabalho acadêmico, use [RELATORIO.md](RELATORIO.md): texto da etapa, figuras com legendas e referências às provas de execução. As capturas usam a organização fictícia **Marina Porto do Sol** e valores de módulos, perfis e ações existentes no domínio do Caisora. A apresentação é executada no módulo isolado, não no frontend de produção. A correspondência entre as operações capturadas e as leituras independentes do PostgreSQL está em [capturas-persistencia.json](evidence/capturas-persistencia.json).
 
 O laboratório não inclui paginação, regras comerciais de enumeração, política de permissões do ERP, TLS ou implantação. Todos os valores de `varchar(50)` obedecem ao esquema, sem fingir que o banco fornece os enums Java do produto. Credenciais locais documentadas servem exclusivamente à apresentação. Chromium desktop/mobile emulado foi testado; dispositivo físico e outros navegadores não foram testados. Nenhuma operação foi realizada no banco de produção e nenhum push é necessário para demonstrar localmente.

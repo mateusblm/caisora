@@ -65,11 +65,11 @@ node tools/database-first/demo.mjs start
 
 Abra <http://localhost:8095>, entre com usuário implícito `demo` e senha `demo-local-123` (ou o `DBF_TOKEN` configurado).
 
-1. Selecione `organizacao_modulos` e cadastre módulo `CLIENTES`, ativo `Sim`.
+1. No menu **Módulos da marina**, clique em **Adicionar módulo**, selecione **Clientes**, situação **Ativo**, e confirme.
 2. Veja a linha e a mensagem de inserção. No **segundo terminal** execute `node tools/database-first/demo.mjs inspect`: aparece `CLIENTES | t` no PostgreSQL.
-3. Clique em **Editar**, altere ativo para `Não` e salve. Repita `inspect`: o mesmo UUID aparece com `CLIENTES | f`.
-4. Clique em **Excluir**, mostre a confirmação e confirme. Atualize a listagem.
-5. Se houver tempo, selecione `perfil_permissoes`: módulo `CLIENTES`, perfil `ATENDENTE`, ação `CONSULTAR`, permitido `Sim`. O fluxo é o mesmo. Exclua ao fim.
+3. Clique no ícone **Editar Clientes**, altere a situação para **Desativado** e salve. Repita `inspect`: o mesmo UUID aparece com `CLIENTES | f`.
+4. Clique no ícone **Remover Clientes**, mostre a confirmação e confirme. Atualize a listagem.
+5. Se houver tempo, abra **Permissões por perfil** e clique em **Adicionar permissão**: módulo **Clientes**, perfil **Atendente**, ação **Visualizar**, acesso **Permitido**. O fluxo é o mesmo. Remova ao fim.
 
 **Fala:** “A tela usa os mappers e o SQL que acabamos de gerar. Cada gravação confirma uma transação real e consulta novamente o banco. Podemos também tentar cadastrar duas vezes a mesma combinação: a restrição única do PostgreSQL impede e recebemos uma mensagem de conflito.”
 

@@ -30,15 +30,17 @@ Os relatórios TXT são saídas do Surefire; os detalhes das asserções estão 
 | Situação | Captura |
 | --- | --- |
 | Módulo inserido | [cadastro](evidence/tela-modulos-cadastro.png) |
-| Módulo alterado para “Não” | [alteração](evidence/tela-modulos-alteracao.png) |
+| Módulo alterado para “Desativado” | [alteração](evidence/tela-modulos-alteracao.png) |
 | Confirmação de exclusão do módulo | [confirmação](evidence/tela-modulos-confirmacao.png) |
 | Permissão inserida | [cadastro](evidence/tela-permissoes-cadastro.png) |
-| Permissão alterada para “Não” | [alteração](evidence/tela-permissoes-alteracao.png) |
+| Permissão alterada para “Bloqueado” | [alteração](evidence/tela-permissoes-alteracao.png) |
 | Confirmação de exclusão da permissão | [confirmação](evidence/tela-permissoes-confirmacao.png) |
-| Após excluir e consultar novamente | [estado vazio](evidence/tela-apos-exclusao.png) |
+| Após remover a permissão de Relatórios e consultar novamente | [listagem após remoção](evidence/tela-apos-exclusao.png) |
 | Layout mobile, viewport 390×844 | [mobile](evidence/tela-mobile.png) |
 
-Capturas completas da página, feitas durante operações reais. UUIDs e nomes de teste são dinâmicos, não valores a copiar para a apresentação. A largura desktop foi 1440px. Revisão adicional da interface: disposição `ship`, sem achados materiais nas capturas/código; o detector apontou somente a tipografia Inter herdada, mantida para preservar a identidade existente. Tela e persistência gerada estão identificadas separadamente na própria interface.
+Capturas de viewport desktop 1440×1000 e página completa no mobile, feitas durante operações reais. Os dados de apresentação usam a marina fictícia Porto do Sol, módulos e perfis do domínio; UUIDs permanecem somente nas provas técnicas. O teste insere o módulo Checklist de saída e a permissão de Visualizar Relatórios para Gerente, altera suas situações e remove ambos, preservando as demais linhas durante as capturas. Ao terminar, limpa a massa que criou. O arquivo [capturas-persistencia.json](evidence/capturas-persistencia.json) comprova essas mesmas operações com conexões independentes `psql`.
+
+As imagens `*-formulario.png` mostram inclusão antes de salvar; `*-cadastro.png` mostram a linha após salvar; `*-edicao.png` mostram a alteração ainda no formulário; `*-alteracao.png` mostram a situação já persistida. Há também listagens iniciais, conflitos e listagens após remoção. A origem manual da tela e automática da persistência está documentada no relatório, sem explicações técnicas na interface. Revisão das novas capturas: `ship`, sem bloqueadores materiais.
 
 ## Preservação do produto principal
 

@@ -1,4 +1,10 @@
- Container caisora-database-first-runner-1 Stopping 
+node :  Container caisora-database-first-runner-1 Stopping 
+No linha:2 caractere:141
++ ... /brand.png; node tools/database-first/demo.mjs verify *> docs/databas ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container cais...ner-1 Stopping :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
  Container caisora-database-first-runner-1 Stopped 
  Container caisora-database-first-postgres-1 Running 
  Container caisora-database-first-postgres-1 Waiting 
@@ -6,8 +12,8 @@
  Container caisora-database-first-postgres-1 Running 
  Container caisora-database-first-postgres-1 Waiting 
  Container caisora-database-first-postgres-1 Healthy 
- Container caisora-database-first-runner-run-f51e368b61ae Creating 
- Container caisora-database-first-runner-run-f51e368b61ae Created 
+ Container caisora-database-first-runner-run-6ae8202a0ae4 Creating 
+ Container caisora-database-first-runner-run-6ae8202a0ae4 Created 
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -----------------< br.com.caisora.demo:database-first >-----------------
@@ -17,30 +23,30 @@
 [INFO] 
 [INFO] --- flyway:11.15.0:migrate (default-cli) @ database-first ---
 [INFO] Database: jdbc:postgresql://postgres:5432/caisora_database_first (PostgreSQL 16.14)
-[INFO] Successfully validated 21 migrations (execution time 00:00.062s)
+[INFO] Successfully validated 21 migrations (execution time 00:00.070s)
 [INFO] Current version of schema "public": 21
 [INFO] Schema "public" is up to date. No migration necessary.
 [INFO] 
 [INFO] --- flyway:11.15.0:validate (default-cli) @ database-first ---
 [INFO] Database: jdbc:postgresql://postgres:5432/caisora_database_first (PostgreSQL 16.14)
-[INFO] Successfully validated 21 migrations (execution time 00:00.045s)
+[INFO] Successfully validated 21 migrations (execution time 00:00.037s)
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.291 s
-[INFO] Finished at: 2026-11-13T18:30:51Z
+[INFO] Total time:  1.546 s
+[INFO] Finished at: 2026-11-13T18:46:36Z
 [INFO] ------------------------------------------------------------------------
 DO
 CREATE TABLE
 psql:/demo/seed.sql:8: NOTICE:  relation "database_first_demo_guard" already exists, skipping
 INSERT 0 0
-INSERT 0 0
+INSERT 0 1
 INSERT 0 0
  Container caisora-database-first-postgres-1 Running 
  Container caisora-database-first-postgres-1 Waiting 
  Container caisora-database-first-postgres-1 Healthy 
- Container caisora-database-first-runner-run-9f345a6e9963 Creating 
- Container caisora-database-first-runner-run-9f345a6e9963 Created 
+ Container caisora-database-first-runner-run-bda0876a584d Creating 
+ Container caisora-database-first-runner-run-bda0876a584d Created 
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -----------------< br.com.caisora.demo:database-first >-----------------
@@ -67,8 +73,8 @@ INSERT 0 0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  0.848 s
-[INFO] Finished at: 2026-11-13T18:30:54Z
+[INFO] Total time:  0.877 s
+[INFO] Finished at: 2026-11-13T18:46:39Z
 [INFO] ------------------------------------------------------------------------
 Gerados pelo MBG:
 java/br/com/caisora/dbfirst/generated/mapper/OrganizacaoModuloMapper.java
@@ -80,8 +86,8 @@ resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
  Container caisora-database-first-postgres-1 Running 
  Container caisora-database-first-postgres-1 Waiting 
  Container caisora-database-first-postgres-1 Healthy 
- Container caisora-database-first-runner-run-d41f29382251 Creating 
- Container caisora-database-first-runner-run-d41f29382251 Created 
+ Container caisora-database-first-runner-run-255d5fe3bf32 Creating 
+ Container caisora-database-first-runner-run-255d5fe3bf32 Created 
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -----------------< br.com.caisora.demo:database-first >-----------------
@@ -96,7 +102,7 @@ resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
 [INFO] Source directory: /workspace/tools/database-first/generated/java added.
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ database-first ---
-[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 4 resources from src/main/resources to target/classes
 [INFO] Copying 2 resources from generated/resources to target/classes
 [INFO] 
 [INFO] --- compiler:3.14.1:compile (default-compile) @ database-first ---
@@ -117,9 +123,9 @@ resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running br.com.caisora.dbfirst.DatabaseFirstTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.766 s -- in br.com.caisora.dbfirst.DatabaseFirstTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.811 s -- in br.com.caisora.dbfirst.DatabaseFirstTest
 [INFO] Running br.com.caisora.dbfirst.HttpCrudTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.669 s -- in br.com.caisora.dbfirst.HttpCrudTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.737 s -- in br.com.caisora.dbfirst.HttpCrudTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -131,6 +137,6 @@ resources/br/com/caisora/dbfirst/generated/mapper/PerfilPermissaoMapper.xml
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  10.630 s
-[INFO] Finished at: 2026-11-13T18:31:07Z
+[INFO] Total time:  11.614 s
+[INFO] Finished at: 2026-11-13T18:46:53Z
 [INFO] ------------------------------------------------------------------------

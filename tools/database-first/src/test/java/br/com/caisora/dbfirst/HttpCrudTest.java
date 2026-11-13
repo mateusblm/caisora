@@ -53,7 +53,9 @@ class HttpCrudTest {
         assertEquals(405, request("/api/modulos", "PATCH", "{}", true).statusCode());
         assertEquals(413, request("/api/modulos", "POST", " ".repeat(8193), true).statusCode());
         var page = request("/", "GET", null, false); assertEquals(200, page.statusCode());
-        assertTrue(page.body().contains("Do PostgreSQL ao CRUD"));
+        assertTrue(page.body().contains("Módulos da marina"));
+        var brand = request("/brand.png", "GET", null, false); assertEquals(200, brand.statusCode());
+        assertTrue(brand.headers().firstValue("Content-Type").orElse("").startsWith("image/png"));
         assertTrue(page.headers().firstValue("Content-Security-Policy").isPresent());
     }
 }

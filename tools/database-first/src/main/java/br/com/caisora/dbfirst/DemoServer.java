@@ -37,12 +37,12 @@ public final class DemoServer implements AutoCloseable {
             String method = exchange.getRequestMethod();
             if (!path.startsWith("/api/")) {
                 if (!method.equals("GET")) { send(exchange, 405, Map.of("erro", "Metodo nao permitido.")); return; }
-                String file = Map.of("/", "index.html", "/app.js", "app.js", "/style.css", "style.css").get(path);
+                String file = Map.of("/", "index.html", "/app.js", "app.js", "/style.css", "style.css", "/brand.png", "brand.png").get(path);
                 if (file == null) { send(exchange, 404, Map.of("erro", "Pagina inexistente.")); return; }
                 try (var input = DemoServer.class.getResourceAsStream("/web/" + file)) {
                     if (input == null) throw new IllegalStateException("Recurso web ausente.");
                     byte[] bytes = input.readAllBytes();
-                    exchange.getResponseHeaders().set("Content-Type", file.endsWith("html") ? "text/html; charset=utf-8" : file.endsWith("js") ? "text/javascript; charset=utf-8" : "text/css; charset=utf-8");
+                    exchange.getResponseHeaders().set("Content-Type", file.endsWith("png") ? "image/png" : file.endsWith("html") ? "text/html; charset=utf-8" : file.endsWith("js") ? "text/javascript; charset=utf-8" : "text/css; charset=utf-8");
                     exchange.sendResponseHeaders(200, bytes.length); exchange.getResponseBody().write(bytes);
                 }
                 return;
@@ -76,7 +76,7 @@ public final class DemoServer implements AutoCloseable {
         } catch (Exception e) {
             SQLException sql = null;
             for (Throwable cause = e; cause != null; cause = cause.getCause()) if (cause instanceof SQLException s) sql = s;
-            if (sql != null && "23505".equals(sql.getSQLState())) send(exchange, 409, Map.of("erro", "Ja existe uma configuracao com essa combinacao de campos."));
+            if (sql != null && "23505".equals(sql.getSQLState())) send(exchange, 409, Map.of("erro", "Já existe uma configuração com essa combinação de campos."));
             else if (sql != null && Set.of("23502", "23503", "23514", "22001").contains(sql.getSQLState())) send(exchange, 400, Map.of("erro", "Dados violam uma restricao do banco de demonstracao."));
             else { e.printStackTrace(); send(exchange, 500, Map.of("erro", "Falha interna. Consulte o log local da demo.")); }
         } finally { exchange.close(); }

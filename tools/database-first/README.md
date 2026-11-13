@@ -13,7 +13,7 @@ node tools/database-first/demo.mjs verify
 node tools/database-first/demo.mjs start
 ```
 
-Abra <http://localhost:8095>. Usuário `demo`, senha local padrão `demo-local-123`. Escolha uma das tabelas, cadastre, edite e exclua com confirmação. `verify` prepara o banco, remove as saídas geradas, executa o MBG e faz `clean verify` com testes reais no PostgreSQL. Ele para o servidor da demo antes do build.
+Abra <http://localhost:8095>. A conta local é `demo`, com senha padrão `demo-local-123`. Na tela, informe apenas a senha. Use o menu **Módulos da marina** ou **Permissões por perfil** para cadastrar, buscar, editar e remover configurações. `verify` prepara o banco, remove as saídas geradas, executa o MBG e faz `clean verify` com testes reais no PostgreSQL. Ele para o servidor da demo antes do build.
 
 Para mudar senha/portas, copie `.env.example` para `.env` **nesta pasta**, antes de preparar o banco. Os scripts carregam apenas esse arquivo; variáveis já exportadas têm prioridade. `DBF_PASSWORD` é a senha do PostgreSQL; `DBF_TOKEN` é a senha HTTP. Mudar a senha PostgreSQL de um volume já criado exige recriar **o banco da demo** com `reproduce`. `DBF_PG_PORT` e `DBF_HTTP_PORT` mudam apenas portas publicadas no host. O host interno, usuário e nome do banco no Compose são fixos para evitar conexão acidental ao produto.
 
@@ -70,7 +70,7 @@ npx playwright install chromium
 npm run test:ui
 ```
 
-O smoke usa os endpoints com mappers gerados e consulta o PostgreSQL por outra conexão `psql` após inserir, atualizar e excluir. O teste de tela percorre as duas tabelas e grava screenshots reais em `docs/database-first/evidence/`. Dados dos testes são locais, com limpeza ao fim do fluxo.
+O smoke usa os endpoints com mappers gerados e consulta o PostgreSQL por outra conexão `psql` após inserir, atualizar e excluir. O teste de tela percorre as duas tabelas e grava screenshots reais em `docs/database-first/evidence/`. A massa de apresentação usa Clientes, Embarcações, Vagas, Ocupações, Movimentações e Contratos; os registros são inseridos pela API local e removidos ao final. O teste preserva configurações preexistentes que reutilizar. `capturas-persistencia.json` contém leituras independentes por `psql` dos registros mostrados nas capturas.
 
 Para repetir e capturar todas as evidências da demo, depois de instalar Playwright:
 
